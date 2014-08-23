@@ -32,6 +32,7 @@ if has('gui_running')
     colorscheme gruvbox
     set cursorline
     set colorcolumn=80
+    autocmd FileType gitcommit set colorcolumn=73
     " Enable spell checking
     setlocal spell spelllang=en
     " Disable mouse, we don't need it!
