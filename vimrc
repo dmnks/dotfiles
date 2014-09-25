@@ -44,6 +44,8 @@ if has('gui_running')
     set guioptions-=T
     set guioptions-=r
     set guioptions-=L
+    " Use a non-GUI tab pages line
+    set guioptions-=e
     " Toggle background (taken from altercation/vim-colors-solarized)
     noremap <leader>b :let &background = (
         \ &background == "dark"? "light" : "dark" )<CR>
