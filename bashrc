@@ -8,7 +8,7 @@ fi
 # User specific aliases and functions
 
 # Use our custom vim build
-MYVIM="~/install/vim"
+MYVIM="~/software/vim/install"
 alias vim="$MYVIM/bin/vim"
 alias gvim="$MYVIM/bin/gvim"
 alias vimdiff="$MYVIM/bin/vimdiff"
