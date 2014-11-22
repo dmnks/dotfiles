@@ -1,6 +1,9 @@
 #!/bin/bash
 # Bootstrap a new system
 
+# install some goodies
+sudo yum install -y pylint
+
 # install the dotfiles
 DOTFILES=~/dotfiles
 if [ -f ~/.vimrc ]; then

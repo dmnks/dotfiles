@@ -14,6 +14,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " custom plugins
 Plugin 'morhetz/gruvbox'
+Plugin 'scrooloose/syntastic'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -28,6 +29,10 @@ set number
 set wildmenu
 set title
 set nowrap
+" Just like the default status line (with the option unset) but with the
+" syntastic flag
+set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+set statusline+=\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
 if has('gui_running')
     colorscheme gruvbox
     set cursorline
@@ -56,8 +61,6 @@ endif
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-" Show the cursor position
-set ruler
 " Start scrolling three lines before the horizontal window border
 set scrolloff=8
 set sidescrolloff=15
@@ -78,3 +81,6 @@ map <c-j> <c-w>j
 map <c-k> <c-w>k
 map <c-l> <c-w>l
 map <c-h> <c-w>h
+
+" === Misc ===
+let g:syntastic_python_pylint_args = "--max-line-length=79"
