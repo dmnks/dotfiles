@@ -75,7 +75,7 @@ set hlsearch
 set ignorecase
 " Highlight dynamically as pattern is typed
 set incsearch
-noremap <c-n> :nohl<CR>
+noremap <leader>n :nohl<CR>
 
 " === Window Manipulation ===
 " Bind the ctrl+movements keys to move around the windows
