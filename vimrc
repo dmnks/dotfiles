@@ -15,6 +15,8 @@ Plugin 'gmarik/Vundle.vim'
 " custom plugins
 Plugin 'morhetz/gruvbox'
 Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'mileszs/ack.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
