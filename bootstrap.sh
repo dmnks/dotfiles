@@ -2,7 +2,8 @@
 # Bootstrap a new system
 
 # install some goodies
-sudo yum install -y pylint
+sudo yum install -y python-pip
+sudo pip install pyflakes pep8
 
 # install the dotfiles
 DOTFILES=~/dotfiles

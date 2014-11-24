@@ -85,4 +85,6 @@ map <c-l> <c-w>l
 map <c-h> <c-w>h
 
 " === Misc ===
-let g:syntastic_python_pylint_args = "--max-line-length=79"
+let g:syntastic_python_checkers = ['pyflakes', 'pep8']
+let g:syntastic_aggregate_errors = 1
+map <leader>t :NERDTreeToggle<CR>
