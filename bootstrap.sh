@@ -23,7 +23,3 @@ fi
 git clone https://github.com/gmarik/Vundle.vim.git \
     ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
-
-# configure GNOME
-gconftool-2 --set --type string \
-    /apps/metacity/window_keybindings/toggle_fullscreen F11
