@@ -37,6 +37,7 @@ set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set statusline+=\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
 if has('gui_running')
     colorscheme gruvbox
+    set guifont=Monospace\ 11
     set cursorline
     set colorcolumn=80
     autocmd FileType gitcommit set colorcolumn=73
