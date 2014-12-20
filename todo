@@ -1,0 +1,5 @@
+* add plugins
+    * tags
+    * commentary
+* update bootstrap.sh to use a list for linking the dotfiles
+* update readme
