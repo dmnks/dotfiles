@@ -89,3 +89,4 @@ map <c-h> <c-w>h
 let g:syntastic_python_checkers = ['pyflakes', 'pep8']
 let g:syntastic_aggregate_errors = 1
 map <leader>t :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.pyc$']
