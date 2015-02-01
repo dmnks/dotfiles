@@ -1,25 +1,17 @@
 #!/bin/bash
 # Bootstrap a new system
 
-# install some goodies
-sudo yum install -y python-pip
+sudo yum install -y git stow python-pip
 sudo pip install pyflakes pep8
 
-# install the dotfiles
-DOTFILES=~/dotfiles
-if [ -f ~/.vimrc ]; then
-    mv ~/.vimrc ~/.vimrc.orig
-fi
-if [ -f ~/.bashrc ]; then
-    mv ~/.bashrc ~/.bashrc.orig
-fi
-ln -s $DOTFILES/vimrc ~/.vimrc
-ln -s $DOTFILES/bashrc ~/.bashrc
+# Install the dotfiles
+git clone https://github.com/dmnks/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+# There already is a default .bashrc
+mv ~/.bashrc ~/.bashrc.orig
+stow -v bash vim
 
-# install Vundle and all plugins
-if [ -d ~/.vim ]; then
-    mv ~/.vim ~/.vim.orig
-fi
+# Install Vundle and all plugins
 git clone https://github.com/gmarik/Vundle.vim.git \
     ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
