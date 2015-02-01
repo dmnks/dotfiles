@@ -6,4 +6,4 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # User specific aliases and functions
-export GIT_EDITOR="gvim -f"
+export GIT_EDITOR="vim"

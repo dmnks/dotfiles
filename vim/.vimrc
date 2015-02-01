@@ -13,7 +13,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " custom plugins
-Plugin 'morhetz/gruvbox'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'mileszs/ack.vim'
@@ -23,41 +23,25 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 " === Vundle end ===
 
-let mapleader = ","
+let mapleader = " "
 
 " === Appearance ===
 syntax on
+colorscheme solarized
+call togglebg#map("<F5>")
 set number
 set wildmenu
 set title
 set nowrap
+set cursorline
+set colorcolumn=80
+autocmd FileType gitcommit set colorcolumn=73
+" Enable spell checking
+setlocal spell spelllang=en
 " Just like the default status line (with the option unset) but with the
 " syntastic flag
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set statusline+=\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
-if has('gui_running')
-    colorscheme gruvbox
-    set guifont=Monospace\ 11
-    set cursorline
-    set colorcolumn=80
-    autocmd FileType gitcommit set colorcolumn=73
-    " Enable spell checking
-    setlocal spell spelllang=en
-    " Disable mouse, we don't need it!
-    set mouse=
-    " Use block cursor in insert mode and disable blinking
-    " (like in a terminal)
-    set gcr=i:block,a:blinkon0
-    set guioptions-=m
-    set guioptions-=T
-    set guioptions-=r
-    set guioptions-=L
-    " Use a non-GUI tab pages line
-    set guioptions-=e
-    " Toggle background (taken from altercation/vim-colors-solarized)
-    noremap <leader>b :let &background = (
-        \ &background == "dark"? "light" : "dark" )<CR>
-endif
 
 " === Editing ===
 " Have the Pythonic indentation regardless of the indent file used
