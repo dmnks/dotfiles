@@ -4,11 +4,15 @@
 sudo yum install -y git stow python-pip
 sudo pip install pyflakes pep8
 
-# Install the dotfiles
+# Clone the repo
 git clone https://github.com/dmnks/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-# There already is a default .bashrc
-mv ~/.bashrc ~/.bashrc.orig
+
+# Compile the latest vim
+./getvim.sh
+
+# Install the dotfiles
+mv ~/.bashrc ~/.bashrc.orig  # There's a default .bashrc already
 stow -v bash vim dircolors
 
 # Install Vundle and all plugins
@@ -59,5 +63,5 @@ foreground-color='#838394949696'
 visible-name='Solarized Dark'
 EOF
 
-# Apply the solarized dircolors
+# Use the new dircolors right now
 eval `dircolors ~/.dir_colors`
