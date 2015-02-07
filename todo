@@ -1,6 +1,5 @@
 * dircolors as git submodule
-* set -o errexit
-* update README
-* bashrc.d
-* tmux
 * add vim-commentary
+* tmux
+* zsh
+* zshrc.d
