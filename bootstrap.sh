@@ -63,5 +63,7 @@ foreground-color='#838394949696'
 visible-name='Solarized Dark'
 EOF
 
-# Use the new dircolors right now
-eval `dircolors ~/.dir_colors`
+echo
+echo "--------------------------------------------"
+echo "Bootstrap complete!"
+echo "Restart gnome-terminal to apply all changes."
