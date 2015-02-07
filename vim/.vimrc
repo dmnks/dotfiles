@@ -1,31 +1,25 @@
-" === General ===
-" Be iMproved
-set nocompatible
+" #############################################################################
+" # General
+" #############################################################################
 
-" === Vundle ===
-filetype off
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-
-" custom plugins
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdtree'
-Plugin 'mileszs/ack.vim'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" === Vundle end ===
+" Initialize Vundle
+source ~/.vundle
 
 let mapleader = " "
 
-" === Appearance ===
+" #############################################################################
+" # Vundle plugins setup
+" #############################################################################
+
+let g:syntastic_python_checkers = ['pyflakes', 'pep8']
+let g:syntastic_aggregate_errors = 1
+map <leader>t :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.pyc$']
+
+" #############################################################################
+" # Appearance
+" #############################################################################
+
 syntax on
 colorscheme solarized
 call togglebg#map("<F5>")
@@ -43,7 +37,10 @@ setlocal spell spelllang=en
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set statusline+=\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
 
-" === Editing ===
+" #############################################################################
+" # Editing
+" #############################################################################
+
 " Have the Pythonic indentation regardless of the indent file used
 set softtabstop=4
 set shiftwidth=4
@@ -55,22 +52,22 @@ set sidescroll=1
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 
-" === Searching ===
+" #############################################################################
+" # Searching
+" #############################################################################
+
 set hlsearch
 set ignorecase
 " Highlight dynamically as pattern is typed
 set incsearch
 noremap <leader>n :nohl<CR>
 
-" === Window Manipulation ===
+" #############################################################################
+" # Window manipulation
+" #############################################################################
+
 " Bind the ctrl+movements keys to move around the windows
 map <c-j> <c-w>j
 map <c-k> <c-w>k
 map <c-l> <c-w>l
 map <c-h> <c-w>h
-
-" === Misc ===
-let g:syntastic_python_checkers = ['pyflakes', 'pep8']
-let g:syntastic_aggregate_errors = 1
-map <leader>t :NERDTreeToggle<CR>
-let NERDTreeIgnore = ['\.pyc$']
