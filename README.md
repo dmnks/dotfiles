@@ -10,5 +10,5 @@ My dotfiles.  Inspired by:
 
 ## Installation
 ```bash
-bash -xc "$(curl -fsSL https://raw.githubusercontent.com/dmnks/dotfiles/master/bootstrap.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/dmnks/dotfiles/master/bootstrap.sh)"
 ```

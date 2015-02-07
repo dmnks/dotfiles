@@ -1,6 +1,8 @@
 #!/bin/bash
 # Bootstrap a new system
 
+set -o errexit
+
 sudo yum install -y git stow python-pip
 sudo pip install pyflakes pep8
 
@@ -63,6 +65,5 @@ visible-name='Solarized Dark'
 EOF
 
 echo
-echo "--------------------------------------------"
 echo "Bootstrap complete!"
 echo "Restart gnome-terminal to apply all changes."
