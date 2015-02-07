@@ -5,7 +5,7 @@ sudo yum install -y git stow python-pip
 sudo pip install pyflakes pep8
 
 # Clone the repo
-git clone git@github.com:dmnks/dotfiles.git ~/.dotfiles
+git clone https://github.com/dmnks/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
 # Compile the latest vim
