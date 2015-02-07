@@ -18,7 +18,7 @@ stow -v bash vim dircolors
 # Install Vundle and all plugins
 git clone https://github.com/gmarik/Vundle.vim.git \
     ~/.vim/bundle/Vundle.vim
-vim -u .vundle +PluginInstall +qall
+vim -u ~/.vundle +PluginInstall +qall
 
 # Enable autohint on Monospace font
 FONTCONFIG=~/.config/fontconfig

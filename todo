@@ -1,4 +1,3 @@
-* revert to cloning with https
 * ask user to restart terminal app (due to solarized)
 * dircolors as git submodule
 * set -o errexit
