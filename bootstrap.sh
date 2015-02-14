@@ -15,7 +15,7 @@ cd ~/.dotfiles
 
 # Install the dotfiles
 mv ~/.bashrc ~/.bashrc.orig  # There's a default .bashrc already
-stow -v bash vim fonts dircolors tmux
+stow -v bash vim git tmux fonts dircolors
 
 # Install Vundle and all plugins
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim

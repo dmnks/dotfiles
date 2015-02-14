@@ -1,0 +1,20 @@
+[user]
+    name = Michal Domonkos
+    email = mdomonko@redhat.com
+[color]
+    ui = true
+[core]
+    editor = vim
+    # Stow ignores .gitignore files so that's why it's renamed in this repo
+    excludesfile = ~/.gitign
+[alias]
+    ci = commit
+    st = status -s
+    lg = log --oneline
+    tp = log origin.. --oneline
+    co = checkout
+    br = branch
+    pu = push
+    a = add
+    d = diff
+    ds = diff --staged
