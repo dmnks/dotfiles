@@ -15,29 +15,11 @@ cd ~/.dotfiles
 
 # Install the dotfiles
 mv ~/.bashrc ~/.bashrc.orig  # There's a default .bashrc already
-stow -v bash vim dircolors
+stow -v bash vim fonts dircolors
 
 # Install Vundle and all plugins
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim -u ~/.vundle +PluginInstall +qall
-
-# Enable autohint on Monospace font
-FONTCONFIG=~/.config/fontconfig
-mkdir -p $FONTCONFIG
-cat << EOF > $FONTCONFIG/fonts.conf
-<?xml version="1.0"?>
-<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-<fontconfig>
-    <match target="pattern">
-        <test qual="any" name="family">
-            <string>Monospace</string>
-        </test>
-        <edit mode="assign" name="autohint">
-            <bool>true</bool>
-        </edit>
-    </match>
-</fontconfig>
-EOF
 
 # Solarize gnome-terminal
 cat << EOF | dconf load /org/gnome/terminal/legacy/profiles:/
