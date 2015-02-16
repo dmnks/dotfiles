@@ -26,3 +26,4 @@ eval `dircolors ~/.dir_colors`
 
 echo
 echo "Bootstrap complete!"
+echo "Restart gnome-terminal to apply all changes."
