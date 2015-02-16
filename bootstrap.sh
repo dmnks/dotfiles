@@ -21,6 +21,8 @@ stow -v bash vim git tmux fonts dircolors
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim -u ~/.vundle +PluginInstall +qall
 
+# Load the new dircolors right now
+eval `dircolors ~/.dir_colors`
+
 echo
 echo "Bootstrap complete!"
-echo "Restart gnome-terminal to apply all changes."
