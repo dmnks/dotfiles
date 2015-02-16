@@ -3,7 +3,7 @@
 
 set -o errexit
 
-sudo yum install -y git stow python-pip tmux
+sudo yum install -y git stow python-pip tmux ack
 sudo pip install pyflakes pep8
 
 # Clone the repo
