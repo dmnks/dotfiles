@@ -11,7 +11,7 @@
     ci = commit
     st = status -s
     lg = log --oneline
-    tp = log origin.. --oneline
+    ah = log @{u}.. --oneline
     co = checkout
     br = branch
     pu = push
