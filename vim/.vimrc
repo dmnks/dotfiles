@@ -11,10 +11,18 @@ let mapleader = " "
 " # Vundle plugins setup
 " #############################################################################
 
+" syntastic
 let g:syntastic_python_checkers = ['pyflakes', 'pep8']
 let g:syntastic_aggregate_errors = 1
+
+" nerdtree
 map <leader>t :NERDTreeToggle<CR>
 let NERDTreeIgnore = ['\.pyc$']
+
+" vim-airline
+let g:airline_powerline_fonts = 1
+set laststatus=2
+set noshowmode
 
 " #############################################################################
 " # Appearance
@@ -32,10 +40,6 @@ set colorcolumn=80
 autocmd FileType gitcommit set colorcolumn=73
 " Enable spell checking
 setlocal spell spelllang=en
-" Just like the default status line (with the option unset) but with the
-" syntastic flag
-set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-set statusline+=\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
 
 " #############################################################################
 " # Editing
