@@ -1,0 +1,11 @@
+bind generic S :source ~/.tigrc
+bind stage <Enter> :/^@@
+
+color title-focus black white bold
+
+# Use the default git colors for diff
+color "diff --" white default bold
+color "index " white default bold
+color "--- " white default bold
+color "+++ " white default bold
+color "@@" cyan default
