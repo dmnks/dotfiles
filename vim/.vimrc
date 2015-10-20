@@ -43,7 +43,7 @@ set cursorline
 set colorcolumn=80
 autocmd FileType gitcommit set colorcolumn=73
 " Enable spell checking
-setlocal spell spelllang=en
+set spell spelllang=en
 
 " #############################################################################
 " # Editing
