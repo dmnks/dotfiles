@@ -10,7 +10,7 @@
 [alias]
     ci = commit
     st = status -s
-    lg = log --oneline
+    lg = log --oneline --graph
     ah = log @{u}.. --oneline
     co = checkout
     br = branch
