@@ -4,7 +4,7 @@
 set -o errexit
 
 sudo yum install -y git stow python-pip tmux ack
-sudo pip install pyflakes pep8
+sudo pip install flake8
 
 # Clone the repo
 git clone --recursive https://github.com/dmnks/dotfiles.git ~/.dotfiles
