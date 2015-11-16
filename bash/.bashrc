@@ -6,23 +6,24 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # User specific aliases and functions
-setup_prompt() {
-    local reset="\[\033[0m\]"
-    local black="\[\033[0;30m\]"
-    local red="\[\033[0;31m\]"
-    local green="\[\033[0;32m\]"
-    local yellow="\[\033[0;33m\]"
-    local blue="\[\033[0;34m\]"
-    local purple="\[\033[0;35m\]"
-    local cyan="\[\033[0;36m\]"
-    local white="\[\033[0;37m\]"
-    local orange="\[\033[1;31m\]"
-    source /usr/share/git-core/contrib/completion/git-prompt.sh
-    PS1="$orange\u$blue@$yellow\h$blue: $green\W$blue\$(__git_ps1) $blue\$$reset "
+
+color() {
+    echo "\[$(tput setaf $@)\]"
 }
 
-setup_prompt
-unset setup_prompt
+reset="\[$(tput sgr0)\]"
+black=$(color 0)
+red=$(color 1)
+green=$(color 2)
+yellow=$(color 3)
+blue=$(color 4)
+purple=$(color 5)
+cyan=$(color 6)
+white=$(color 7)
+orange=$(color 9)
+
+source /usr/share/git-core/contrib/completion/git-prompt.sh
+PS1="$orange\u$blue@$yellow\h$blue: $green\W$blue\$(__git_ps1) $blue\$$reset "
 
 for script in $HOME/.bashrc.d/*.sh; do
     [ -f $script ] && source $script
