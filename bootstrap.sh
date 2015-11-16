@@ -10,9 +10,6 @@ sudo pip install flake8
 git clone --recursive https://github.com/dmnks/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
-# Compile the latest vim
-./getvim.sh
-
 # Install the dotfiles
 mv ~/.bashrc ~/.bashrc.orig  # There's a default .bashrc already
 stow -v bash vim git tmux fonts dircolors

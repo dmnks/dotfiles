@@ -8,7 +8,7 @@ STOW=/usr/local/stow
 
 # Install build deps
 sudo yum install -y mercurial gcc ncurses-devel python-devel gtk2-devel \
-    libSM-devel libXt-devel libXpm-devel
+    libSM-devel libXt-devel libXpm-devel stow
 
 # Prepare the sources
 if [ ! -d $REPO ]; then
