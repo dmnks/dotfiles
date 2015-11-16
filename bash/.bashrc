@@ -23,3 +23,7 @@ setup_prompt() {
 
 setup_prompt
 unset setup_prompt
+
+for script in $HOME/.bashrc.d/*.sh; do
+    [ -f $script ] && source $script
+done
