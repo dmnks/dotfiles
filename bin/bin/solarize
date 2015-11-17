@@ -1,0 +1,43 @@
+#!/bin/bash
+
+profile_name="Solarized"
+profile_id=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")
+path="org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/"
+path+=":$profile_id/"
+
+bglight="rgb(253,246,227)"
+fglight="rgb(101,123,131)"
+bgdark="rgb(0,43,54)"
+fgdark="rgb(131,148,150)"
+
+if [ "$(gsettings get $path visible-name)" != "'$profile_name'" ]; then
+    # First-time setup of the theme
+    font="DejaVu Sans Mono for Powerline 11"  # for vim-powerline
+    # Although gnome-terminal has the Solarized presets built-in, we have to
+    # specify the palette manually when using gsettings.
+    palette="['rgb(7,54,66)', 'rgb(220,50,47)', 'rgb(133,153,0)',
+              'rgb(181,137,0)', 'rgb(38,139,210)', 'rgb(211,54,130)',
+              'rgb(42,161,152)', 'rgb(238,232,213)', 'rgb(0,43,54)',
+              'rgb(203,75,22)', 'rgb(88,110,117)', 'rgb(101,123,131)',
+              'rgb(131,148,150)', 'rgb(108,113,196)', 'rgb(147,161,161)',
+              'rgb(253,246,227)']"
+    gsettings set $path visible-name "$profile_name"
+    gsettings set $path font "$font"
+    gsettings set $path palette "$palette"
+    gsettings set $path use-system-font false
+    gsettings set $path use-theme-colors false
+    bgcolor=$bgdark
+    fgcolor=$fgdark
+else
+    # Toggle the variant only
+    if [ "$(gsettings get $path background-color)" == "'$bgdark'" ]; then
+        bgcolor=$bglight
+        fgcolor=$fglight
+    else
+        bgcolor=$bgdark
+        fgcolor=$fgdark
+    fi
+fi
+
+gsettings set $path background-color "$bgcolor"
+gsettings set $path foreground-color "$fgcolor"
