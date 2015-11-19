@@ -78,3 +78,12 @@ map <c-j> <c-w>j
 map <c-k> <c-w>k
 map <c-l> <c-w>l
 map <c-h> <c-w>h
+
+" #############################################################################
+" # Misc
+" #############################################################################
+
+" Load additional config files
+for f in split(glob('~/.vimrc.d/*.vim'), '\n')
+    exe 'source' f
+endfor
