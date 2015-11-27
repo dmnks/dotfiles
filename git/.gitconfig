@@ -16,5 +16,7 @@
     br = branch
     pu = push
     a = add
+    au = add -u
     d = diff
     ds = diff --staged
+    stl = stash list
