@@ -17,6 +17,7 @@
     pu = push
     a = add
     au = add -u
+    ap = add -p
     d = diff
     ds = diff --staged
     stl = stash list
