@@ -9,6 +9,7 @@
     excludesfile = ~/.gitign
 [alias]
     ci = commit
+    ca = commit --amend
     st = status -s
     lg = log --oneline --graph
     ah = log @{u}.. --oneline
