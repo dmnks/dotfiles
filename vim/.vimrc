@@ -19,7 +19,7 @@ let g:syntastic_check_on_wq = 0
 
 " nerdtree
 map <leader>t :NERDTreeToggle<CR>
-let NERDTreeIgnore = ['\.py[co]$']
+let NERDTreeIgnore = ['\.py[co]$', '__pycache__']
 
 " vim-airline
 let g:airline_powerline_fonts = 1
