@@ -3,7 +3,7 @@
 
 set -o errexit
 
-sudo yum install -y git stow python-pip tmux ack
+sudo yum install -y git stow python-pip tmux ctags
 sudo pip install flake8
 
 # Clone the repo

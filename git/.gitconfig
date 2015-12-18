@@ -22,3 +22,5 @@
     d = diff
     ds = diff --staged
     stl = stash list
+    ctags = !git ls-files | ctags \
+        --tag-relative -L - -f"$(git rev-parse --show-toplevel)/tags"
