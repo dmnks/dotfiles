@@ -60,6 +60,21 @@ set sidescroll=1
 set backspace=indent,eol,start
 
 " #############################################################################
+" # Motion
+" #############################################################################
+
+" Bind the ctrl+movements keys to move around the windows
+nmap <c-j> <c-w>j
+nmap <c-k> <c-w>k
+nmap <c-l> <c-w>l
+nmap <c-h> <c-w>h
+
+nmap ]c :cnext<CR>
+nmap [c :cprev<CR>
+nmap ]l :lnext<CR>
+nmap [l :lprev<CR>
+
+" #############################################################################
 " # Searching
 " #############################################################################
 
@@ -68,16 +83,6 @@ set ignorecase
 " Highlight dynamically as pattern is typed
 set incsearch
 nmap <leader>n :nohl<CR>
-
-" #############################################################################
-" # Window manipulation
-" #############################################################################
-
-" Bind the ctrl+movements keys to move around the windows
-nmap <c-j> <c-w>j
-nmap <c-k> <c-w>k
-nmap <c-l> <c-w>l
-nmap <c-h> <c-w>h
 
 " #############################################################################
 " # Misc
