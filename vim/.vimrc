@@ -18,7 +18,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 " nerdtree
-map <leader>t :NERDTreeToggle<CR>
+nmap <leader>t :NERDTreeToggle<CR>
 let NERDTreeIgnore = ['\.py[co]$', '__pycache__']
 
 " vim-airline
@@ -67,17 +67,17 @@ set hlsearch
 set ignorecase
 " Highlight dynamically as pattern is typed
 set incsearch
-noremap <leader>n :nohl<CR>
+nmap <leader>n :nohl<CR>
 
 " #############################################################################
 " # Window manipulation
 " #############################################################################
 
 " Bind the ctrl+movements keys to move around the windows
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
-map <c-h> <c-w>h
+nmap <c-j> <c-w>j
+nmap <c-k> <c-w>k
+nmap <c-l> <c-w>l
+nmap <c-h> <c-w>h
 
 " #############################################################################
 " # Misc
