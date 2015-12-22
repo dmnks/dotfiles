@@ -17,9 +17,8 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" nerdtree
-nmap <leader>t :NERDTreeToggle<CR>
-let NERDTreeIgnore = ['\.py[co]$', '__pycache__']
+" ctrlp
+let g:ctrlp_cmd = 'CtrlPBuffer'
 
 " vim-airline
 let g:airline_powerline_fonts = 1
