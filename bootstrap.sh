@@ -21,6 +21,9 @@ vim -u ~/.vundle +PluginInstall +qall
 # Configure GNOME
 $HOME/bin/solarize
 
+# System tweaks
+echo "flat-volumes = no" | sudo tee --append /etc/pulse/daemon.conf
+
 echo
 echo "Bootstrap complete!"
 echo "Restart gnome-terminal to apply all changes."
