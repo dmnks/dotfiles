@@ -19,10 +19,11 @@ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim -u ~/.vundle +PluginInstall +qall
 
 # Configure GNOME
-$HOME/bin/solarize
+~/bin/solarize
 
 # System tweaks
 echo "flat-volumes = no" | sudo tee --append /etc/pulse/daemon.conf
+gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
 
 echo
 echo "Bootstrap complete!"
