@@ -26,10 +26,13 @@ fi
 ./configure --prefix=$stow/tmux
 make
 sudo make install
-rm -rf $src
 
 # Stow it
 sudo stow -d $stow tmux
 
 # Use the new tmux right now
 hash -r
+
+# Clean up
+cd
+rm -rf $src
