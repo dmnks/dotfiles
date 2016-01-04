@@ -24,6 +24,7 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:airline_powerline_fonts = 1
 set laststatus=2
 set noshowmode
+set ttimeoutlen=50
 
 " #############################################################################
 " # Appearance
