@@ -11,4 +11,4 @@ alias dnf=dnf-2
 alias dnfpath="PYTHONPATH=$DNF_MAIN:$DNF_PLUGINS"
 alias sudo="sudo "
 
-dnfpath source $DNF_MAIN/etc/bash_completion.d/dnf-completion.bash
+dnfpath source $DNF_MAIN/etc/bash_completion.d/dnf
