@@ -3,7 +3,7 @@
 
 set -o errexit
 
-sudo dnf install -y vim git stow python-pip tmux ctags
+sudo dnf install -y vim git stow python-pip tmux ctags colordiff
 sudo pip install flake8
 
 # Clone the repo
