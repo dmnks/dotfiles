@@ -87,9 +87,9 @@ nmap <leader>n :nohl<CR>
 " # Misc
 " #############################################################################
 
-map <leader>b Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
-map <leader>B Oimport pdb; pdb.set_trace()  # BREAKPOINT<esc>
-map <leader>c :!git ctags<CR><CR>
+nmap <leader>b Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
+nmap <leader>B Oimport pdb; pdb.set_trace()  # BREAKPOINT<esc>
+nmap <leader>c :!git ctags<CR><CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
