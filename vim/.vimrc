@@ -88,8 +88,8 @@ nmap <leader>n :nohl<CR>
 " # Misc
 " #############################################################################
 
-nmap <leader>b Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
-nmap <leader>B Oimport pdb; pdb.set_trace()  # BREAKPOINT<esc>
+nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
+nmap <leader>B Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
 nmap <leader>c :!git ctags<CR><CR>
 
 " Load additional config files
