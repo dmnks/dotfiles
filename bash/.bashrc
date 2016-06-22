@@ -29,7 +29,7 @@ alias diff="colordiff -u"
 
 backport() {
     find $2 -name '*.orig' | xargs rm
-    git diff $1 | patch -d $2 -p1
+    git diff $1 | patch -d $2 -b -p1
 }
 
 for script in $HOME/.bashrc.d/*.sh; do
