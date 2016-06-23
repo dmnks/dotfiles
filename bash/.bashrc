@@ -27,11 +27,6 @@ PS1="$orange\u$blue@$yellow\h$blue: $green\W$blue\$(__git_ps1) $blue\$$reset "
 
 alias diff="colordiff -u"
 
-backport() {
-    find $2 -name '*.orig' | xargs rm
-    git diff $1 | patch -d $2 -b -p1
-}
-
 for script in $HOME/.bashrc.d/*.sh; do
     [ -f $script ] && source $script
 done

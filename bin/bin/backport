@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Usage: $(basename $0) SOURCE [BRANCH]"
+    echo "Backport topic branch to unpacked source tree"
+    exit 1
+fi
+
+SOURCE=$1
+BRANCH=$(git branch)
+[ -n "$2"] && BRANCH=$2
+
+find $SOURCE -name '*.orig' | xargs rm
+git diff master..$BRANCH | patch -d $SOURCE -b -p1
