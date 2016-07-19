@@ -26,6 +26,9 @@ source /usr/share/git-core/contrib/completion/git-prompt.sh
 PS1="$orange\u$blue@$yellow\h$blue: $green\W$blue\$(__git_ps1) $blue\$$reset "
 
 alias diff="colordiff -u"
+diffls() {
+    diff $@ | less -R
+}
 
 for script in $HOME/.bashrc.d/*.sh; do
     [ -f $script ] && source $script
