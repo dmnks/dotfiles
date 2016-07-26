@@ -41,7 +41,7 @@ set title
 set nowrap
 set cursorline
 set colorcolumn=80
-autocmd FileType gitcommit set colorcolumn=73
+autocmd FileType gitcommit set textwidth=72 colorcolumn=73
 " Enable spell checking
 set spell spelllang=en
 
@@ -50,6 +50,7 @@ set spell spelllang=en
 " #############################################################################
 
 " Have the Pythonic indentation regardless of the indent file used
+set autoindent
 set softtabstop=4
 set shiftwidth=4
 set expandtab
