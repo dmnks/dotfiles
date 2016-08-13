@@ -32,9 +32,7 @@ set ttimeoutlen=50
 " #############################################################################
 
 syntax on
-set background=dark
-colorscheme solarized
-call togglebg#map("<F5>")
+colorscheme badwolf
 set number
 set wildmenu
 set title

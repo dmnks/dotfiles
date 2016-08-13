@@ -3,9 +3,6 @@ bind stage <Enter> :/^@@
 
 color title-focus black white bold
 
-# Use the default git colors for diff
-color "diff --" default default bold
-color "index " default default bold
-color "--- " default default bold
-color "+++ " default default bold
-color "@@" cyan default
+# These are not taken from git config
+color "--- " yellow default bold
+color "+++ " yellow default bold

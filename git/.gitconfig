@@ -3,6 +3,11 @@
     email = mdomonko@redhat.com
 [color]
     ui = true
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
 [core]
     editor = vim
     # Stow ignores .gitignore files so that's why it's renamed in this repo

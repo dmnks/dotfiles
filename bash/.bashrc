@@ -11,19 +11,16 @@ color() {
     echo "\[$(tput setaf $@)\]"
 }
 
-reset="\[$(tput sgr0)\]"
-black=$(color 0)
-red=$(color 1)
-green=$(color 2)
-yellow=$(color 3)
-blue=$(color 4)
-purple=$(color 5)
-cyan=$(color 6)
-white=$(color 7)
-orange=$(color 9)
+off="\[$(tput sgr0)\]"
+red=$(color 9)
+green=$(color 10)
+yellow=$(color 11)
+blue=$(color 12)
+purple=$(color 13)
+cyan=$(color 14)
 
 source /usr/share/git-core/contrib/completion/git-prompt.sh
-PS1="$orange\u$blue@$yellow\h$blue: $green\W$blue\$(__git_ps1) $blue\$$reset "
+PS1="[${green}\u${off}@${yellow}\h${off} ${green}\W${red}\$(__git_ps1)${off}]\\$ "
 
 alias diff="colordiff -u"
 diffls() {

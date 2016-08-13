@@ -1,6 +1,3 @@
-[submodule "ext/dircolors-solarized"]
-	path = ext/dircolors-solarized
-	url = https://github.com/seebi/dircolors-solarized
 [submodule "ext/powerline-fonts"]
 	path = ext/powerline-fonts
 	url = https://github.com/powerline/fonts
