@@ -10,7 +10,7 @@ My dotfiles, inspired by:
 
 ## Installation
 ```bash
-git clone --recursive https://github.com/dmnks/dotfiles.git ~/.dotfiles
+git clone --recursive git@github.com:dmnks/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./bootstrap.sh
 ```
