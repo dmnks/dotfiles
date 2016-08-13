@@ -20,7 +20,7 @@ purple=$(color 13)
 cyan=$(color 14)
 
 source /usr/share/git-core/contrib/completion/git-prompt.sh
-PS1="[${green}\u${off}@${yellow}\h${off} ${green}\W${red}\$(__git_ps1)${off}]\\$ "
+PS1="${cyan}\u${off}@${green}\h${off} ${yellow}\W${purple}\$(__git_ps1)${off} \\$ "
 
 alias diff="colordiff -u"
 diffls() {
