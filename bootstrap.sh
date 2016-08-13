@@ -12,7 +12,7 @@ cd ~/.dotfiles
 
 # Install the dotfiles
 mv ~/.bashrc ~/.bashrc.orig  # There's a default .bashrc already
-stow -v bash vim git tmux fonts dircolors bin python
+stow -v bash vim git tmux fonts dircolors bin python pulse
 
 # Install Vundle and all plugins
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -22,7 +22,6 @@ vim -u ~/.vundle +PluginInstall +qall
 ~/bin/solarize
 
 # System tweaks
-echo "flat-volumes = no" | sudo tee --append /etc/pulse/daemon.conf
 gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
 
 echo
