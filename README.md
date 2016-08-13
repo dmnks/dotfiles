@@ -1,6 +1,6 @@
 # Dotfiles
 
-My dotfiles.  Inspired by:
+My dotfiles, inspired by:
 
  * [Martin Brochhaus](https://www.github.com/mbrochh/vim-as-a-python-ide)
  * [Mathias Bynens](https://www.github.com/mathiasbynens/dotfiles)
@@ -10,5 +10,5 @@ My dotfiles.  Inspired by:
 
 ## Installation
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/dmnks/dotfiles/master/bootstrap.sh)"
+./bootstrap.sh
 ```

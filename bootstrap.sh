@@ -6,10 +6,6 @@ set -o errexit
 sudo dnf install -y vim git stow python-pip tmux ctags colordiff
 sudo pip install flake8 pudb
 
-# Clone the repo
-git clone --recursive https://github.com/dmnks/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-
 # Install the dotfiles
 mv ~/.bashrc ~/.bashrc.orig  # There's a default .bashrc already
 stow -v bash vim git tmux fonts dircolors bin python pulse
