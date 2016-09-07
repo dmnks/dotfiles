@@ -1,0 +1,124 @@
+#!/bin/bash
+
+progname="thinbox"
+confdir=$HOME/.$progname
+
+usage() {
+    echo "\
+Usage: $progname COMMAND ARGS
+
+Manage thin VM development environments.
+
+Commands:
+    spawn NAME BASE_IMAGE   create new VM based on BASE_IMAGE and call it NAME
+    clean NAME              delete VM called NAME
+    ssh NAME                ssh as root into VM called NAME
+    sync NAME               rsync current git repo to VM called NAME"
+    exit 1
+}
+
+get_mac(){
+    virsh domiflist $1 | sed '3q;d' | awk '{print $5}'
+}
+
+get_ipaddr() {
+    local mac=$1
+    local line=""
+    while [ -z "$line" ]; do
+        line=$(arp -na | grep $mac) || sleep 0.5
+    done
+    line=$(echo $line | awk '{print $2}')
+    echo ${line:1:-1}
+}
+
+save_ipaddr() {
+    echo $2 > $confdir/ips/$1
+}
+
+load_ipaddr() {
+    cat $confdir/ips/$1
+}
+
+domain_defined() {
+    virsh list --name --all | egrep -q '^'$1'$'
+}
+
+ensure_domain_defined() {
+    if ! domain_defined $1; then
+        echo "No VM called $1"
+        exit 1
+    fi
+}
+
+ensure_domain_undefined() {
+    if domain_defined $1; then
+        echo "VM called $1 already exists"
+        exit 1
+    fi
+}
+
+mkdir -p $confdir/{ips,base,image}
+[ -z "$THIN_MEMORY" ] && THIN_MEMORY="1024"
+cmd=$1
+
+if [ -z "$cmd" ]; then
+    usage
+fi
+
+if [ "$cmd" == "spawn" ]; then
+    shift
+    [ "$#" -ne 2 ] && usage
+    name=$1
+    base=$confdir/base/${2}.qcow2
+    image=$confdir/image/${name}.qcow2
+    ensure_domain_undefined $name
+
+    echo "Creating new thin image"
+    qemu-img create -f qcow2 -o backing_file=$base $image >/dev/null
+
+    echo "Configuring image"
+    virt-sysprep -a $image --hostname $name --ssh-inject root \
+                 --firstboot-command "restorecon -R /root/.ssh" >/dev/null
+
+    echo "Installing new VM"
+    virt-install --network=bridge:virbr0 --name $name --memory $THIN_MEMORY \
+                 --disk $image --import --noautoconsole >/dev/null
+
+    echo "Waiting for IP address"
+    mac=$(get_mac $name)
+    ipaddr=$(get_ipaddr $mac)
+    save_ipaddr $name $ipaddr
+
+    echo "Done!"
+elif [ "$cmd" == "ssh" ]; then
+    shift
+    [ "$#" -ne 1 ] && usage
+    name=$1
+    ensure_domain_defined $name
+
+    ipaddr=$(load_ipaddr $name)
+    ssh -o StrictHostKeyChecking=no root@$ipaddr
+elif [ "$cmd" == "sync" ]; then
+    shift
+    [ "$#" -ne 1 ] && usage
+    name=$1
+    ensure_domain_defined $name
+
+    ipaddr=$(load_ipaddr $name)
+    topdir=$(git rev-parse --show-toplevel) || exit 1
+    remotedir=/root/$(basename $topdir)
+    rsync -az -e "ssh -o StrictHostKeyChecking=no" --delete --exclude '.git/' \
+          $topdir/ root@$ipaddr:$remotedir
+elif [ "$cmd" == "clean" ]; then
+    shift
+    [ "$#" -ne 1 ] && usage
+    name=$1
+    ensure_domain_defined $name
+
+    virsh destroy $name >/dev/null
+    virsh undefine $name >/dev/null
+    rm $confdir/image/${name}.qcow2
+    rm $confdir/ips/$name
+fi
+
+exit 0
