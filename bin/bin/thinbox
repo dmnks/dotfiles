@@ -57,7 +57,7 @@ ensure_domain_undefined() {
     fi
 }
 
-mkdir -p $confdir/{ips,base,image}
+mkdir -p $confdir/{ips,bases,images}
 [ -z "$THIN_MEMORY" ] && THIN_MEMORY="1024"
 cmd=$1
 
@@ -69,8 +69,8 @@ if [ "$cmd" == "spawn" ]; then
     shift
     [ "$#" -ne 2 ] && usage
     name=$1
-    base=$confdir/base/${2}.qcow2
-    image=$confdir/image/${name}.qcow2
+    base=$confdir/bases/${2}.qcow2
+    image=$confdir/images/${name}.qcow2
     ensure_domain_undefined $name
 
     echo "Creating new thin image"
@@ -117,7 +117,7 @@ elif [ "$cmd" == "clean" ]; then
 
     virsh destroy $name >/dev/null
     virsh undefine $name >/dev/null
-    rm $confdir/image/${name}.qcow2
+    rm $confdir/images/${name}.qcow2
     rm $confdir/ips/$name
 fi
 
