@@ -70,6 +70,10 @@ if [ "$cmd" == "spawn" ]; then
     [ "$#" -ne 2 ] && usage
     name=$1
     base=$confdir/bases/${2}.qcow2
+    if [ ! -f "$base" ]; then
+        echo "No such base image: $base"
+        exit 1
+    fi
     image=$confdir/images/${name}.qcow2
     ensure_domain_undefined $name
 
