@@ -119,7 +119,7 @@ elif [ "$cmd" == "clean" ]; then
     name=$1
     ensure_domain_defined $name
 
-    virsh destroy $name >/dev/null
+    virsh destroy $name >/dev/null 2>&1
     virsh undefine $name >/dev/null
     rm $confdir/images/${name}.qcow2
     rm $confdir/ips/$name
