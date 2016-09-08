@@ -5,7 +5,7 @@ confdir=$HOME/.$progname
 
 usage() {
     echo "\
-Usage: $progname COMMAND ARGS
+Usage: $progname COMMAND [ARGS]
 
 Manage thin VM development environments.
 
