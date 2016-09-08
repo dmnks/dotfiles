@@ -14,6 +14,7 @@ Commands:
     clean NAME              delete VM called NAME
     ssh NAME                ssh as root into VM called NAME
     sync NAME               rsync current git repo to VM called NAME
+    upload NAME FILE        copy FILE to VM called NAME (to /root dir)
     list                    list all VMs spawned by this tool
     base                    list all available base images"
     exit 1
@@ -115,6 +116,20 @@ elif [ "$cmd" == "sync" ]; then
     remotedir=/root/$(basename $topdir)
     rsync -az -e "ssh -o StrictHostKeyChecking=no" --delete --exclude '.git/' \
           $topdir/ root@$ipaddr:$remotedir
+elif [ "$cmd" == "upload" ]; then
+    shift
+    [ "$#" -ne 2 ] && usage
+    name=$1
+    fname=$2
+    ensure_domain_defined $name
+
+    ipaddr=$(load_ipaddr $name)
+    if ! ssh root@$ipaddr stat $fname >/dev/null 2>&1; then
+        scp $fname root@$ipaddr:
+    else
+        echo "File /root/$fname already exists on VM, aborting"
+        exit 1
+    fi
 elif [ "$cmd" == "clean" ]; then
     shift
     [ "$#" -ne 1 ] && usage
