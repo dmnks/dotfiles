@@ -131,6 +131,14 @@ elif [ "$cmd" == "list" ]; then
         name=$(basename $fname)
         domain_defined $name && echo $name
     done
+elif [ "$cmd" == "base" ]; then
+    shift
+    [ "$#" -ne 0 ] && usage
+    for fname in $confdir/base/*; do
+        [ ! -e "$fname" ] && continue
+        name=$(basename $fname)
+        echo ${name%.qcow2}
+    done
 else
     usage
 fi
