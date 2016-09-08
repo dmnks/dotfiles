@@ -123,6 +123,14 @@ elif [ "$cmd" == "clean" ]; then
     virsh undefine $name >/dev/null
     rm $confdir/images/${name}.qcow2
     rm $confdir/ips/$name
+elif [ "$cmd" == "list" ]; then
+    shift
+    [ "$#" -ne 0 ] && usage
+    for fname in $confdir/ips/*; do
+        [ ! -e "$fname" ] && continue
+        name=$(basename $fname)
+        domain_defined $name && echo $name
+    done
 else
     usage
 fi
