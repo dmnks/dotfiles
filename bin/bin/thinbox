@@ -13,7 +13,9 @@ Commands:
     spawn NAME BASE_IMAGE   create new VM based on BASE_IMAGE and call it NAME
     clean NAME              delete VM called NAME
     ssh NAME                ssh as root into VM called NAME
-    sync NAME               rsync current git repo to VM called NAME"
+    sync NAME               rsync current git repo to VM called NAME
+    list                    list all VMs spawned by this tool
+    base                    list all available base images"
     exit 1
 }
 
