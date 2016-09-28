@@ -3,7 +3,8 @@
 
 set -o errexit
 
-sudo dnf install -y vim git stow python-pip tmux ctags colordiff tig
+sudo dnf install -y vim git stow python-pip tmux ctags colordiff tig \
+    libguestfs-tools-c virt-install
 sudo pip install flake8 pudb
 
 [ -f ~/.bashrc ] && mv ~/.bashrc{,.orig}
