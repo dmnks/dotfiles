@@ -26,7 +26,7 @@ let g:ctrlp_working_path_mode = 0
 " #############################################################################
 
 syntax on
-colorscheme badwolf
+colorscheme iceberg
 set number
 set wildmenu
 set title
