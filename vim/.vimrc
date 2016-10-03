@@ -21,12 +21,6 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_extensions = ['tag']
 let g:ctrlp_working_path_mode = 0
 
-" vim-airline
-let g:airline_powerline_fonts = 1
-set laststatus=2
-set noshowmode
-set ttimeoutlen=50
-
 " #############################################################################
 " # Appearance
 " #############################################################################
@@ -40,8 +34,6 @@ set nowrap
 set cursorline
 set colorcolumn=80
 autocmd FileType gitcommit set textwidth=72 colorcolumn=73
-" Enable spell checking
-set spell spelllang=en
 
 " #############################################################################
 " # Editing
@@ -52,10 +44,6 @@ set autoindent
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-" Start scrolling three lines before the horizontal window border
-set scrolloff=8
-set sidescrolloff=15
-set sidescroll=1
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 

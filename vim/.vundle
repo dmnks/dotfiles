@@ -12,7 +12,6 @@ Plugin 'sjl/badwolf'
 Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tpope/vim-commentary'
-Plugin 'bling/vim-airline'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
