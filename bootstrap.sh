@@ -4,7 +4,7 @@
 set -o errexit
 
 sudo dnf install -y vim git stow python-pip tmux ctags colordiff tig \
-    libguestfs-tools-c virt-install weechat
+    libguestfs-tools-c virt-install weechat libvirt-daemon-config-network
 sudo pip install flake8 pudb
 
 [ -f ~/.bashrc ] && mv ~/.bashrc{,.orig}
