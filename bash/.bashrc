@@ -20,12 +20,9 @@ purple=$(color 13)
 cyan=$(color 14)
 
 source /usr/share/git-core/contrib/completion/git-prompt.sh 2>/dev/null
-PS1="${cyan}\u${off}@${green}\h${off} ${yellow}\W${purple}\$(declare -F __git_ps1 &>/dev/null && __git_ps1)${off} \\$ "
+PS1="[${green}\u${off}@${green}\h${off} \W\$(declare -F __git_ps1 &>/dev/null && __git_ps1)]\\$ "
 
-alias diff="colordiff -u"
-diffls() {
-    diff $@ | less -R
-}
+gdiff () { colordiff -u $@ | less -R; }
 
 for script in $HOME/.bashrc.d/*.sh; do
     [ -f $script ] && source $script
