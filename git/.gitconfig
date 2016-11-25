@@ -15,7 +15,7 @@
 [alias]
     ci = commit
     ca = commit --amend
-    st = status -sb
+    st = status -s
     lg = log --oneline --graph
     co = checkout
     br = branch
