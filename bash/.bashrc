@@ -7,6 +7,9 @@ fi
 
 # User specific aliases and functions
 
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
 color() {
     echo "\[$(tput setaf $@)\]"
 }
