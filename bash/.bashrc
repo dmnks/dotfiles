@@ -13,6 +13,12 @@ fi
 color() {
     echo "\[$(tput setaf $@)\]"
 }
+promptcmd() {
+    local status=$?
+    local dollar
+    [ $status != 0 ] && dollar=$red'$'$off || dollar=$off'$'
+    PS1="${green}\u@\h${off}:${cyan}\W${purple}\$(__git_ps1 '(%s)')${dollar} "
+}
 
 off="\[$(tput sgr0)\]"
 red=$(color 9)
@@ -22,11 +28,16 @@ blue=$(color 12)
 purple=$(color 13)
 cyan=$(color 14)
 
-source /usr/share/git-core/contrib/completion/git-prompt.sh 2>/dev/null
-PS1="[${green}\u${off}@${green}\h${off} \W\$(declare -F __git_ps1 &>/dev/null && __git_ps1)]\\$ "
+PROMPT_COMMAND=promptcmd
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUPSTREAM=1
+GIT_PS1_SHOWSTASHSTATE=1
+source /usr/share/git-core/contrib/completion/git-prompt.sh
 
 gdiff () { colordiff -u $@ | less -R; }
 
 for script in $HOME/.bashrc.d/*.sh; do
     [ -f $script ] && source $script
 done
+
+unset color
