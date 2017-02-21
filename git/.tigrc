@@ -1,5 +1,4 @@
 bind generic S :source ~/.tigrc
-bind stage <Enter> :/^@@
 
 color title-focus black white bold
 
