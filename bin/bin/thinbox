@@ -4,6 +4,7 @@ progname="thinbox"
 confdir=$HOME/.$progname
 sshopts="-o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null "
 sshopts+="-o UserKnownHostsFile=/dev/null"
+[ -z "$THIN_MEMORY" ] && THIN_MEMORY="1024"
 
 usage() {
     echo "\
@@ -27,7 +28,7 @@ get_mac(){
 }
 
 get_ipaddr() {
-    local mac=$1
+    local mac=$(get_mac $1)
     local line=""
     while [ -z "$line" ]; do
         line=$(arp -na | grep $mac) || sleep 0.5
@@ -36,12 +37,9 @@ get_ipaddr() {
     echo ${line:1:-1}
 }
 
-save_ipaddr() {
-    echo $2 > $confdir/ips/$1
-}
-
-load_ipaddr() {
-    cat $confdir/ips/$1
+ssh_in() {
+    local ipaddr=$(get_ipaddr $1)
+    ssh $sshopts root@$ipaddr
 }
 
 domain_defined() {
@@ -62,15 +60,12 @@ ensure_domain_undefined() {
     fi
 }
 
-mkdir -p $confdir/{ips,base,images}
-[ -z "$THIN_MEMORY" ] && THIN_MEMORY="1024"
+mkdir -p $confdir/{base,images}
 cmd=$1
 
 if [ -z "$cmd" ]; then
     usage
-fi
-
-if [ "$cmd" == "spawn" ]; then
+elif [ "$cmd" == "spawn" ]; then
     shift
     [ "$#" -ne 2 ] && usage
     name=$1
@@ -94,26 +89,20 @@ if [ "$cmd" == "spawn" ]; then
                  --disk $image --import --noautoconsole >/dev/null
 
     echo "Waiting for IP address"
-    mac=$(get_mac $name)
-    ipaddr=$(get_ipaddr $mac)
-    save_ipaddr $name $ipaddr
-
-    echo "Done!"
+    ssh_in $name
 elif [ "$cmd" == "ssh" ]; then
     shift
     [ "$#" -ne 1 ] && usage
     name=$1
     ensure_domain_defined $name
-
-    ipaddr=$(load_ipaddr $name)
-    ssh $sshopts root@$ipaddr
+    ssh_in $name
 elif [ "$cmd" == "sync" ]; then
     shift
     [ "$#" -ne 1 ] && usage
     name=$1
     ensure_domain_defined $name
 
-    ipaddr=$(load_ipaddr $name)
+    ipaddr=$(get_ipaddr $name)
     topdir=$(git rev-parse --show-toplevel) || exit 1
     remotedir=/root/$(basename $topdir)
     rsync -az -e "ssh $sshopts" --delete --exclude '.git/' $topdir/ \
@@ -125,7 +114,7 @@ elif [ "$cmd" == "upload" ]; then
     fname=$2
     ensure_domain_defined $name
 
-    ipaddr=$(load_ipaddr $name)
+    ipaddr=$(get_ipaddr $name)
     if ! ssh root@$ipaddr stat $fname >/dev/null 2>&1; then
         scp $fname root@$ipaddr:
     else
@@ -141,14 +130,13 @@ elif [ "$cmd" == "clean" ]; then
     virsh destroy $name >/dev/null 2>&1
     virsh undefine $name >/dev/null
     rm $confdir/images/${name}.qcow2
-    rm $confdir/ips/$name
 elif [ "$cmd" == "list" ]; then
     shift
     [ "$#" -ne 0 ] && usage
-    for fname in $confdir/ips/*; do
+    for fname in $confdir/images/*; do
         [ ! -e "$fname" ] && continue
         name=$(basename $fname)
-        domain_defined $name && echo $name
+        echo ${name%.qcow2}
     done
 elif [ "$cmd" == "base" ]; then
     shift
