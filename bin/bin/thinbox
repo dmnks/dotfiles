@@ -39,7 +39,10 @@ get_ipaddr() {
 
 ssh_in() {
     local ipaddr=$(get_ipaddr $1)
-    ssh $sshopts root@$ipaddr
+    while true; do
+        ssh $sshopts root@$ipaddr 2>/dev/null && break
+        sleep 0.5
+    done
 }
 
 domain_defined() {
