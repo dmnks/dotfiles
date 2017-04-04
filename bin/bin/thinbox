@@ -17,7 +17,7 @@ Commands:
     remove NAME         delete VM called NAME
     ssh NAME            ssh as root into VM called NAME
     sync NAME           rsync current git repo to VM called NAME
-    upload NAME FILE    copy FILE to /root dir of VM called NAME
+    upload NAME FILES   copy FILES to /root dir of VM called NAME
     list                list all VMs spawned by this tool
     base                list all available base images"
     exit 1
@@ -112,18 +112,14 @@ elif [ "$cmd" == "sync" ]; then
           root@$ipaddr:$remotedir
 elif [ "$cmd" == "upload" ]; then
     shift
-    [ "$#" -ne 2 ] && usage
+    [ "$#" -lt 2 ] && usage
     name=$1
-    fname=$2
+    shift
+    fnames=$@
     ensure_domain_defined $name
 
     ipaddr=$(get_ipaddr $name)
-    if ! ssh root@$ipaddr stat $fname >/dev/null 2>&1; then
-        scp $fname root@$ipaddr:
-    else
-        echo "File /root/$fname already exists on VM, aborting"
-        exit 1
-    fi
+    scp $sshopts $fnames root@$ipaddr:
 elif [ "$cmd" == "remove" ]; then
     shift
     [ "$#" -ne 1 ] && usage
