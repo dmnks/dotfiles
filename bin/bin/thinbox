@@ -2,6 +2,8 @@
 
 progname="thinbox"
 confdir=$HOME/.$progname
+sshopts="-o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null "
+sshopts+="-o UserKnownHostsFile=/dev/null"
 
 usage() {
     echo "\
@@ -104,7 +106,7 @@ elif [ "$cmd" == "ssh" ]; then
     ensure_domain_defined $name
 
     ipaddr=$(load_ipaddr $name)
-    ssh -o StrictHostKeyChecking=no root@$ipaddr
+    ssh $sshopts root@$ipaddr
 elif [ "$cmd" == "sync" ]; then
     shift
     [ "$#" -ne 1 ] && usage
@@ -114,8 +116,8 @@ elif [ "$cmd" == "sync" ]; then
     ipaddr=$(load_ipaddr $name)
     topdir=$(git rev-parse --show-toplevel) || exit 1
     remotedir=/root/$(basename $topdir)
-    rsync -az -e "ssh -o StrictHostKeyChecking=no" --delete --exclude '.git/' \
-          $topdir/ root@$ipaddr:$remotedir
+    rsync -az -e "ssh $sshopts" --delete --exclude '.git/' $topdir/ \
+          root@$ipaddr:$remotedir
 elif [ "$cmd" == "upload" ]; then
     shift
     [ "$#" -ne 2 ] && usage
