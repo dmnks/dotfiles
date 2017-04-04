@@ -13,7 +13,8 @@ Usage: $progname COMMAND [ARGS]
 Manage thin VM development environments.
 
 Commands:
-    spawn NAME BASE     create new VM based on BASE image and call it NAME
+    spawn BASE [SUFFIX] create new VM based on BASE image and name it
+                        BASE-SUFFIX
     remove NAME         delete VM called NAME
     ssh NAME            ssh as root into VM called NAME
     sync NAME           rsync current git repo to VM called NAME
@@ -70,14 +71,22 @@ if [ -z "$cmd" ]; then
     usage
 elif [ "$cmd" == "spawn" ]; then
     shift
-    [ "$#" -ne 2 ] && usage
-    name=$1
-    base=$confdir/base/${2}.qcow2
+    [ "$#" -lt 1 ] || [ "$#" -gt 2 ] && usage
+
+    base=$confdir/base/${1}.qcow2
     if [ ! -f "$base" ]; then
         echo "No such base image: $base"
         exit 1
     fi
-    image=$confdir/images/${name}.qcow2
+    suffix=$2
+    if [ -z "$suffix" ]; then
+        image=$(mktemp $confdir/images/${1}-XXXXX.qcow2)
+    else
+        image=$confdir/images/${1}-${suffix}.qcow2
+    fi
+    name=$(basename $image)
+    name=${name%.qcow2}
+
     ensure_domain_undefined $name
 
     echo "Creating new thin image"
