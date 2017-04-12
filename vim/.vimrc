@@ -26,7 +26,12 @@ let g:ctrlp_working_path_mode = 0
 " #############################################################################
 
 syntax on
-colorscheme iceberg
+set termguicolors
+" Needed for termguicolors to work in tmux
+set t_8f=[38;2;%lu;%lu;%lum
+set t_8b=[48;2;%lu;%lu;%lum
+set background=dark
+colorscheme one
 set number
 set wildmenu
 set title
