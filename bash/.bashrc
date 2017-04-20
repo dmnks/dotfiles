@@ -35,6 +35,10 @@ GIT_PS1_SHOWSTASHSTATE=1
 source /usr/share/git-core/contrib/completion/git-prompt.sh
 
 gdiff () { colordiff -u $@ | less -R; }
+alias drme='sudo docker rm \
+            $(sudo docker ps --filter "status=exited" -qa --no-trunc)'
+alias drmi='sudo docker rmi \
+            $(sudo docker images --filter "dangling=true" -q --no-trunc)'
 
 for script in $HOME/.bashrc.d/*.sh; do
     [ -f $script ] && source $script
