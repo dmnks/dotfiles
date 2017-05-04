@@ -12,7 +12,6 @@ Fonts are taken from: https://github.com/powerline/fonts
 
 ## Installation
 ```bash
-git clone --recursive git@github.com:dmnks/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-./bootstrap.sh
+$ git clone --recursive git@github.com:dmnks/dotfiles.git ~/.dotfiles
+$ make -C ~/.dotfiles
 ```
