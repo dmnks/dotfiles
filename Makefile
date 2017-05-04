@@ -31,4 +31,4 @@ unconf:
 	@sed "s|ARG_BASE|$(BASE_IMAGE)|" $< > $@
 
 image: .dockerfile
-	sudo docker build -t $(DEV_IMAGE) -f $< .
+	docker build -t $(DEV_IMAGE) -f $< .
