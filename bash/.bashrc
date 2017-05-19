@@ -37,10 +37,11 @@ source /usr/share/git-core/contrib/completion/git-prompt.sh
 alias docker='sudo docker'
 
 gdiff () { colordiff -u $@ | less -R; }
-alias drme='sudo docker rm \
-            $(sudo docker ps --filter "status=exited" -qa --no-trunc)'
-alias drmi='sudo docker rmi \
-            $(sudo docker images --filter "dangling=true" -q --no-trunc)'
+dclean() {
+    docker rm $(docker ps --filter "status=exited" -qa --no-trunc) 2>/dev/null
+    docker rmi $(docker images --filter "dangling=true" -q --no-trunc) \
+        2>/dev/null
+}
 
 for script in $HOME/.bashrc.d/*.sh; do
     [ -f $script ] && source $script
