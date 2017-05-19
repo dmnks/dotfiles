@@ -38,9 +38,10 @@ alias docker='sudo docker'
 
 gdiff () { colordiff -u $@ | less -R; }
 dclean() {
-    docker rm $(docker ps --filter "status=exited" -qa --no-trunc) 2>/dev/null
-    docker rmi $(docker images --filter "dangling=true" -q --no-trunc) \
-        2>/dev/null
+    local cnts=$(docker ps --filter "status=exited" -qa --no-trunc)
+    local imgs=$(docker images --filter "dangling=true" -q --no-trunc)
+    [ -n "$cnts" ] && docker rm $cnts
+    [ -n "$imgs" ] && docker rmi $imgs || true
 }
 
 for script in $HOME/.bashrc.d/*.sh; do
