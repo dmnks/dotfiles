@@ -34,6 +34,8 @@ GIT_PS1_SHOWUPSTREAM=1
 GIT_PS1_SHOWSTASHSTATE=1
 source /usr/share/git-core/contrib/completion/git-prompt.sh
 
+alias docker='sudo docker'
+
 gdiff () { colordiff -u $@ | less -R; }
 alias drme='sudo docker rm \
             $(sudo docker ps --filter "status=exited" -qa --no-trunc)'
