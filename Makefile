@@ -1,13 +1,8 @@
 DOTFILES = bash bin fonts git pulse python tmux vim
-BASE_IMAGE = centos:7
-DEV_IMAGE = devbase
 
-.PHONY: all clean pkgs conf unconf image
+.PHONY: all pkgs conf unconf
 
 all: pkgs conf
-
-clean:
-	rm -f .dockerfile
 
 pkgs:
 	sudo dnf install -y vim git stow python-pip tmux ctags colordiff tig \
@@ -26,9 +21,3 @@ conf:
 unconf:
 	stow -Dv $(DOTFILES)
 	@[ -f ~/.bashrc.orig ] && mv ~/.bashrc{.orig,} || true
-
-.dockerfile: Dockerfile.in
-	@sed "s|ARG_BASE|$(BASE_IMAGE)|" $< > $@
-
-image: .dockerfile
-	docker build -t $(DEV_IMAGE) -f $< .
