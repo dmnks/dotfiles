@@ -8,6 +8,8 @@ pkgs:
 	sudo dnf install -y vim git stow python-pip tmux ctags colordiff tig \
 			    libguestfs-tools-c virt-install weechat \
 			    libvirt-daemon-config-network docker docker-compose
+	sudo systemctl enable docker
+	sudo systemctl start docker
 	sudo pip install flake8 pudb
 	git clone https://github.com/gmarik/Vundle.vim.git \
 		  ${HOME}/.vim/bundle/Vundle.vim
