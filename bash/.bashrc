@@ -21,6 +21,7 @@ promptcmd() {
 }
 
 off="\[$(tput sgr0)\]"
+# Use the bright variants (looks better)
 red=$(color 9)
 green=$(color 10)
 yellow=$(color 11)
