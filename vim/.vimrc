@@ -42,7 +42,8 @@ set title
 set nowrap
 set cursorline
 set colorcolumn=80
-autocmd FileType gitcommit set textwidth=72 colorcolumn=73
+autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
+autocmd FileType gitcommit setlocal spell
 
 " #############################################################################
 " # Editing
