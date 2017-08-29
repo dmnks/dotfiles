@@ -32,7 +32,7 @@ set t_8f=[38;2;%lu;%lu;%lum
 set t_8b=[48;2;%lu;%lu;%lum
 set background=dark
 map <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
-colorscheme one
+colorscheme gruvbox
 set number
 set wildmenu
 set title
