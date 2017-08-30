@@ -78,6 +78,7 @@ nmap [l :lprev<CR>
 
 set hlsearch
 set ignorecase
+set smartcase
 " Highlight dynamically as pattern is typed
 set incsearch
 nmap <leader>n :nohl<CR>
