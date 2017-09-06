@@ -36,8 +36,8 @@ GIT_PS1_SHOWSTASHSTATE=1
 source /usr/share/git-core/contrib/completion/git-prompt.sh
 
 alias docker='sudo docker'
+alias gdiff='git diff --no-index -- '
 
-gdiff () { colordiff -u $@ | less -R; }
 dclean() {
     local cnts=$(docker ps --filter "status=exited" -qa --no-trunc)
     local imgs=$(docker images --filter "dangling=true" -q --no-trunc)

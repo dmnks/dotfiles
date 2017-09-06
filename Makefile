@@ -5,7 +5,7 @@ DOTFILES = bash bin fonts git pulse python tmux vim
 all: pkgs conf
 
 pkgs:
-	sudo dnf install -y vim git stow python-pip tmux ctags colordiff tig \
+	sudo dnf install -y vim git stow python-pip tmux ctags tig \
 			    libguestfs-tools-c virt-install weechat \
 			    libvirt-daemon-config-network docker docker-compose
 	sudo systemctl enable docker
