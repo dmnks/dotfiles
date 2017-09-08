@@ -27,7 +27,7 @@
     ds = diff --staged
     stl = stash list
     ctags = !git ls-files | ctags \
-        --tag-relative -L - -f"$(git rev-parse --show-toplevel)/tags" \
+        --tag-relative -L - -f"$(git rev-parse --git-dir)/tags" \
         --python-kinds=-i
     rc = rebase --continue
     ra = rebase --abort
