@@ -70,6 +70,8 @@ nmap ]c :cnext<CR>
 nmap [c :cprev<CR>
 nmap ]l :lnext<CR>
 nmap [l :lprev<CR>
+nmap ]t :tnext<CR>
+nmap [t :tprev<CR>
 
 " #############################################################################
 " # Searching
