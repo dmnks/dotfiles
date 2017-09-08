@@ -22,7 +22,6 @@ let g:syntastic_check_on_wq = 0
 " ctrlp
 let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_extensions = ['tag']
-let g:ctrlp_working_path_mode = 0
 
 " #############################################################################
 " # Appearance
