@@ -67,10 +67,11 @@ nmap <c-k> <c-w>k
 nmap <c-l> <c-w>l
 nmap <c-h> <c-w>h
 
-nmap ]c :cnext<CR>
-nmap [c :cprev<CR>
+nmap ]q :cnext<CR>
+nmap [q :cprev<CR>
 nmap ]l :lnext<CR>
 nmap [l :lprev<CR>
+nmap ]L :llast<CR>
 nmap ]t :tnext<CR>
 nmap [t :tprev<CR>
 
