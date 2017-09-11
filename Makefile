@@ -12,7 +12,7 @@ pkgs:
 	sudo systemctl start docker
 	sudo pip install flake8 pudb
 	git clone https://github.com/gmarik/Vundle.vim.git \
-		  ${HOME}/.vim/bundle/Vundle.vim
+		  $(HOME)/.vim/bundle/Vundle.vim
 	vim -u vim/.vundle +PluginInstall +qall
 
 conf: unconf
