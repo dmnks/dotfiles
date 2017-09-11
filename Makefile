@@ -15,7 +15,7 @@ pkgs:
 		  ${HOME}/.vim/bundle/Vundle.vim
 	vim -u vim/.vundle +PluginInstall +qall
 
-conf:
+conf: unconf
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
 	stow -v --no-folding $(DOTFILES)
 	dconf load /org/gnome/ < gnome.conf
