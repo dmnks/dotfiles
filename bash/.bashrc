@@ -7,36 +7,36 @@ fi
 
 # User specific aliases and functions
 
-# If not running interactively, don't do anything
+# If not running interactively, go with the distro defaults
 [ -z "$PS1" ] && return
 
-color() {
-    echo "\[$(tput setaf $@)\]"
-}
-promptcmd() {
-    local status=$?
-    local dollar
-    [ $status != 0 ] && dollar=$red'$'$off || dollar=$off'$'
-    PS1="${green}\u@\h${off}:${cyan}\W${purple}\$(__git_ps1 '(%s)')${dollar} "
-}
+###############################################################################
+# Sources
+###############################################################################
 
-off="\[$(tput sgr0)\]"
-# Use the bright variants (looks better)
-red=$(color 9)
-green=$(color 10)
-yellow=$(color 11)
-blue=$(color 12)
-purple=$(color 13)
-cyan=$(color 14)
-
-PROMPT_COMMAND=promptcmd
-GIT_PS1_SHOWDIRTYSTATE=1
-GIT_PS1_SHOWUPSTREAM=1
-GIT_PS1_SHOWSTASHSTATE=1
 source /usr/share/git-core/contrib/completion/git-prompt.sh
 
-alias docker='sudo docker'
-alias gdiff='git diff --no-index --'
+###############################################################################
+# Functions
+###############################################################################
+
+promptcmd() {
+    local status=$?
+    local c_red="\[$(tput setaf 9)\]"
+    local c_green="\[$(tput setaf 10)\]"
+    local c_yellow="\[$(tput setaf 11)\]"
+    local c_blue="\[$(tput setaf 12)\]"
+    local c_purple="\[$(tput setaf 13)\]"
+    local c_cyan="\[$(tput setaf 14)\]"
+    local c_off="\[$(tput sgr0)\]"
+    if [ $status != 0 ]; then
+        local c_dollar=$c_red
+    else
+        local c_dollar=$c_off
+    fi
+    __git_ps1 "${c_green}\u@\h${c_off}:${c_cyan}\W${c_purple}" \
+        "${c_dollar}\$${c_off} " "(%s)"
+}
 
 dclean() {
     local cnts=$(docker ps --filter "status=exited" -qa --no-trunc)
@@ -45,8 +45,28 @@ dclean() {
     [ -n "$imgs" ] && docker rmi $imgs || true
 }
 
-for script in $HOME/.bashrc.d/*.sh; do
-    [ -f $script ] && source $script
-done
+###############################################################################
+# Environment
+###############################################################################
 
-unset color
+PROMPT_COMMAND=promptcmd
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUPSTREAM="auto"
+GIT_PS1_SHOWSTASHSTATE=1
+
+###############################################################################
+# Aliases
+###############################################################################
+
+alias docker='sudo docker'
+alias gdiff='git diff --no-index --'
+
+###############################################################################
+# Misc
+###############################################################################
+
+if [ -d $HOME/.bashrc.d ]; then
+    for script in $HOME/.bashrc.d/*.sh; do
+        [ -f $script ] && source $script
+    done
+fi
