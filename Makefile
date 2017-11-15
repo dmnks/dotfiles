@@ -5,10 +5,22 @@ DOTFILES = bash bin fonts git pulse python tmux vim
 all: pkgs backup conf
 
 pkgs:
-	sudo dnf install -y vim git stow python-pip tmux ctags tig \
-			    libguestfs-tools-c virt-install weechat \
-			    libvirt-daemon-config-network docker \
-			    docker-compose python3-flake8 python3-pudb
+	sudo dnf install -y vim \
+			    git \
+			    stow \
+			    python-pip \
+			    tmux \
+			    ctags \
+			    tig \
+			    libguestfs-tools-c \
+			    virt-install \
+			    virt-manager \
+			    libvirt-daemon-config-network \
+			    weechat \
+			    docker \
+			    docker-compose \
+			    python3-flake8 \
+			    python3-pudb
 	sudo systemctl enable docker
 	sudo systemctl start docker
 	git clone https://github.com/gmarik/Vundle.vim.git \
