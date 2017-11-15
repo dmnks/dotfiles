@@ -2,7 +2,7 @@ DOTFILES = bash bin fonts git pulse python tmux vim
 
 .PHONY: all pkgs conf unconf
 
-all: pkgs conf
+all: pkgs backup conf
 
 pkgs:
 	sudo dnf install -y vim git stow python-pip tmux ctags tig \
@@ -15,11 +15,15 @@ pkgs:
 		  $(HOME)/.vim/bundle/Vundle.vim
 	vim -u vim/.vundle +PluginInstall +qall
 
-conf: unconf
+backup:
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
+
+restore: unconf
+	@[ -f ~/.bashrc.orig ] && mv ~/.bashrc{.orig,} || true
+
+conf: unconf
 	stow -v --no-folding $(DOTFILES)
 	dconf load /org/gnome/ < gnome.conf
 
 unconf:
 	stow -Dv $(DOTFILES)
-	@[ -f ~/.bashrc.orig ] && mv ~/.bashrc{.orig,} || true
