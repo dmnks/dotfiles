@@ -20,7 +20,7 @@ source /usr/share/git-core/contrib/completion/git-prompt.sh
 # Aliases
 ###############################################################################
 
-alias docker='sudo docker'
+alias docker='sudo docker --config $HOME/.docker'
 alias gdiff='git diff --no-index --'
 
 ###############################################################################
