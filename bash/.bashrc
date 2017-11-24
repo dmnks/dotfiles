@@ -27,22 +27,21 @@ alias gdiff='git diff --no-index --'
 # Functions
 ###############################################################################
 
-promptcmd() {
-    local status=$?
-    local c_red="\[$(tput setaf 9)\]"
-    local c_green="\[$(tput setaf 10)\]"
-    local c_yellow="\[$(tput setaf 11)\]"
-    local c_blue="\[$(tput setaf 12)\]"
-    local c_purple="\[$(tput setaf 13)\]"
-    local c_cyan="\[$(tput setaf 14)\]"
-    local c_off="\[$(tput sgr0)\]"
-    if [ $status != 0 ]; then
-        local c_dollar=$c_red
-    else
-        local c_dollar=$c_off
-    fi
-    __git_ps1 "${c_green}\u@\h${c_off}:${c_cyan}\W${c_purple}" \
-        "${c_dollar}\$${c_off} " "(%s)"
+setup_ps1() {
+    local c_red=$(tput setaf 9)
+    local c_green=$(tput setaf 10)
+    local c_yellow=$(tput setaf 11)
+    local c_blue=$(tput setaf 12)
+    local c_purple=$(tput setaf 13)
+    local c_cyan=$(tput setaf 14)
+    local c_off=$(tput sgr0)
+    c_dollar() {
+        [ $? -eq 0 ] && tput sgr0 || tput setaf 9
+    }
+    PS1="\[${c_green}\]\u@\h:\[${c_cyan}\]\W"
+    PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
+    PS1+="\[\$(c_dollar)\]\$\[${c_off}\] "
+    export PS1
 }
 
 dclean() {
@@ -56,7 +55,7 @@ dclean() {
 # Environment
 ###############################################################################
 
-PROMPT_COMMAND=promptcmd
+setup_ps1
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUPSTREAM="auto"
 GIT_PS1_SHOWSTASHSTATE=1
