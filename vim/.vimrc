@@ -30,9 +30,9 @@ let g:ctrlp_working_path_mode = 0
 
 syntax on
 set termguicolors
-" Needed for termguicolors to work in tmux
-set t_8f=[38;2;%lu;%lu;%lum
-set t_8b=[48;2;%lu;%lu;%lum
+set t_8f=[38;2;%lu;%lu;%lum  " for tmux
+set t_8b=[48;2;%lu;%lu;%lum  " for tmux
+set t_ut=  " for tmux
 set background=dark
 map <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 colorscheme gruvbox
