@@ -95,6 +95,7 @@ nmap <leader>B Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
 nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
+nmap <leader>r :redraw!<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
