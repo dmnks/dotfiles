@@ -15,9 +15,7 @@ let mapleader = " "
 let g:gruvbox_invert_tabline = 1
 
 " syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = {"mode": "passive"}
 
 " ctrlp
 let g:ctrlp_cmd = 'CtrlPBuffer'
@@ -96,6 +94,7 @@ nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>r :redraw!<CR>
+nmap <F4> :SyntasticCheck<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
