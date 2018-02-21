@@ -94,7 +94,7 @@ nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>r :redraw!<CR>
-nmap <F4> :SyntasticCheck<CR>
+nmap <F4> :SyntasticToggleMode<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
