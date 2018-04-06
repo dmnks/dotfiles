@@ -8,6 +8,7 @@ RUN dnf install -y \
         python3-pip
 RUN pip3 install --upgrade pip && pip3 install pudb
 RUN rpm -e --nodeps dnf
+RUN echo "alias dnf='dnf-3'" >> ~/.bashrc
 
 ENV PATH=/dnf/bin:$PATH \
     PYTHONPATH=/libdnf/python/hawkey \
