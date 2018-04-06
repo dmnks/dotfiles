@@ -1,7 +1,6 @@
-DNF_PATH=$HOME/projects/dnf
-LIBDNF_LIBS=$HOME/projects/libdnf/build/libdnf
-LIBDNF_PYTHON=$HOME/projects/libdnf/build/python/hawkey
-
-alias dnf="LD_LIBRARY_PATH=$LIBDNF_LIBS \
-           GI_TYPELIB_PATH=$LIBDNF_LIBS \
-           PYTHONPATH=$LIBDNF_PYTHON $DNF_PATH/bin/dnf-3"
+function ddnf() {
+    dnf_path=$HOME/projects/dnf
+    libdnf_path=$HOME/projects/libdnf/build/
+    docker build -t dnf $HOME/.dockerfile/dnf/
+    docker run -v$dnf_path:/dnf:ro,z -v$libdnf_path:/libdnf:ro,z -it dnf
+}
