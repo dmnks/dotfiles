@@ -20,9 +20,10 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 " ctrlp
-let g:ctrlp_cmd = 'CtrlPBuffer'
+let g:ctrlp_cmd = 'CtrlPMRUFiles'
 let g:ctrlp_extensions = ['tag']
 let g:ctrlp_working_path_mode = 0
+let g:ctrlp_mruf_relative = 1
 
 " #############################################################################
 " # Appearance
