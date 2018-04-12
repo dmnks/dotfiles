@@ -22,6 +22,7 @@ let g:syntastic_check_on_wq = 0
 " ctrlp
 let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_extensions = ['tag']
+let g:ctrlp_working_path_mode = 0
 
 " #############################################################################
 " # Appearance
@@ -88,7 +89,7 @@ nmap <leader>n :nohl<CR>
 " # Misc
 " #############################################################################
 
-set tags=./.git/tags;
+set tags=.git/tags
 
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>B Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
