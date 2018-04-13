@@ -85,6 +85,7 @@ set smartcase
 " Highlight dynamically as pattern is typed
 set incsearch
 nmap <leader>n :nohl<CR>
+set grepprg=git\ grep\ -n\ $*
 
 " #############################################################################
 " # Misc
