@@ -86,6 +86,7 @@ set smartcase
 set incsearch
 nmap <leader>n :nohl<CR>
 set grepprg=git\ grep\ -n\ $*
+command -nargs=+ G execute "silent grep! <args>" | copen | redraw!
 
 " #############################################################################
 " # Misc
