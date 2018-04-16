@@ -9,9 +9,8 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'morhetz/gruvbox'
-Plugin 'scrooloose/syntastic'
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'w0rp/ale'
 
 call vundle#end()            " required
 filetype plugin indent on    " required

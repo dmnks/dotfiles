@@ -14,16 +14,8 @@ let mapleader = " "
 " gruvbox
 let g:gruvbox_invert_tabline = 1
 
-" syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-" ctrlp
-let g:ctrlp_cmd = 'CtrlPMRUFiles'
-let g:ctrlp_extensions = ['tag']
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_mruf_relative = 1
+" ALE
+let g:ale_lint_on_text_changed = 'never'
 
 " #############################################################################
 " # Appearance
@@ -105,3 +97,16 @@ nmap <leader>r :redraw!<CR>
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exe 'source' f
 endfor
+
+" #############################################################################
+" # Custom commands
+" #############################################################################
+
+command! -bar Tags if !empty(tagfiles()) | call fzf#run({
+\   'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
+\   'sink':   'tag',
+\   'down':   '40%',
+\ }) | else | echo 'No tags' | endif
+
+nmap <c-p> :FZF<CR>
+nmap <leader>t :Tags<CR>
