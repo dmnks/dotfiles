@@ -80,6 +80,16 @@ nmap <leader>n :nohl<CR>
 set grepprg=git\ grep\ -n\ $*
 command -nargs=+ G execute "silent grep! <args>" | copen | redraw!
 
+" Extra FZF commands
+" Taken from: https://github.com/junegunn/fzf/wiki/Examples-(vim)
+command! FZFTags if !empty(tagfiles()) | call fzf#run({
+    \ 'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
+    \ 'sink':   'tag',
+    \ 'down':   '40%',
+    \ }) | else | echoerr 'No tags' | endif
+nmap <c-p> :FZF<CR>
+nmap <leader>t :FZFTags<CR>
+
 " #############################################################################
 " # Misc
 " #############################################################################
@@ -97,16 +107,3 @@ nmap <leader>r :redraw!<CR>
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exe 'source' f
 endfor
-
-" #############################################################################
-" # Custom commands
-" #############################################################################
-
-command! -bar Tags if !empty(tagfiles()) | call fzf#run({
-\   'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
-\   'sink':   'tag',
-\   'down':   '40%',
-\ }) | else | echo 'No tags' | endif
-
-nmap <c-p> :FZF<CR>
-nmap <leader>t :Tags<CR>
