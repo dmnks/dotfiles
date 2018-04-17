@@ -17,6 +17,30 @@ let g:gruvbox_invert_tabline = 1
 " ALE
 let g:ale_lint_on_text_changed = 'never'
 
+" FZF
+" https://github.com/junegunn/fzf/blob/master/README-VIM.md
+" https://github.com/junegunn/fzf/wiki/Examples-(vim)
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
+    \ 'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
+    \ 'sink':   'tag',
+    \ })) | else | echoerr 'No tags' | endif
+nmap <c-p> :FZF<CR>
+nmap <leader>t :FZFTags<CR>
+
 " #############################################################################
 " # Appearance
 " #############################################################################
@@ -79,16 +103,6 @@ set incsearch
 nmap <leader>n :nohl<CR>
 set grepprg=git\ grep\ -n\ $*
 command -nargs=+ G execute "silent grep! <args>" | copen | redraw!
-
-" Extra FZF commands
-" Taken from: https://github.com/junegunn/fzf/wiki/Examples-(vim)
-command! FZFTags if !empty(tagfiles()) | call fzf#run({
-    \ 'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
-    \ 'sink':   'tag',
-    \ 'down':   '40%',
-    \ }) | else | echoerr 'No tags' | endif
-nmap <c-p> :FZF<CR>
-nmap <leader>t :FZFTags<CR>
 
 " #############################################################################
 " # Misc
