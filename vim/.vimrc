@@ -45,12 +45,13 @@ function! s:buflist()
 endfunction
 command! FZFBuffers call fzf#run(fzf#wrap({
     \ 'source':  reverse(<sid>buflist()),
-    \ 'options': '+m',
+    \ 'options': '+m --prompt "buffer> "',
     \ }))
 command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
-    \ 'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
-    \ 'sink':   'tag',
-    \ })) | else | echoerr 'No tags' | endif
+    \ 'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
+    \ 'sink':    'tag',
+    \ 'options': '+m --prompt "tag> "',
+    \ })) | else | echoerr 'No tags found' | endif
 
 nmap <c-p> :FZFBuffers<CR>
 nmap <leader>f :FZF<CR>
