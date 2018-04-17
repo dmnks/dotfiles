@@ -20,6 +20,7 @@ let g:ale_lint_on_text_changed = 'never'
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
+
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -34,11 +35,29 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
+function! s:buflist()
+    redir => ls
+    silent ls
+    redir END
+    return split(ls, '\n')
+endfunction
+function! s:bufopen(e)
+    execute 'buffer' matchstr(a:e, '^[ 0-9]*')
+endfunction
+command! FZFBuffers call fzf#run(fzf#wrap({
+    \ 'source':  reverse(<sid>buflist()),
+    \ 'sink':    function('<sid>bufopen'),
+    \ 'options': '+m',
+    \ 'down':    len(<sid>buflist()) + 2
+    \ }))
 command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \ 'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
     \ 'sink':   'tag',
     \ })) | else | echoerr 'No tags' | endif
-nmap <c-p> :FZF<CR>
+
+nmap <c-p> :FZFBuffers<CR>
+nmap <leader>f :FZF<CR>
 nmap <leader>t :FZFTags<CR>
 
 " #############################################################################
