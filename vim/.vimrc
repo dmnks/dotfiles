@@ -138,6 +138,13 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exe 'source' f
 endfor
 
-" Logbook
+" Logbook (+ simple syntax highlighting)
 nmap <leader>j :e ~/logbook/daily<CR>
 imap <F4> <c-r>=strftime("%A %Y-%m-%d")<CR>
+autocmd BufRead,BufNewFile ~/logbook/*
+    \ syntax match logdate /^[^\*\-x].*$/ |
+    \ syntax match logtask /^\s*\* .*$/ |
+    \ syntax match logdone /^\s*x .*$/ |
+    \ highlight def link logdate Constant |
+    \ highlight def link logtask Macro |
+    \ highlight def link logdone Comment
