@@ -107,3 +107,7 @@ nmap <leader>r :redraw!<CR>
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exe 'source' f
 endfor
+
+" Logbook
+nmap <leader>j :e ~/logbook/today<CR>
+nmap <F4> i<c-r>=strftime("%A %Y-%m-%d")<CR><esc>
