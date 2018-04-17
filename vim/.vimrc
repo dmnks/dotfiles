@@ -44,7 +44,7 @@ function! s:buflist()
     return named
 endfunction
 command! FZFBuffers call fzf#run(fzf#wrap({
-    \ 'source':  <sid>buflist(),
+    \ 'source':  reverse(<sid>buflist()),
     \ 'options': '+m',
     \ }))
 command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
