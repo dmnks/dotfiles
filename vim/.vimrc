@@ -37,19 +37,15 @@ let g:fzf_colors =
   \ 'header':  ['fg', 'Comment'] }
 
 function! s:buflist()
-    redir => ls
-    silent ls
-    redir END
-    return split(ls, '\n')
-endfunction
-function! s:bufopen(e)
-    execute 'buffer' matchstr(a:e, '^[ 0-9]*')
+    " Return listed buffers that have a name
+    let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+    let named = map(listed, 'bufname(v:val)')
+    let named = map(filter(named, '!empty(v:val)'), 'v:val')
+    return named
 endfunction
 command! FZFBuffers call fzf#run(fzf#wrap({
-    \ 'source':  reverse(<sid>buflist()),
-    \ 'sink':    function('<sid>bufopen'),
+    \ 'source':  <sid>buflist(),
     \ 'options': '+m',
-    \ 'down':    len(<sid>buflist()) + 2
     \ }))
 command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \ 'source': "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
