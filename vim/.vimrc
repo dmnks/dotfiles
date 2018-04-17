@@ -139,4 +139,4 @@ endfor
 
 " Logbook
 nmap <leader>j :e ~/logbook/today<CR>
-nmap <F4> i<c-r>=strftime("%A %Y-%m-%d")<CR><esc>
+imap <F4> <c-r>=strftime("%A %Y-%m-%d")<CR>
