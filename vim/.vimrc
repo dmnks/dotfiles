@@ -139,5 +139,5 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
 endfor
 
 " Logbook
-nmap <leader>j :e ~/logbook/today<CR>
+nmap <leader>j :e ~/logbook/daily<CR>
 imap <F4> <c-r>=strftime("%A %Y-%m-%d")<CR>
