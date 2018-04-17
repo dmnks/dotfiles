@@ -22,7 +22,8 @@ pkgs:
 			    python3-flake8 \
 			    python3-pudb \
 			    task \
-			    ipython3
+			    ipython3 \
+			    fzf
 	sudo systemctl enable docker
 	sudo systemctl start docker
 	git clone https://github.com/gmarik/Vundle.vim.git \
