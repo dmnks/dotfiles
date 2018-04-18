@@ -139,6 +139,9 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
 endfor
 
 " Logbook (+ simple syntax highlighting)
+for f in split(glob('~/logbook/{daily,weekly,monthly}'))
+    exe 'badd' f
+endfor
 nmap <leader>j :e ~/logbook/daily<CR>
 imap <F4> <c-r>=strftime("%A %Y-%m-%d")<CR>
 autocmd BufRead,BufNewFile ~/logbook/*
