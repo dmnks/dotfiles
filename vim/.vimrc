@@ -142,9 +142,11 @@ endfor
 nmap <leader>j :e ~/logbook/daily<CR>
 imap <F4> <c-r>=strftime("%A %Y-%m-%d")<CR>
 autocmd BufRead,BufNewFile ~/logbook/*
-    \ syntax match logdate /^[^\*\-x].*$/ |
-    \ syntax match logtask /^\s*\* .*$/ |
-    \ syntax match logdone /^\s*x .*$/ |
+    \ syntax match logdate "^[^ ].*$" |
+    \ syntax region logtask start="^o " end="^[^ ]"me=s-1 |
+    \ syntax region logdone start="^x " end="^[^ ]"me=s-1 |
+    \ syntax region lognote start="^\- " end="^[^ ]"me=s-1 |
     \ highlight def link logdate Constant |
     \ highlight def link logtask Macro |
-    \ highlight def link logdone Comment
+    \ highlight def link logdone Comment |
+    \ highlight def link lognote Normal
