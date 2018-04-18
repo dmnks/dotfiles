@@ -143,7 +143,8 @@ for f in split(glob('~/logbook/{daily,weekly,monthly}'))
     exe 'badd' f
 endfor
 nmap <leader>j :e ~/logbook/daily<CR>
-imap <F4> <c-r>=strftime("%A %Y-%m-%d")<CR>
+imap <F3> <c-r>=strftime("%A %Y-%m-%d")<CR>
+imap <F4> <c-r>=strftime("%A %Y-%m-%d", strftime("%s") + 24*60*60)<CR>
 autocmd BufRead,BufNewFile ~/logbook/*
     \ syntax match logdate "^[^ ].*$" |
     \ syntax region logtask start="^o " end="^[^ ]"me=s-1 |
