@@ -13,7 +13,7 @@
     # Stow ignores .gitignore files so that's why it's renamed in this repo
     excludesfile = ~/.gitign
 [alias]
-    ci = commit
+    ci = commit --verbose
     ca = commit --amend
     st = status -s
     lg = log --oneline --graph
