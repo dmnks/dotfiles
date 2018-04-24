@@ -125,6 +125,7 @@ command -nargs=+ G execute "silent grep! <args>" | copen | redraw!
 " #############################################################################
 
 set tags=tags
+set ttimeoutlen=10
 
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>B Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
