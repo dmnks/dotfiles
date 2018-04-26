@@ -88,6 +88,7 @@ set shiftwidth=4
 set expandtab
 " Allow backspace in insert mode
 set backspace=indent,eol,start
+set textwidth=80
 
 " #############################################################################
 " # Motion
