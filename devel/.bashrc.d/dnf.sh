@@ -11,6 +11,6 @@ function dnf-load-env() {
 }
 
 function dnf-docker() {
-    docker build -t dnf -f $HOME/.dockerfile/dnf
+    docker build -t dnf -f $HOME/.dockerfile/dnf $HOME/.dockerfile/
     docker run -v$DNF_PATH:/dnf:ro,z -v$LIBDNF_BUILD:/libdnf:ro,z -it $@ dnf
 }
