@@ -69,3 +69,5 @@ if [ -d $HOME/.bashrc.d ]; then
         [ -f $script ] && source $script
     done
 fi
+
+export EDITOR=vim
