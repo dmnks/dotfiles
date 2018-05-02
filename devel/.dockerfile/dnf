@@ -1,9 +1,10 @@
 # DNF development image
 # # vi:syntax=dockerfile
 
-FROM fedora:27
+FROM fedora:28
 
 RUN dnf install -y \
+        libstdc++ \
         python3-gobject \
         python3-ipdb \
         python3-pip
