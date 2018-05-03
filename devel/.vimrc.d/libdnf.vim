@@ -1,2 +1,2 @@
 autocmd BufRead,BufNewFile */projects/libdnf/*
-    \ setlocal textwidth=100 colorcolumn=100
+    \ setlocal textwidth=99 colorcolumn=100
