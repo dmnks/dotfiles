@@ -120,11 +120,16 @@ nmap <c-h> <c-w>h
 
 nmap ]q :cnext<CR>
 nmap [q :cprev<CR>
+nmap ]Q :clast<CR>
+nmap [Q :cfirst<CR>
 nmap ]l :lnext<CR>
 nmap [l :lprev<CR>
 nmap ]L :llast<CR>
+nmap [L :lfirst<CR>
 nmap ]t :tnext<CR>
 nmap [t :tprev<CR>
+nmap ]T :tlast<CR>
+nmap [T :tfirst<CR>
 
 " #############################################################################
 " # Searching
