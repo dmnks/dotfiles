@@ -38,7 +38,7 @@ setup_ps1() {
     c_dollar() {
         [ $? -eq 0 ] && tput sgr0 || tput setaf 9
     }
-    PS1="\[${c_green}\]\u@\h:\[${c_cyan}\]\W"
+    PS1="\[${c_green}\]-> \[${c_cyan}\]\W"
     PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
     PS1+="\[\$(c_dollar)\]\$\[${c_off}\] "
     export PS1
