@@ -17,6 +17,22 @@ let g:gruvbox_invert_tabline = 1
 " ALE
 let g:ale_lint_on_text_changed = 'never'
 
+" Add error/warning summary to statusline
+" https://github.com/w0rp/ale#5v-how-can-i-show-errors-or-warnings-in-my-statusline
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))
+
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+
+    return l:counts.total == 0 ? 'OK' : printf(
+    \   '%dE %dW',
+    \   all_errors,
+    \   all_non_errors,
+    \)
+endfunction
+set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ [%{LinterStatus()}]
+
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
@@ -77,6 +93,7 @@ set cursorline
 set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
+set laststatus=2
 
 " #############################################################################
 " # Editing
