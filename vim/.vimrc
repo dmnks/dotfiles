@@ -25,13 +25,13 @@ function! LinterStatus() abort
     let l:all_errors = l:counts.error + l:counts.style_error
     let l:all_non_errors = l:counts.total - l:all_errors
 
-    return l:counts.total == 0 ? 'OK' : printf(
-    \   '%dE %dW',
+    return l:counts.total == 0 ? '' : printf(
+    \   ' %dE %dW ',
     \   all_errors,
     \   all_non_errors,
     \)
 endfunction
-set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ [%{LinterStatus()}]
+set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %#Error#%{LinterStatus()}
 
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
