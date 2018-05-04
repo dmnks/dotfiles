@@ -3,14 +3,20 @@
     email = mdomonko@redhat.com
 [color]
     ui = true
+# Use bold color variants for better readability on black terminal
 [color "diff"]
     meta = yellow bold
     frag = magenta bold
     old = red bold
     new = green bold
+[color "status"]
+    added = green bold
+    changed = red bold
+    untracked = red bold
+    unmerged = red bold
 [core]
     editor = vim
-    # Stow ignores .gitignore files so that's why it's renamed in this repo
+    # Stow ignores .gitignore files so using a different name
     excludesfile = ~/.gitign
 [alias]
     ci = commit --verbose
