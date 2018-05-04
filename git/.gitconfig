@@ -4,10 +4,10 @@
 [color]
     ui = true
 [color "diff"]
-    meta = 11
-    frag = 13
-    old = 9
-    new = 10
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
 [core]
     editor = vim
     # Stow ignores .gitignore files so that's why it's renamed in this repo
