@@ -31,7 +31,6 @@ function! LinterStatus() abort
     \   all_non_errors,
     \)
 endfunction
-set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %#Error#%{LinterStatus()}
 
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
@@ -94,6 +93,9 @@ set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
+set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+" Add ALE status
+set statusline+=\ %#Error#%{LinterStatus()}
 
 " #############################################################################
 " # Editing
