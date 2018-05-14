@@ -73,6 +73,9 @@ nmap <c-p> :FZFBuffers<CR>
 nmap <leader>f :FZF<CR>
 nmap <leader>t :FZFTags<CR>
 
+" Tagbar
+nmap <F6> :TagbarToggle<CR>
+
 " #############################################################################
 " # Appearance
 " #############################################################################
@@ -94,8 +97,8 @@ autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" Add ALE status
-set statusline+=\ %#Error#%{LinterStatus()}
+" Add current function name (using tagbar plugin) and ALE status
+set statusline+=\ %{tagbar#currenttag('[%s]\ ','')}%#Error#%{LinterStatus()}
 
 " #############################################################################
 " # Editing
