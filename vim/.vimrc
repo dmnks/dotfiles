@@ -158,7 +158,7 @@ set tags=tags
 set ttimeoutlen=10
 
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
-nmap <leader>B Oimport ipdb; ipdb.set_trace()  # BREAKPOINT<esc>
+nmap <leader>B :G '\# BREAKPOINT'<CR>
 nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
