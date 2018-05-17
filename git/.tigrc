@@ -6,7 +6,7 @@ color title-focus   black      white    bold
 # These are already defined in git config but not inherited for some reason
 color "--- "        color11    default
 color "+++ "        color11    default
-# Replace the dark blue with the bright one for readability on black terminal
+# Replace the dark blue with the bright one for readability on dark terminal
 color "---"         color12    default
 color "index "      color12    default
 color "diff-tree "  color12    default

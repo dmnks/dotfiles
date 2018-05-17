@@ -3,17 +3,17 @@
     email = mdomonko@redhat.com
 [color]
     ui = true
-# Use bold color variants for better readability on black terminal
+# Use bright color variants for better readability on dark terminal
 [color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
+    meta = 11
+    frag = 13
+    old = 9
+    new = 10
 [color "status"]
-    added = green bold
-    changed = red bold
-    untracked = red bold
-    unmerged = red bold
+    added = 10
+    changed = 9
+    untracked = 9
+    unmerged = 9
 [core]
     editor = vim
     # Stow ignores .gitignore files so using a different name
