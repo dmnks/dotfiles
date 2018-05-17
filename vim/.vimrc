@@ -50,7 +50,6 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
-let g:fzf_action = {'ctrl-q': 'bdelete'}
 
 function! s:buflist()
     " Return listed buffers that have a name
