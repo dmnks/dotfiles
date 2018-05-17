@@ -96,8 +96,8 @@ autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" Add current function name (using tagbar plugin) and ALE status
-set statusline+=\ %{tagbar#currenttag('[%s]\ ','')}%#Error#%{LinterStatus()}
+" Add ALE status
+set statusline+=\ %#Error#%{LinterStatus()}
 
 " #############################################################################
 " # Editing
