@@ -156,6 +156,8 @@ nmap <leader>g :exec "G <cword>"<cr>
 
 set tags=tags
 set ttimeoutlen=10
+set dictionary=/usr/share/dict/words
+set complete+=k
 
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>B :G '\# BREAKPOINT'<CR>
