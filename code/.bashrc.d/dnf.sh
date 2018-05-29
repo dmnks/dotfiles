@@ -1,5 +1,5 @@
-DNF_PATH=$HOME/projects/dnf
-LIBDNF_PATH=$HOME/projects/libdnf
+DNF_PATH=$HOME/code/dnf
+LIBDNF_PATH=$HOME/code/libdnf
 
 function dnf-docker() {
     docker build -t dnf -f $HOME/.dockerfile/dnf $HOME/.dockerfile/
