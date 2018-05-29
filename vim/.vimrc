@@ -170,18 +170,18 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exe 'source' f
 endfor
 
-" Logbook (+ simple syntax highlighting)
-for f in split(glob('~/logbook/*'))
+" Simple GTD with syntax highlighting
+for f in split(glob('~/gtd/*'))
     exe 'badd' f
 endfor
-nmap <leader>j :e ~/logbook/daily<CR>
-imap <F3> <c-r>=strftime("%A %Y-%m-%d")<CR>
-autocmd BufRead,BufNewFile ~/logbook/*
-    \ syntax match loghead "^[^ ox\-].*$" |
-    \ syntax region logtask start="^ *o " end="^ *[ox\-] \|^[^ ]"me=s-1 |
-    \ syntax region logdone start="^ *x " end="^ *[ox\-] \|^[^ ]"me=s-1 |
-    \ syntax region lognote start="^ *\- " end="^ *[ox\-] \|^[^ ]"me=s-1 |
-    \ highlight def link loghead Constant |
-    \ highlight def link logtask Macro |
-    \ highlight def link logdone Comment |
-    \ highlight def link lognote Normal
+nmap <leader>j :e ~/gtd/next<CR>
+imap <F3> <C-R>=strftime("%A %Y-%m-%d")<CR>
+autocmd BufRead,BufNewFile ~/gtd/*
+    \ syntax match gtdhead "^[^ ox\-].*$" |
+    \ syntax region gtdtask start="^ *o " end="^ *[ox\-] \|^[^ ]"me=s-1 |
+    \ syntax region gtddone start="^ *x " end="^ *[ox\-] \|^[^ ]"me=s-1 |
+    \ syntax region gtdnote start="^ *\- " end="^ *[ox\-] \|^[^ ]"me=s-1 |
+    \ highlight def link gtdhead Constant |
+    \ highlight def link gtdtask Macro |
+    \ highlight def link gtddone Comment |
+    \ highlight def link gtdnote Normal

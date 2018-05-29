@@ -1,4 +1,4 @@
-DOTFILES = bash bin fonts git task pulse python tmux vim docker
+DOTFILES = bash bin fonts git pulse python tmux vim docker
 
 .PHONY: all pkgs conf unconf
 
@@ -21,7 +21,6 @@ pkgs:
 			    docker-compose \
 			    python3-flake8 \
 			    python3-pudb \
-			    task \
 			    ipython3 \
 			    fzf
 	sudo systemctl enable docker
