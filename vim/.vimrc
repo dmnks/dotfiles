@@ -171,18 +171,17 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
 endfor
 
 " Logbook (+ simple syntax highlighting)
-for f in split(glob('~/logbook/{daily,monthly,future,*/*}'))
+for f in split(glob('~/logbook/*'))
     exe 'badd' f
 endfor
 nmap <leader>j :e ~/logbook/daily<CR>
 imap <F3> <c-r>=strftime("%A %Y-%m-%d")<CR>
-imap <F4> <c-r>=strftime("%A %Y-%m-%d", strftime("%s") + 24*60*60)<CR>
 autocmd BufRead,BufNewFile ~/logbook/*
-    \ syntax match logdate "^[^ ].*$" |
-    \ syntax region logtask start="^o " end="^[^ ]"me=s-1 |
-    \ syntax region logdone start="^x " end="^[^ ]"me=s-1 |
-    \ syntax region lognote start="^\- " end="^[^ ]"me=s-1 |
-    \ highlight def link logdate Constant |
+    \ syntax match loghead "^[^ ox\-].*$" |
+    \ syntax region logtask start="^ *o " end="^ *[ox\-] \|^[^ ]"me=s-1 |
+    \ syntax region logdone start="^ *x " end="^ *[ox\-] \|^[^ ]"me=s-1 |
+    \ syntax region lognote start="^ *\- " end="^ *[ox\-] \|^[^ ]"me=s-1 |
+    \ highlight def link loghead Constant |
     \ highlight def link logtask Macro |
     \ highlight def link logdone Comment |
     \ highlight def link lognote Normal

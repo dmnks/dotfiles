@@ -52,10 +52,14 @@ dclean() {
     [ -n "$imgs" ] && docker rmi $imgs || true
 }
 
-vimpr() {
+tlog() {
+    if [ -z "$1" ]; then
+        echo "No task ID given"
+        return
+    fi
     local name=$(task _get ${1}.project)
     if [ -n "$name" ]; then
-        vim ~/projects/$name
+        vim ~/logbook/$name
     else
         echo "No project associated with task $1"
     fi
