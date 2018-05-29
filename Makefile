@@ -1,4 +1,4 @@
-DOTFILES = bash bin fonts git pulse python tmux vim docker
+DOTFILES = bash bin fonts git task pulse python tmux vim docker
 
 .PHONY: all pkgs conf unconf
 

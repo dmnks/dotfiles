@@ -22,6 +22,7 @@ source /usr/share/git-core/contrib/completion/git-prompt.sh
 
 alias docker='sudo docker --config $HOME/.docker'
 alias gdiff='git diff --no-index --'
+alias in='task add +in'
 
 ###############################################################################
 # Functions
@@ -49,6 +50,15 @@ dclean() {
     local imgs=$(docker images --filter "dangling=true" -q --no-trunc)
     [ -n "$cnts" ] && docker rm $cnts
     [ -n "$imgs" ] && docker rmi $imgs || true
+}
+
+vimpr() {
+    local name=$(task _get ${1}.project)
+    if [ -n "$name" ]; then
+        vim ~/projects/$name
+    else
+        echo "No project associated with task $1"
+    fi
 }
 
 ###############################################################################
