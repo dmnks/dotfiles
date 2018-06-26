@@ -1,4 +1,4 @@
-DOTFILES = bash bin fonts git pulse python tmux vim docker
+DOTFILES = bash bin fonts git pulse python tmux vim docker task
 
 .PHONY: all pkgs conf unconf
 
@@ -22,7 +22,8 @@ pkgs:
 			    python3-flake8 \
 			    python3-pudb \
 			    ipython3 \
-			    fzf
+			    fzf \
+			    task
 	sudo systemctl enable docker
 	sudo systemctl start docker
 	git clone https://github.com/gmarik/Vundle.vim.git \
