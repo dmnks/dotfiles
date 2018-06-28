@@ -33,6 +33,8 @@ data.location=~/.task
 
 # This is the same as default, except it only shows annotation count
 report.next.columns = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description.count,urgency
+# Don't show "in" tags
+report.next.filter = status:pending limit:page -in
 
 # Inbox report
 report.in.columns     = id,description
