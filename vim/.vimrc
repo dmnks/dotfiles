@@ -171,7 +171,7 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
 endfor
 
 " Simple logbook with syntax highlighting
-for f in split(glob('~/logbook/*/*'))
+for f in split(glob('~/logbook/{future,*/*}'))
     exe 'badd' f
 endfor
 nmap <leader>j :e ~/logbook/daily<CR>
