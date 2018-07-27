@@ -193,3 +193,9 @@ function! s:rotate()
     let line = substitute(line, '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
     call setline('.', line)
 endfunction
+
+" Customize Markdown
+autocmd BufRead,BufNewFile *.md
+    \ set conceallevel=3 |
+    \ syntax region markdownLink matchgroup=markdownLinkDelimiter
+        \ start="(" end=")" contains=markdownUrl keepend contained conceal
