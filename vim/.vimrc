@@ -146,7 +146,7 @@ set smartcase
 set incsearch
 nmap <leader>n :nohl<CR>
 set grepprg=git\ grep\ -n\ $*
-command -nargs=+ G execute "silent grep! " . <q-args> | copen | redraw!
+command -nargs=+ G exec "silent grep! " . <q-args> | copen | redraw!
 nmap <leader>g :exec "G <cword>"<cr>
 
 " #############################################################################
@@ -167,21 +167,19 @@ nmap <leader>r :redraw!<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
-    exe 'source' f
+    exec 'source' f
 endfor
 
-" Simple logbook with syntax highlighting
-for f in split(glob('~/logbook/{future,*/*}'))
-    exe 'badd' f
+" Simple planner with syntax highlighting
+for f in split(glob('~/plan/{future,*/*}'))
+    exec 'badd' f
 endfor
-nmap <leader>j :e ~/logbook/daily<CR>
+nmap <leader>j :exec 'edit ~/plan/' . tolower(strftime("%Y/%B"))<CR>
 imap <F3> <C-R>=strftime("%A %Y-%m-%d")<CR>
-autocmd BufRead,BufNewFile ~/logbook/*
-    \ syntax match loghead "^[^ ox\-].*$" |
-    \ syntax region logtask start="^ *o " end="^ *[ox\-] \|^[^ ]"me=s-1 |
-    \ syntax region logdone start="^ *x " end="^ *[ox\-] \|^[^ ]"me=s-1 |
-    \ syntax region lognote start="^ *\- " end="^ *[ox\-] \|^[^ ]"me=s-1 |
-    \ highlight def link loghead Constant |
-    \ highlight def link logtask Macro |
-    \ highlight def link logdone Comment |
-    \ highlight def link lognote Normal
+autocmd BufRead,BufNewFile ~/plan/*
+    \ syntax match planhead "^[^ ox].*$" |
+    \ syntax region plantask start="^ *o " end="^ *[ox] \|^[^ ]"me=s-1 |
+    \ syntax region plandone start="^ *x " end="^ *[ox] \|^[^ ]"me=s-1 |
+    \ highlight def link planhead Constant |
+    \ highlight def link plantask Macro |
+    \ highlight def link plandone Normal
