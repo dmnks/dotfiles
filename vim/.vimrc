@@ -170,32 +170,29 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
 endfor
 
-" Simple todo coloring for Markdown
-autocmd BufRead,BufNewFile *.md
-    \ syntax region tdtask start="^ *- \[ ] " end="$" |
-    \ syntax region tdprog start="^ *- \[O] " end="$" |
-    \ syntax region tdcomp start="^ *- \[X] " end="$" |
-    \ syntax region tdwait start="^ *- \[=] " end="$" |
-    \ highlight def link tdtask Normal |
-    \ highlight def link tdprog Define |
-    \ highlight def link tdcomp Comment |
-    \ highlight def link tdwait Typedef |
+" Simple todo filetype
+autocmd BufRead,BufNewFile *.todo
+    \ set filetype= |
+    \ syntax region todoHead start="^#\+ " end="$" |
+    \ syntax region todoTask start="^ *\[ ] " end="$" |
+    \ syntax region todoProg start="^ *\[O] " end="$" |
+    \ syntax region todoDone start="^ *\[X] " end="$" |
+    \ syntax region todoWait start="^ *\[=] " end="$" |
+    \ highlight def link todoHead markdownHeadingDelimiter |
+    \ highlight def link todoTask Normal |
+    \ highlight def link todoProg Define |
+    \ highlight def link todoDone Comment |
+    \ highlight def link todoWait Typedef |
     \ nnoremap <buffer> <silent> <CR> :call <sid>rotate()<CR>
 function! s:rotate()
     let symbs = [' ', 'O', 'X', '=']
     let line = getline('.')
-    let symb = substitute(line, '^ *- \[\(.\)] .*$', '\1', 'g')
+    let symb = substitute(line, '^ *\[\(.\)] .*$', '\1', 'g')
     if symb == line
         return
     endif
     let idx = index(symbs, symb)
     let symb = symbs[(idx + 1) % len(symbs)]
-    let line = substitute(line, '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
+    let line = substitute(line, '^\( *\[\).\(] .*\)$', '\1' . symb . '\2', 'g')
     call setline('.', line)
 endfunction
-
-" Customize Markdown
-autocmd BufRead,BufNewFile *.md
-    \ set conceallevel=3 |
-    \ syntax region markdownLink matchgroup=markdownLinkDelimiter
-        \ start="(" end=")" contains=markdownUrl keepend contained conceal
