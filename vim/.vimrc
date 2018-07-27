@@ -170,16 +170,26 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
 endfor
 
-" Simple planner with syntax highlighting
-for f in split(glob('~/plan/{future,*/*}'))
-    exec 'badd' f
-endfor
-nmap <leader>j :exec 'edit ~/plan/' . tolower(strftime("%Y/%B"))<CR>
-imap <F3> <C-R>=strftime("%A %Y-%m-%d")<CR>
-autocmd BufRead,BufNewFile ~/plan/*
-    \ syntax match planhead "^[^ ox].*$" |
-    \ syntax region plantask start="^ *o " end="^ *[ox] \|^[^ ]"me=s-1 |
-    \ syntax region plandone start="^ *x " end="^ *[ox] \|^[^ ]"me=s-1 |
-    \ highlight def link planhead Constant |
-    \ highlight def link plantask Macro |
-    \ highlight def link plandone Normal
+" Simple todo filetype
+autocmd BufRead,BufNewFile *.td
+    \ syntax region tdtask start="^ *\[ ] " end="$" |
+    \ syntax region tdcomp start="^ *\[X] " end="$" |
+    \ syntax region tdprog start="^ *\[O] " end="$" |
+    \ syntax region tdwait start="^ *\[-] " end="$" |
+    \ syntax region tdhead start="^=\+ .* =" end="$" |
+    \ highlight def link tdtask Normal |
+    \ highlight def link tdcomp Comment |
+    \ highlight def link tdprog Define |
+    \ highlight def link tdwait Typedef |
+    \ highlight def link tdhead Constant |
+    \ nmap <buffer> <silent> <CR> :call <sid>taskinfo()<CR>
+function! s:taskinfo()
+    let line = getline('.')
+    let text = substitute(getline('.'), '^ *\[.] \(.*\)$', '\1', 'g')
+    if line == text
+        " Not a task
+        return
+    endif
+    let name = tolower(substitute(text, ' ', '_', 'g'))
+    exec "edit " . name . ".md"
+endfunction
