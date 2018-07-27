@@ -170,26 +170,26 @@ for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
 endfor
 
-" Simple todo filetype
-autocmd BufRead,BufNewFile *.td
-    \ syntax region tdtask start="^ *\[ ] " end="$" |
-    \ syntax region tdcomp start="^ *\[X] " end="$" |
-    \ syntax region tdprog start="^ *\[O] " end="$" |
-    \ syntax region tdwait start="^ *\[-] " end="$" |
-    \ syntax region tdhead start="^=\+ .* =" end="$" |
+" Simple todo coloring for Markdown
+autocmd BufRead,BufNewFile *.md
+    \ syntax region tdtask start="^ *- \[ ] " end="$" |
+    \ syntax region tdprog start="^ *- \[O] " end="$" |
+    \ syntax region tdcomp start="^ *- \[X] " end="$" |
+    \ syntax region tdwait start="^ *- \[=] " end="$" |
     \ highlight def link tdtask Normal |
-    \ highlight def link tdcomp Comment |
     \ highlight def link tdprog Define |
+    \ highlight def link tdcomp Comment |
     \ highlight def link tdwait Typedef |
-    \ highlight def link tdhead Constant |
-    \ nmap <buffer> <silent> <CR> :call <sid>taskinfo()<CR>
-function! s:taskinfo()
+    \ nnoremap <buffer> <silent> <CR> :call <sid>rotate()<CR>
+function! s:rotate()
+    let symbs = [' ', 'O', 'X', '=']
     let line = getline('.')
-    let text = substitute(getline('.'), '^ *\[.] \(.*\)$', '\1', 'g')
-    if line == text
-        " Not a task
+    let symb = substitute(line, '^ *- \[\(.\)] .*$', '\1', 'g')
+    if symb == line
         return
     endif
-    let name = tolower(substitute(text, ' ', '_', 'g'))
-    exec "edit " . name . ".md"
+    let idx = index(symbs, symb)
+    let symb = symbs[(idx + 1) % len(symbs)]
+    let line = substitute(line, '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
+    call setline('.', line)
 endfunction
