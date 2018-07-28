@@ -184,7 +184,7 @@ autocmd BufRead,BufNewFile *.md
     \ highlight def link todoProg Define |
     \ highlight def link todoDone Comment |
     \ highlight def link todoWait Typedef |
-    \ nnoremap <buffer> <silent> <CR> :call <sid>rotate()<CR>
+    \ nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
 function! s:rotate()
     let symbs = [' ', 'O', 'X', '=']
     let line = getline('.')
@@ -197,3 +197,5 @@ function! s:rotate()
     let line = substitute(line, '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
     call setline('.', line)
 endfunction
+
+nmap <leader>w :edit ~/kbase/index.md<CR>
