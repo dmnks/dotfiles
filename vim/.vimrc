@@ -169,33 +169,3 @@ nmap <leader>r :redraw!<CR>
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
 endfor
-
-" Simple todo mode for Markdown
-autocmd BufRead,BufNewFile *.md
-    \ syntax region todoTask start="^ *- \[ ] " end="$"
-        \ contains=markdownListMarker |
-    \ syntax region todoProg start="^ *- \[O] " end="$"
-        \ contains=markdownListMarker |
-    \ syntax region todoDone start="^ *- \[X] " end="$"
-        \ contains=markdownListMarker |
-    \ syntax region todoWait start="^ *- \[=] " end="$"
-        \ contains=markdownListMarker |
-    \ highlight def link todoTask Normal |
-    \ highlight def link todoProg Define |
-    \ highlight def link todoDone Comment |
-    \ highlight def link todoWait Typedef |
-    \ nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
-function! s:rotate()
-    let symbs = [' ', 'O', 'X', '=']
-    let line = getline('.')
-    let symb = substitute(line, '^ *- \[\(.\)] .*$', '\1', 'g')
-    if symb == line
-        return
-    endif
-    let idx = index(symbs, symb)
-    let symb = symbs[(idx + 1) % len(symbs)]
-    let line = substitute(line, '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
-    call setline('.', line)
-endfunction
-
-nmap <leader>w :edit ~/kbase/index.md<CR>
