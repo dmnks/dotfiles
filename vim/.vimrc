@@ -75,6 +75,10 @@ nmap <leader>t :FZFTags<CR>
 " Tagbar
 nmap <F6> :TagbarToggle<CR>
 
+" Vimwiki
+let g:vimwiki_hl_headers = 1
+let g:vimwiki_hl_cb_checked = 2
+
 " #############################################################################
 " # Appearance
 " #############################################################################
