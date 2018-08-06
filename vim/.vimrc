@@ -78,6 +78,10 @@ nmap <F6> :TagbarToggle<CR>
 " Vimwiki
 let g:vimwiki_hl_headers = 1
 let g:vimwiki_hl_cb_checked = 2
+let wiki = {}
+let wiki.path = '~/vimwiki/'
+let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
+let g:vimwiki_list = [wiki]
 
 " #############################################################################
 " # Appearance
