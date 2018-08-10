@@ -8,7 +8,6 @@ pkgs:
 	sudo dnf install -y vim \
 			    git \
 			    stow \
-			    python-pip \
 			    tmux \
 			    ctags \
 			    tig \
@@ -18,7 +17,6 @@ pkgs:
 			    libvirt-daemon-config-network \
 			    weechat \
 			    docker \
-			    docker-compose \
 			    python3-flake8 \
 			    python3-pudb \
 			    ipython3 \
