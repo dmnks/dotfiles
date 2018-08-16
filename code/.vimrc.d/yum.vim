@@ -1,5 +1,5 @@
 let g:ale_pattern_options = {
-\   'code/yum.*/.*py$': {
+\   '\(createrepo\|urlgrabber\|yum\).*py$': {
 \       'ale_linters': [],
 \   },
 \}
