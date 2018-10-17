@@ -98,8 +98,8 @@ elif [ "$cmd" == "spawn" ]; then
 
     echo "Booting up new VM"
     virt-install --network=bridge:virbr0 --name $name --memory $THIN_MEMORY \
-                 --disk $image --import --os-type=linux --noautoconsole \
-                 >/dev/null 2>&1
+                 --disk $image --import --os-type=linux --os-variant=none \
+                 --noautoconsole >/dev/null
 
     ssh_in $name
 elif [ "$cmd" == "ssh" ]; then
