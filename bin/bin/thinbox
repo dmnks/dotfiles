@@ -96,12 +96,11 @@ elif [ "$cmd" == "spawn" ]; then
     virt-sysprep -a $image --hostname $name --ssh-inject root \
                  --firstboot-command "restorecon -R /root/.ssh" >/dev/null
 
-    echo "Installing new VM"
+    echo "Booting up new VM"
     virt-install --network=bridge:virbr0 --name $name --memory $THIN_MEMORY \
                  --disk $image --import --os-type=linux --noautoconsole \
                  >/dev/null 2>&1
 
-    echo "Waiting for IP address"
     ssh_in $name
 elif [ "$cmd" == "ssh" ]; then
     shift
