@@ -94,7 +94,7 @@ elif [ "$cmd" == "spawn" ]; then
 
     echo "Configuring image"
     virt-sysprep -a $image --hostname $name --ssh-inject root \
-                 --firstboot-command "restorecon -R /root/.ssh" >/dev/null
+                 --selinux-relabel >/dev/null
 
     echo "Booting up new VM"
     virt-install --network=bridge:virbr0 --name $name --memory $THIN_MEMORY \
