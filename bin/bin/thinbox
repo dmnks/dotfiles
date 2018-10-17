@@ -13,8 +13,8 @@ Usage: $progname COMMAND [ARGS]
 Manage thin VM development environments.
 
 Commands:
-    spawn BASE [SUFFIX] create new VM based on BASE image and name it
-                        BASE-SUFFIX
+    spawn BASE [NAME]   create new VM based on BASE image and call it NAME
+                        (random if not specified)
     remove NAME         delete VM called NAME
     ssh NAME            ssh as root into VM called NAME
     sync NAME           rsync current git repo to VM called NAME
@@ -78,14 +78,14 @@ elif [ "$cmd" == "spawn" ]; then
         echo "No such base image: $base"
         exit 1
     fi
-    suffix=$2
-    if [ -z "$suffix" ]; then
+    name=$2
+    if [ -z "$name" ]; then
         image=$(mktemp $confdir/images/${1}-XXXXX.qcow2)
+        name=$(basename $image)
+        name=${name%.qcow2}
     else
-        image=$confdir/images/${1}-${suffix}.qcow2
+        image=$confdir/images/${name}.qcow2
     fi
-    name=$(basename $image)
-    name=${name%.qcow2}
 
     ensure_domain_undefined $name
 
