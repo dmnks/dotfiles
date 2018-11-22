@@ -107,6 +107,7 @@ set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " Add ALE status
 set statusline+=\ %#Error#%{LinterStatus()}
 let g:markdown_folding = 1
+autocmd BufRead,BufNewFile *.md set conceallevel=2
 
 " #############################################################################
 " # Editing
