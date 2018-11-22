@@ -106,6 +106,7 @@ set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " Add ALE status
 set statusline+=\ %#Error#%{LinterStatus()}
+let g:markdown_folding = 1
 
 " #############################################################################
 " # Editing
@@ -177,3 +178,22 @@ nmap <leader>r :redraw!<CR>
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
 endfor
+
+" Simple TODO mode for Markdown
+autocmd BufRead,BufNewFile *.md
+    \ syntax region taskDone start="^ *- \[X] " end="$"
+        \ contains=markdownListMarker |
+    \ highlight def link taskDone Comment |
+    \ nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
+function! s:rotate()
+    let symbs = [' ', 'X']
+    let line = getline('.')
+    let symb = substitute(line, '^ *- \[\(.\)] .*$', '\1', 'g')
+    if symb == line
+        return
+    endif
+    let idx = index(symbs, symb)
+    let symb = symbs[(idx + 1) % len(symbs)]
+    let line = substitute(line, '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
+    call setline('.', line)
+endfunction
