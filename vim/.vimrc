@@ -185,7 +185,8 @@ autocmd BufRead,BufNewFile *.md
     \ syntax region taskDone start="^ *- \[X] " end="$"
         \ contains=markdownListMarker |
     \ highlight def link taskDone Comment |
-    \ nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
+    \ nmap <buffer> <silent> <CR> :call <sid>rotate()<CR> |
+    \ nmap <leader>d o- [ ] 
 function! s:rotate()
     let symbs = [' ', 'X']
     let line = getline('.')
