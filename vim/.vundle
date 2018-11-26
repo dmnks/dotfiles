@@ -13,6 +13,7 @@ Plugin 'tpope/vim-commentary'
 Plugin 'w0rp/ale'
 Plugin 'majutsushi/tagbar'
 Plugin 'vimwiki/vimwiki'
+Plugin 'junegunn/fzf.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required

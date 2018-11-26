@@ -33,9 +33,6 @@ function! LinterStatus() abort
 endfunction
 
 " FZF
-" https://github.com/junegunn/fzf/blob/master/README-VIM.md
-" https://github.com/junegunn/fzf/wiki/Examples-(vim)
-
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -50,27 +47,8 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
-
-function! s:buflist()
-    " Return listed buffers that have a name
-    let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-    let named = map(listed, 'bufname(v:val)')
-    let named = map(filter(named, '!empty(v:val)'), 'v:val')
-    return named
-endfunction
-command! FZFBuffers call fzf#run(fzf#wrap({
-    \ 'source':  reverse(<sid>buflist()),
-    \ 'options': '+m --prompt "buffer> "',
-    \ }))
-command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
-    \ 'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
-    \ 'sink':    'tag',
-    \ 'options': '+m --prompt "tag> "',
-    \ })) | else | echoerr 'No tags found' | endif
-
-nmap <c-p> :FZFBuffers<CR>
-nmap <leader>f :FZF<CR>
-nmap <leader>t :FZFTags<CR>
+nmap <c-p> :GFiles<CR>
+nmap <leader>t :Tags<CR>
 
 " Tagbar
 nmap <F6> :TagbarToggle<CR>
