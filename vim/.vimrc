@@ -164,7 +164,7 @@ autocmd BufRead,BufNewFile *.md
         \ contains=markdownListMarker |
     \ highlight def link taskDone Comment |
     \ nmap <buffer> <silent> <CR> :call <sid>rotate()<CR> |
-    \ nmap <leader>d o- [ ] 
+    \ nmap <leader>d O- [ ] 
 function! s:rotate()
     let symbs = [' ', 'X']
     let line = getline('.')
