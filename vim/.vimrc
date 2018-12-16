@@ -50,17 +50,6 @@ let g:fzf_colors =
 nmap <c-p> :GFiles<CR>
 nmap <leader>t :Tags<CR>
 
-" Tagbar
-nmap <F6> :TagbarToggle<CR>
-
-" Vimwiki
-let g:vimwiki_hl_headers = 1
-let g:vimwiki_hl_cb_checked = 2
-let wiki = {}
-let wiki.path = '~/vimwiki/'
-let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
-let g:vimwiki_list = [wiki]
-
 " #############################################################################
 " # Appearance
 " #############################################################################
@@ -77,7 +66,6 @@ set wildmenu
 set title
 set nowrap
 set cursorline
-set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
