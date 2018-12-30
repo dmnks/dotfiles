@@ -47,6 +47,9 @@ let g:fzf_colors =
 nmap <c-p> :GFiles<CR>
 nmap <leader>t :Tags<CR>
 
+" gitgutter
+set updatetime=100
+
 " #############################################################################
 " # Appearance
 " #############################################################################
@@ -57,7 +60,7 @@ set t_8f=[38;2;%lu;%lu;%lum  " for tmux
 set t_8b=[48;2;%lu;%lu;%lum  " for tmux
 set background=dark
 map <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
-colorscheme gruvbox
+colorscheme dracula
 set number
 set wildmenu
 set title
