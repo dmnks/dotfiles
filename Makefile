@@ -38,7 +38,6 @@ restore: unconf
 
 conf: unconf
 	stow -v --no-folding $(DOTFILES)
-	dconf load /org/gnome/ < gnome.conf
 
 unconf:
 	stow -Dv $(DOTFILES)
