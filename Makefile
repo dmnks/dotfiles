@@ -1,8 +1,9 @@
 DOTFILES = bash bin fonts git pulse python tmux vim docker
+PLUGINS = ~/.vim/pack/git/start
 
-.PHONY: all pkgs conf unconf
+.PHONY: all pkgs plugins backup restore conf unconf
 
-all: pkgs backup conf
+all: pkgs plugins backup conf
 
 pkgs:
 	sudo dnf install -y vim \
@@ -21,11 +22,13 @@ pkgs:
 			    python3-pudb \
 			    ipython3 \
 			    fzf
-	sudo systemctl enable docker
-	sudo systemctl start docker
-	git clone https://github.com/gmarik/Vundle.vim.git \
-		  $(HOME)/.vim/bundle/Vundle.vim
-	vim -u vim/.vundle +PluginInstall +qall
+
+plugins:
+	mkdir -p $(PLUGINS)
+	git clone https://github.com/morhetz/gruvbox $(PLUGINS)/gruvbox
+	git clone https://github.com/w0rp/ale.git $(PLUGINS)/ale
+	git clone https://github.com/junegunn/fzf.vim $(PLUGINS)/fzf
+	git clone https://github.com/tpope/vim-commentary $(PLUGINS)/vim-commentary
 
 backup:
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
