@@ -17,7 +17,7 @@ pkgs:
 			    virt-manager \
 			    libvirt-daemon-config-network \
 			    weechat \
-			    docker \
+			    podman \
 			    python3-flake8 \
 			    python3-pudb \
 			    ipython3 \
