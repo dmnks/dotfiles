@@ -21,7 +21,8 @@ pkgs:
 			    python3-flake8 \
 			    python3-pudb \
 			    ipython3 \
-			    fzf
+			    fzf \
+			    powerline-fonts
 
 plugins:
 	mkdir -p $(PLUGINS)
