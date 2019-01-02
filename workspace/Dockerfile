@@ -10,11 +10,11 @@ RUN dnf install -y \
         python3-pip
 RUN pip3 install --upgrade pip && pip3 install pudb
 RUN rpm -e --nodeps dnf libdnf
-RUN echo "alias dnf='dnf-3'" >> ~/.bashrc
+RUN echo "alias dnf='dnf-3 --setopt=pluginpath=/plugins'" >> ~/.bashrc
 
 # Use dnf and libdnf checkouts mounted from the host
 ENV PATH=/dnf/bin:$PATH \
-    PYTHONPATH=/libdnf/build/python/hawkey \
+    PYTHONPATH=/libdnf/build/python/hawkey:/plugins \
     LD_LIBRARY_PATH=/libdnf/build/libdnf \
     GI_TYPELIB_PATH=/libdnf/build/libdnf
 
@@ -25,5 +25,5 @@ RUN mkdir libdnf && \
         > libdnf/__init__.py
 WORKDIR /
 
-VOLUME ["/dnf", "/libdnf"]
+VOLUME ["/dnf", "/libdnf", "/plugins"]
 ENTRYPOINT ["/bin/bash"]
