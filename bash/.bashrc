@@ -20,7 +20,6 @@ source /usr/share/git-core/contrib/completion/git-prompt.sh
 # Aliases
 ###############################################################################
 
-alias docker='sudo docker --config $HOME/.docker'
 alias gdiff='git diff --no-index --'
 
 ###############################################################################
@@ -42,13 +41,6 @@ setup_ps1() {
     PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
     PS1+="\[\$(c_dollar)\]\$\[${c_off}\] "
     export PS1
-}
-
-dclean() {
-    local cnts=$(docker ps --filter "status=exited" -qa --no-trunc)
-    local imgs=$(docker images --filter "dangling=true" -q --no-trunc)
-    [ -n "$cnts" ] && docker rm $cnts
-    [ -n "$imgs" ] && docker rmi $imgs || true
 }
 
 ###############################################################################

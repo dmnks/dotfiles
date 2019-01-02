@@ -8,9 +8,6 @@ let mapleader = ' '
 " # Plugin setup
 " #############################################################################
 
-" gruvbox
-let g:gruvbox_invert_tabline = 1
-
 " lightline
 let g:lightline = {
     \ 'colorscheme': 'Dracula',
@@ -33,6 +30,7 @@ function! LightlineGitbranch()
     let branch = gitbranch#name()
     return branch !=# '' ? ''.branch : ''
 endfunction
+set noshowmode
 
 " ALE
 let g:ale_linters = {

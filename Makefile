@@ -1,9 +1,9 @@
-DOTFILES = bash bin fonts git pulse python tmux vim docker
+DOTFILES = bash bin fonts git pulse python tmux vim
 PLUGINS = ~/.vim/pack/git/start
 
-.PHONY: all pkgs plugins backup restore conf unconf
+.PHONY: all pkgs plugins conf workspace restore
 
-all: pkgs plugins backup conf
+all: pkgs plugins conf
 
 pkgs:
 	sudo dnf install -y vim \
@@ -27,21 +27,20 @@ pkgs:
 plugins:
 	mkdir -p $(PLUGINS)
 	git clone https://github.com/dracula/vim $(PLUGINS)/dracula
-	git clone https://github.com/morhetz/gruvbox $(PLUGINS)/gruvbox
 	git clone https://github.com/w0rp/ale.git $(PLUGINS)/ale
 	git clone https://github.com/tpope/vim-commentary $(PLUGINS)/commentary
 	git clone https://github.com/airblade/vim-gitgutter $(PLUGINS)/gitgutter
 	git clone https://github.com/itchyny/lightline.vim $(PLUGINS)/lightline
 	git clone https://github.com/itchyny/vim-gitbranch $(PLUGINS)/gitbranch
 
-backup:
+conf:
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
-
-restore: unconf
-	@[ -f ~/.bashrc.orig ] && mv ~/.bashrc{.orig,} || true
-
-conf: unconf
 	stow -v --no-folding $(DOTFILES)
 
-unconf:
-	stow -Dv $(DOTFILES)
+workspace:
+	podman build -t dnf-workspace workspace/
+	stow -v --no-folding --ignore=Dockerfile workspace
+
+restore:
+	stow -Dv $(DOTFILES) workspace || true
+	@[ -f ~/.bashrc.orig ] && mv ~/.bashrc{.orig,} || true
