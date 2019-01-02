@@ -72,8 +72,8 @@ command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \ 'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
 nmap <c-p> :FZFBuffers<CR>
-nmap <leader>f :FZF<CR>
-nmap <leader>t :FZFTags<CR>
+nmap <c-l> :FZF<CR>
+nmap <c-k> :FZFTags<CR>
 
 " gitgutter
 set updatetime=100
@@ -88,6 +88,7 @@ set t_8f=[38;2;%lu;%lu;%lum  " for tmux
 set t_8b=[48;2;%lu;%lu;%lum  " for tmux
 set background=dark
 map <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
+let g:dracula_italic = 0
 colorscheme dracula
 set number
 set wildmenu
@@ -117,12 +118,6 @@ set textwidth=79
 " #############################################################################
 " # Motion
 " #############################################################################
-
-" Bind the ctrl+movements keys to move around the windows
-nmap <c-j> <c-w>j
-nmap <c-k> <c-w>k
-nmap <c-l> <c-w>l
-nmap <c-h> <c-w>h
 
 nmap ]q :cnext<CR>
 nmap [q :cprev<CR>
