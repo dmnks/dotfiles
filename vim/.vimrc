@@ -143,7 +143,7 @@ set smartcase
 set incsearch
 nmap <leader>n :nohl<CR>
 set grepprg=git\ grep\ -n\ $*
-command -nargs=+ G exec "silent grep! " . <q-args> | copen | redraw!
+command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'" | copen | redraw!
 nmap <leader>g :exec "G <cword>"<cr>
 
 " #############################################################################
