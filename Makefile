@@ -36,6 +36,7 @@ plugins:
 conf:
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
 	stow -v --no-folding $(DOTFILES)
+	dconf load /org/gnome/ < gnome.conf
 
 workspace:
 	podman build -t dnf-workspace workspace/
