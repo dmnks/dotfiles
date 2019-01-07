@@ -1,7 +1,6 @@
-DOTFILES = bash bin fonts git pulse python tmux vim
 PLUGINS = ~/.vim/pack/git/start
 
-.PHONY: all pkgs plugins conf workspace restore
+.PHONY: all pkgs plugins conf swm restore
 
 all: pkgs plugins conf
 
@@ -35,13 +34,13 @@ plugins:
 
 conf:
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
-	stow -v --no-folding $(DOTFILES)
+	stow -v --no-folding default
 	dconf load /org/gnome/ < gnome.conf
 
-workspace:
-	podman build -t dnf-workspace workspace/
-	stow -v --no-folding --ignore=Dockerfile workspace
+swm:
+	podman build -t dnf-devel swm/
+	stow -v --no-folding --ignore=Dockerfile swm
 
 restore:
-	stow -Dv $(DOTFILES) workspace || true
+	stow -Dv default swm || true
 	@[ -f ~/.bashrc.orig ] && mv ~/.bashrc{.orig,} || true

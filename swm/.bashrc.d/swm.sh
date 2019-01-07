@@ -7,5 +7,5 @@ podman-dnf() {
         -v=$DNF_PATH:/dnf:ro,z \
         -v=$DNF_PLUGINS_PATH:/plugins:ro,z \
         -v=$LIBDNF_PATH:/libdnf:ro,z \
-        -it $@ dnf-workspace
+        -it $@ dnf-devel
 }
