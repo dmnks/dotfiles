@@ -6,22 +6,22 @@ all: pkgs plugins conf
 
 pkgs:
 	sudo dnf install -y vim \
-			    git \
-			    stow \
-			    tmux \
-			    ctags \
-			    tig \
-			    libguestfs-tools-c \
-			    virt-install \
-			    virt-manager \
-			    libvirt-daemon-config-network \
-			    weechat \
-			    podman \
-			    python3-flake8 \
-			    python3-pudb \
-			    ipython3 \
-			    fzf \
-			    powerline-fonts
+	                    git \
+	                    stow \
+	                    tmux \
+	                    ctags \
+	                    tig \
+	                    libguestfs-tools-c \
+	                    virt-install \
+	                    virt-manager \
+	                    libvirt-daemon-config-network \
+	                    weechat \
+	                    podman \
+	                    python3-flake8 \
+	                    python3-pudb \
+	                    ipython3 \
+	                    fzf \
+	                    powerline-fonts
 
 plugins:
 	mkdir -p $(PLUGINS)
