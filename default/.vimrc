@@ -10,7 +10,7 @@ let mapleader = ' '
 
 " lightline
 let g:lightline = {
-    \ 'colorscheme': 'Dracula',
+    \ 'colorscheme': 'gruvbox',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
@@ -88,8 +88,7 @@ set t_8f=[38;2;%lu;%lu;%lum  " for tmux
 set t_8b=[48;2;%lu;%lu;%lum  " for tmux
 set background=dark
 map <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
-let g:dracula_italic = 0
-colorscheme dracula
+colorscheme gruvbox
 set number
 set wildmenu
 set title
