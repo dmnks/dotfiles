@@ -166,13 +166,15 @@ endfor
 " Simple TODO mode for Markdown
 autocmd BufRead,BufNewFile *.md call <sid>set_todo_md()
 function! s:set_todo_md()
-    syntax region taskDone start="^ *- \[X] " end="$" contains=markdownListMarker
+    syntax region taskDone start="^ *- \[X\] " end="$" contains=markdownListMarker
+    syntax region taskProg start="^ *- \[O\] " end="$" contains=markdownListMarker
     highlight def link taskDone Comment
+    highlight def link taskProg Constant
     nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
     nmap <leader>t O- [ ] 
 endfunction
 function! s:rotate()
-    let symbs = [' ', 'X']
+    let symbs = [' ', 'X', 'O']
     let line = getline('.')
     let symb = substitute(line, '^ *- \[\(.\)] .*$', '\1', 'g')
     if symb == line
