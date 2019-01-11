@@ -153,7 +153,7 @@ function! s:set_todo_md()
     nmap <leader>t O- [ ] 
 endfunction
 function! s:rotate()
-    let symbs = [' ', 'X', 'O']
+    let symbs = [' ', 'O', 'X']
     let line = getline('.')
     let symb = substitute(line, '^ *- \[\(.\)] .*$', '\1', 'g')
     if symb == line
