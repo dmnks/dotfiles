@@ -139,7 +139,8 @@ set smartcase
 set incsearch
 nmap <leader>n :nohl<CR>
 set grepprg=git\ grep\ -n\ $*
-command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'" | copen | redraw!
+command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
+    \ | copen | redraw!
 nmap <leader>g :exec "G <cword>"<cr>
 
 " #############################################################################
@@ -166,8 +167,10 @@ endfor
 " Simple TODO mode for Markdown
 autocmd BufRead,BufNewFile *.md call <sid>set_todo_md()
 function! s:set_todo_md()
-    syntax region taskDone start="^ *- \[X\] " end="$" contains=markdownListMarker
-    syntax region taskProg start="^ *- \[O\] " end="$" contains=markdownListMarker
+    syntax region taskDone start="^ *- \[X\] " end="$"
+        \ contains=markdownListMarker
+    syntax region taskProg start="^ *- \[O\] " end="$"
+        \ contains=markdownListMarker
     highlight def link taskDone Comment
     highlight def link taskProg Constant
     nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
@@ -182,6 +185,7 @@ function! s:rotate()
     endif
     let idx = index(symbs, symb)
     let symb = symbs[(idx + 1) % len(symbs)]
-    let line = substitute(line, '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
+    let line = substitute(line,
+        \ '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
     call setline('.', line)
 endfunction
