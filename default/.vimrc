@@ -8,30 +8,6 @@ let mapleader = ' '
 " # Plugin setup
 " #############################################################################
 
-" lightline
-let g:lightline = {
-    \ 'colorscheme': 'gruvbox',
-    \ 'active': {
-    \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-    \ },
-    \ 'component': {
-    \   'lineinfo': ' %3l:%-2v',
-    \ },
-    \ 'component_function': {
-    \   'readonly': 'LightlineReadonly',
-    \   'gitbranch': 'LightlineGitbranch'
-    \ },
-    \ }
-function! LightlineReadonly()
-    return &readonly ? '' : ''
-endfunction
-function! LightlineGitbranch()
-    let branch = gitbranch#name()
-    return branch !=# '' ? ''.branch : ''
-endfunction
-set noshowmode
-
 " ALE
 let g:ale_linters = {
     \   'python': ['flake8', 'pyls'],
