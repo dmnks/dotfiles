@@ -150,7 +150,8 @@ function! s:set_todo_md()
     highlight def link taskDone Comment
     highlight def link taskProg Constant
     nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
-    nmap <leader>t O- [ ] 
+    nmap <leader>t o- [ ] 
+    nmap <leader>T O- [ ] 
 endfunction
 function! s:rotate()
     let symbs = [' ', 'O', 'X']
