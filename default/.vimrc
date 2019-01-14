@@ -8,6 +8,9 @@ let mapleader = ' '
 " # Plugin setup
 " #############################################################################
 
+" gruvbox
+let g:gruvbox_invert_tabline = 1
+
 " ALE
 let g:ale_linters = {
     \   'python': ['flake8', 'pyls'],
