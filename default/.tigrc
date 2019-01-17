@@ -3,6 +3,7 @@ bind generic S :source ~/.tigrc
 
 # COLORS
 color title-focus   black      white    bold
+color cursor        white      color6   bold
 # These are already defined in git config but not inherited for some reason
 color "--- "        color11    default
 color "+++ "        color11    default
