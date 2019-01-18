@@ -1,5 +1,4 @@
 # DNF development image
-# # vi:syntax=dockerfile
 
 FROM fedora:29
 
