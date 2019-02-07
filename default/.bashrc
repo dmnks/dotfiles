@@ -45,9 +45,10 @@ setup_ps1() {
 
 podman-clean() {
     local cnts=$(podman ps -a --format="{{.ID}}" --filter=status=exited)
-    local imgs=$(podman images --filter=dangling=true 2>/dev/null)
+    local imgs=$(podman images --format="{{.ID}}" --filter=dangling=true \
+                 2>/dev/null)
     [ -n "$cnts" ] && podman rm $cnts
-    [ -n "$imgs" ] && podman rmi $imgs || true
+    [ -n "$imgs" ] && podman rmi --force $imgs || true
 }
 
 ###############################################################################
