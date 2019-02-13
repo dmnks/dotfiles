@@ -35,7 +35,6 @@ conf:
 	dconf load /org/gnome/ < gnome.conf
 
 swm:
-	podman build -t dnf-devel swm/
 	stow -v --no-folding --ignore=Dockerfile swm
 
 restore:
