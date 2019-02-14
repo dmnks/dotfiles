@@ -28,6 +28,7 @@ plugins:
 	git clone https://github.com/morhetz/gruvbox $(PLUGINS)/gruvbox
 	git clone https://github.com/w0rp/ale.git $(PLUGINS)/ale
 	git clone https://github.com/tpope/vim-commentary $(PLUGINS)/commentary
+	git clone https://github.com/vimwiki/vimwiki $(PLUGINS)/vimwiki
 
 conf:
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true

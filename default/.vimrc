@@ -54,6 +54,15 @@ nmap <c-p> :FZFBuffers<CR>
 nmap <c-l> :FZF<CR>
 nmap <c-k> :FZFTags<CR>
 
+" Vimwiki
+let g:vimwiki_hl_headers = 1
+let g:vimwiki_hl_cb_checked = 2
+let g:vimwiki_folding = 'expr'
+let wiki = {}
+let wiki.path = '~/vimwiki/'
+let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
+let g:vimwiki_list = [wiki]
+
 " #############################################################################
 " # Appearance
 " #############################################################################
@@ -75,8 +84,6 @@ autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-let g:markdown_folding = 1
-autocmd BufRead,BufNewFile *.md set conceallevel=2
 
 " #############################################################################
 " # Editing
@@ -143,30 +150,3 @@ nmap <leader>r :redraw!<CR>
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
 endfor
-
-" Simple TODO mode for Markdown
-autocmd BufRead,BufNewFile *.md call <sid>set_todo_md()
-function! s:set_todo_md()
-    syntax region taskDone start="^ *- \[X\] " end="$"
-        \ contains=markdownListMarker
-    syntax region taskProg start="^ *- \[O\] " end="$"
-        \ contains=markdownListMarker
-    highlight def link taskDone Comment
-    highlight def link taskProg Constant
-    nmap <buffer> <silent> <CR> :call <sid>rotate()<CR>
-    nmap <leader>t o- [ ] 
-    nmap <leader>T O- [ ] 
-endfunction
-function! s:rotate()
-    let symbs = [' ', 'O', 'X']
-    let line = getline('.')
-    let symb = substitute(line, '^ *- \[\(.\)] .*$', '\1', 'g')
-    if symb == line
-        return
-    endif
-    let idx = index(symbs, symb)
-    let symb = symbs[(idx + 1) % len(symbs)]
-    let line = substitute(line,
-        \ '^\( *- \[\).\(] .*\)$', '\1' . symb . '\2', 'g')
-    call setline('.', line)
-endfunction
