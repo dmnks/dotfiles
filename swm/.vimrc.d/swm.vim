@@ -1,6 +1,7 @@
 " libdnf
 autocmd BufRead,BufNewFile */code/libdnf/*
-    \ setlocal textwidth=99 colorcolumn=100
+    \ setlocal textwidth=99 |
+    \ let &colorcolumn=join(range(100, 999), ",")
 
 let g:ale_pattern_options = {
 \   '\(libdnf\).*[hc]pp$': {
