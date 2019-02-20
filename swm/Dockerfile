@@ -3,8 +3,6 @@
 FROM fedora:29
 
 # Install build deps
-RUN dnf install -y dnf-plugins-core && \
-    dnf config-manager --setopt=tsflags= --save
 RUN dnf install -y \
         check-devel \
         cmake \
@@ -23,6 +21,7 @@ RUN dnf install -y \
         libsolv-tools \
         libstdc++ \
         make \
+        man-db \
         python2-breathe \
         python2-devel \
         python2-nose \
@@ -54,7 +53,7 @@ RUN ln -s /usr/local/bin/dnf-3 /usr/bin/dnf
 
 # Copy in the source trees
 COPY libdnf /libdnf
-COPY dnf dnf/
+COPY dnf /dnf
 
 # Build & install them
 RUN mkdir -p /build/{libdnf,dnf}
