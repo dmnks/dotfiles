@@ -97,6 +97,7 @@ set expandtab
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 set textwidth=79
+set foldlevel=99
 
 " #############################################################################
 " # Motion
