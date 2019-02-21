@@ -21,6 +21,9 @@ source /usr/share/git-core/contrib/completion/git-prompt.sh
 ###############################################################################
 
 alias gdiff='git diff --no-index --'
+alias docker='sudo docker --config $HOME/.docker'
+alias docker-clean='clean_containers "sudo docker"'
+alias podman-clean='clean_containers podman'
 
 ###############################################################################
 # Functions
@@ -43,12 +46,13 @@ setup_ps1() {
     export PS1
 }
 
-podman-clean() {
-    local cnts="$(podman ps -a --format="{{.ID}}" --filter=status=exited)"
-    local imgs="$(podman images --format="{{.ID}}" --filter=dangling=true \
-                  2>/dev/null)"
-    [ -n "$cnts" ] && podman rm $cnts
-    [ -n "$imgs" ] && podman rmi --force $imgs || true
+clean_containers() {
+    local bin=$1
+    local conts=$($bin ps -qa --filter=status=exited --no-trunc)
+    local images=$($bin images -q --filter=dangling=true --no-trunc \
+                 2>/dev/null)
+    [ -n "$conts" ] && $bin rm $conts
+    [ -n "$images" ] && $bin rmi $images || true
 }
 
 ###############################################################################
