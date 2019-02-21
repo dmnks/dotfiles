@@ -29,6 +29,7 @@ plugins:
 	git clone https://github.com/w0rp/ale.git $(PLUGINS)/ale
 	git clone https://github.com/tpope/vim-commentary $(PLUGINS)/commentary
 	git clone https://github.com/vimwiki/vimwiki $(PLUGINS)/vimwiki
+	git clone https://github.com/scrooloose/nerdtree $(PLUGINS)/nerdtree
 
 conf:
 	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
