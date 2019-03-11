@@ -5,7 +5,7 @@ bind main N @git branch "%(prompt Enter branch name: )" %(commit)
 
 # COLORS
 color title-focus   black      white    bold
-color cursor        white      color6   bold
+color cursor        white      blue     bold
 # These are already defined in git config but not inherited for some reason
 color "--- "        color11    default
 color "+++ "        color11    default
