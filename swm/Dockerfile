@@ -26,6 +26,7 @@ RUN dnf install -y \
         python2-devel \
         python2-nose \
         python2-sphinx \
+        python3-behave \
         python3-breathe \
         python3-devel \
         python3-gobject \
@@ -68,5 +69,5 @@ RUN cmake /dnf -DPYTHON_DESIRED=3 && \
     make install
 WORKDIR /build
 
-VOLUME ["/libdnf", "/dnf"]
+VOLUME ["/libdnf", "/dnf", "/test"]
 ENTRYPOINT ["/bin/bash"]
