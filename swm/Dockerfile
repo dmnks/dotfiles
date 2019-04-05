@@ -1,6 +1,6 @@
 # DNF stack development image
 
-FROM fedora:29
+FROM fedora:30
 
 # Install build deps
 RUN dnf install -y \
