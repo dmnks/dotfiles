@@ -31,6 +31,7 @@ RUN dnf install -y \
         python3-devel \
         python3-gobject \
         python3-nose \
+        python3-rpmfluff \
         python3-sphinx \
         rpm-devel \
         sqlite-devel \
@@ -68,6 +69,12 @@ RUN cmake /dnf -DPYTHON_DESIRED=3 && \
     make doc && \
     make install
 WORKDIR /build
+
+# Fake rpmdb records
+RUN python3 -c 'import rpmfluff; \
+                b = rpmfluff.SimpleRpmBuild("libdnf", "0.30.0", "1"); \
+                b.make(); print(b.get_built_rpm("x86_64"))' | \
+    xargs rpm -i --nodeps --justdb
 
 VOLUME ["/libdnf", "/dnf", "/test"]
 ENTRYPOINT ["/bin/bash"]
