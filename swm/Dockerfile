@@ -57,24 +57,27 @@ RUN ln -s /usr/local/bin/dnf-3 /usr/bin/dnf
 COPY libdnf /libdnf
 COPY dnf /dnf
 
-# Build & install them
+# Prepare build environment
 RUN mkdir -p /build/{libdnf,dnf}
 WORKDIR /build/libdnf
-RUN cmake /libdnf -DCMAKE_INSTALL_PREFIX=/ -DPYTHON_DESIRED=3 && \
-    make && \
-    make install
+RUN cmake /libdnf -DCMAKE_INSTALL_PREFIX=/ -DPYTHON_DESIRED=3
 WORKDIR /build/dnf
-RUN cmake /dnf -DPYTHON_DESIRED=3 && \
-    make && \
-    make doc && \
-    make install
-WORKDIR /build
+RUN cmake /dnf -DPYTHON_DESIRED=3
+WORKDIR /test
+RUN echo "make -C /build/libdnf install && \
+          make -C /build/dnf doc && \
+          make -C /build/dnf install" \
+    > /usr/local/bin/build && chmod +x /usr/local/bin/build
 
 # Fake rpmdb records
-RUN python3 -c 'import rpmfluff; \
-                b = rpmfluff.SimpleRpmBuild("libdnf", "0.30.0", "1"); \
-                b.make(); print(b.get_built_rpm("x86_64"))' | \
-    xargs rpm -i --nodeps --justdb
+ENV VLIB 0.30.0
+ENV VDNF 4.2.2
+RUN python3 -c "import rpmfluff; \
+                b = rpmfluff.SimpleRpmBuild('libdnf', '${VLIB}', '1'); \
+                b.make(); print(b.get_built_rpm('x86_64')); \
+                b = rpmfluff.SimpleRpmBuild('dnf', '${VDNF}', '1'); \
+                b.make(); print(b.get_built_rpm('x86_64'))" \
+    | xargs rpm -i --nodeps --justdb
 
 VOLUME ["/libdnf", "/dnf", "/test"]
 ENTRYPOINT ["/bin/bash"]
