@@ -59,9 +59,6 @@ let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
 
-" nerdtree
-map <c-n> :NERDTreeToggle<CR>
-
 " #############################################################################
 " # Appearance
 " #############################################################################
