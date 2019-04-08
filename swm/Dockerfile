@@ -75,8 +75,9 @@ ENV VDNF 4.2.2
 RUN python3 -c "import rpmfluff; \
                 b = rpmfluff.SimpleRpmBuild('libdnf', '${VLIB}', '1'); \
                 b.make(); print(b.get_built_rpm('x86_64')); \
-                b = rpmfluff.SimpleRpmBuild('dnf', '${VDNF}', '1'); \
-                b.make(); print(b.get_built_rpm('x86_64'))" \
+                b = rpmfluff.SimpleRpmBuild('dnf', '${VDNF}', '1', \
+                                            buildArchs=['noarch']); \
+                b.make(); print(b.get_built_rpm('noarch'))" \
     | xargs rpm -i --nodeps --justdb
 
 VOLUME ["/libdnf", "/dnf", "/test"]
