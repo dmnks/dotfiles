@@ -20,12 +20,13 @@ tmux-init() {
         tmux attach -t "utils"
         ;;
     "devel")
-        tmux new-session -ds "devel" -n "code"
+        local name=$2
+        tmux new-session -ds "$name" -n "code"
         tmux send-keys "vim" C-m
-        tmux new-window -t "devel" -n "git"
+        tmux new-window -t "$name" -n "git"
         tmux send-keys "tig status" C-m
-        tmux new-window -t "devel" -n "build"
-        tmux attach -t "devel"
+        tmux new-window -t "$name" -n "build"
+        tmux attach -t "$name"
         ;;
     esac
 }
