@@ -64,6 +64,8 @@ RUN cmake /libdnf -DCMAKE_INSTALL_PREFIX=/ -DPYTHON_DESIRED=3
 WORKDIR /build/dnf
 RUN cmake /dnf -DPYTHON_DESIRED=3
 WORKDIR /test
+RUN echo "cmake /build/libdnf && cmake /build/dnf" \
+    > /usr/local/bin/prep && chmod +x /usr/local/bin/prep
 RUN echo "make -C /build/libdnf install && \
           make -C /build/dnf doc && \
           make -C /build/dnf install" \
