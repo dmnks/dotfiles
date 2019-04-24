@@ -23,7 +23,8 @@ pkgs:
 	                    ipython3 \
 	                    fzf \
 	                    powerline-fonts \
-			    ranger
+			    ranger \
+			    xterm
 	sudo systemctl enable docker
 	sudo systemctl start docker
 
