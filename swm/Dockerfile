@@ -35,7 +35,8 @@ RUN dnf install -y \
         python3-sphinx \
         rpm-devel \
         sqlite-devel \
-        swig
+        swig \
+        vim
 # Hack
 RUN dnf install -y --allowerasing libmodulemd1-devel
 # Install debugging tools
