@@ -5,20 +5,25 @@ bind main N @git branch "%(prompt Enter branch name: )" %(commit)
 bind status A !?git commit --amend
 
 # COLORS
-color title-focus   black      white    bold
-color cursor        white      blue     bold
+color title-focus           black       white       bold
+color cursor                white       blue        bold
+color "Refs: "              default     default
+color "Author: "            default     default
+color "AuthorDate: "        default     default
+color "Commit: "            default     default
+color "CommitDate: "        default     default
 # These are already defined in git config but not inherited for some reason
-color "--- "        color11    default
-color "+++ "        color11    default
+color "--- "                color11     default
+color "+++ "                color11     default
 # Replace the dark blue with the bright one for readability on dark terminal
-color "---"         color12    default
-color "index "      color12    default
-color "diff-tree "  color12    default
-color "Merge: "     color12    default
-color "parent "     color12    default
-color "tree "       color12    default
-color date          color12    default
-color grep.file     color12    default
-color help-group    color12    default
-color diff-stat     color12    default
-color graph-commit  color12    default
+color "---"                 color12     default
+color "index "              color12     default
+color "diff-tree "          color12     default
+color "Merge: "             color12     default
+color "parent "             color12     default
+color "tree "               color12     default
+color date                  color12     default
+color grep.file             color12     default
+color help-group            color12     default
+color diff-stat             color12     default
+color graph-commit          color12     default
