@@ -1,6 +1,6 @@
 # DNF stack development image
 
-FROM fedora:30
+FROM fedora:rawhide
 
 # Install build deps
 RUN dnf install -y \
@@ -22,10 +22,6 @@ RUN dnf install -y \
         libstdc++ \
         make \
         man-db \
-        python2-breathe \
-        python2-devel \
-        python2-nose \
-        python2-sphinx \
         python3-behave \
         python3-breathe \
         python3-devel \
