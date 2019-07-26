@@ -81,6 +81,7 @@ autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+set scrolloff=0
 
 " #############################################################################
 " # Editing
