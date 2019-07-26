@@ -69,8 +69,8 @@ RUN echo "make -C /build/libdnf install && \
     > /usr/local/bin/build && chmod +x /usr/local/bin/build
 
 # Fake rpmdb records
-ENV VLIB 0.30.0
-ENV VDNF 4.2.2
+ENV VLIB 0.35.1
+ENV VDNF 4.2.8
 RUN python3 -c "import rpmfluff; \
                 b = rpmfluff.SimpleRpmBuild('libdnf', '${VLIB}', '1'); \
                 b.make(); print(b.get_built_rpm('x86_64')); \
