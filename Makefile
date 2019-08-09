@@ -16,15 +16,15 @@ pkgs:
 	                    virt-manager \
 	                    libvirt-daemon-config-network \
 	                    weechat \
-			    docker \
+	                    docker \
 	                    podman \
 	                    python3-flake8 \
 	                    python3-pudb \
 	                    ipython3 \
 	                    fzf \
 	                    powerline-fonts \
-			    ranger \
-			    xterm
+	                    ranger \
+	                    xterm
 	sudo systemctl enable docker
 	sudo systemctl start docker
 
