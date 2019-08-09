@@ -41,7 +41,7 @@ setup_ps1() {
         [ $? -eq 0 ] && tput sgr0 || tput setaf 9
     }
     PS1="\[${c_green}\]"
-    [ "$HOSTNAME" == "toolbox" ] && PS1+="[toolbox]"
+    [[ "$HOSTNAME" =~ ^(toolbox|sandbox)$ ]] && PS1+="[$HOSTNAME]"
     PS1+="-> \[${c_cyan}\]\W"
     PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
     PS1+="\[\$(c_dollar)\]\$\[${c_off}\] "
@@ -55,6 +55,16 @@ clean_containers() {
                  2>/dev/null)
     [ -n "$conts" ] && $bin rm -f $conts
     [ -n "$images" ] && $bin rmi -f $images || true
+}
+
+sandbox() {
+    podman run \
+         -e TERM -it \
+         --detach-keys="ctrl-@" \
+         -v=$PWD:/host \
+         -v=$HOME/.bashrc:/root/.bashrc:ro \
+         --hostname sandbox \
+         -it $@ sandbox
 }
 
 ###############################################################################

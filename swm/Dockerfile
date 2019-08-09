@@ -108,4 +108,6 @@ RUN python3 -c "import rpmfluff; \
                 b.make(); print(b.get_built_rpm('noarch'))" \
     | xargs rpm -i --nodeps --justdb
 
-CMD /bin/sh
+VOLUME /host
+WORKDIR /host
+CMD /bin/bash
