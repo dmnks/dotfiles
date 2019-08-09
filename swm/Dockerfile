@@ -2,6 +2,8 @@
 
 FROM fedora:rawhide
 
+RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf
+
 # Install build deps
 RUN dnf install -y \
         check-devel \
