@@ -59,16 +59,6 @@ clean_containers() {
     [ -n "$images" ] && $bin rmi -f $images || true
 }
 
-sandbox() {
-    podman run \
-         -e TERM -it \
-         --detach-keys="ctrl-@" \
-         -v=$PWD:/host \
-         -v=$HOME/.bashrc:/root/.bashrc:ro \
-         --hostname sandbox \
-         -it $@ sandbox
-}
-
 ###############################################################################
 # Environment
 ###############################################################################

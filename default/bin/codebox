@@ -1,0 +1,61 @@
+#!/bin/bash
+
+progname="codebox"
+
+usage() {
+    echo "\
+Usage: $progname COMMAND [ARGS]
+
+Simple development environment within the current directory.
+
+Commands:
+    create      create new codebox container
+    enter       attach to codebox container
+    ls          list all codebox containers
+    rm          remove codebox container"
+    exit 1
+}
+
+NAME="codebox-"$(basename $PWD)
+IMAGE="codebox"
+
+ensure_exists() {
+    if ! podman container exists $NAME; then
+        >&2 echo "No codebox exists here"
+        exit 1
+    fi
+}
+
+ensure_no_exists() {
+    if podman container exists $NAME; then
+        >&2 echo "Codebox already exists here"
+        exit 1
+    fi
+}
+
+cmd=$1
+if [ -z "$cmd" ]; then
+    usage
+elif [ "$cmd" == "create" ]; then
+    ensure_no_exists
+    podman create \
+         -e TERM -it \
+         -v=$PWD:/host \
+         -v=$HOME/.bashrc:/root/.bashrc:ro \
+         --name $NAME \
+         --hostname codebox \
+         -it $IMAGE >/dev/null
+elif [ "$cmd" == "enter" ]; then
+    ensure_exists
+    podman start $NAME >/dev/null
+    podman attach --detach-keys="ctrl-@" $NAME
+elif [ "$cmd" == "ls" ]; then
+    podman ps -a | grep $IMAGE
+elif [ "$cmd" == "rm" ]; then
+    ensure_exists
+    podman rm -f $NAME >/dev/null
+else
+    usage
+fi
+
+exit 0
