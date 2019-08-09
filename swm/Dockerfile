@@ -80,6 +80,8 @@ RUN dnf install -y \
         sqlite-devel \
         swig
 
+RUN dnf install -y --allowerasing libmodulemd1-devel
+
 # Install development tools
 RUN dnf install -y \
         python3-pip \
