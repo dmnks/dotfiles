@@ -30,7 +30,6 @@ alias podman-clean='clean_containers podman'
 ###############################################################################
 
 setup_ps1() {
-    [ "$HOSTNAME" == "toolbox" ] && return
     local c_red=$(tput setaf 9)
     local c_green=$(tput setaf 10)
     local c_yellow=$(tput setaf 11)
@@ -41,7 +40,9 @@ setup_ps1() {
     c_dollar() {
         [ $? -eq 0 ] && tput sgr0 || tput setaf 9
     }
-    PS1="\[${c_green}\]-> \[${c_cyan}\]\W"
+    PS1="\[${c_green}\]"
+    [ "$HOSTNAME" == "toolbox" ] && PS1+="[toolbox]"
+    PS1+="-> \[${c_cyan}\]\W"
     PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
     PS1+="\[\$(c_dollar)\]\$\[${c_off}\] "
     export PS1
