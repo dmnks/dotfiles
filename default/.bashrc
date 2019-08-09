@@ -41,10 +41,12 @@ setup_ps1() {
         [ $? -eq 0 ] && tput sgr0 || tput setaf 9
     }
     PS1="\[${c_green}\]"
-    [[ "$HOSTNAME" =~ ^(toolbox|sandbox)$ ]] && PS1+="[$HOSTNAME]"
+    [ "$HOSTNAME" != "thinkpad" ] && PS1+="[$HOSTNAME]"
     PS1+="-> \[${c_cyan}\]\W"
     PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
-    PS1+="\[\$(c_dollar)\]\$\[${c_off}\] "
+    PS1+="\[\$(c_dollar)\]"
+    [ "$EUID" != 0 ] && PS1+="\$" || PS1+="#"
+    PS1+="\[${c_off}\] "
     export PS1
 }
 
