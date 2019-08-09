@@ -33,25 +33,27 @@ ensure_no_exists() {
     fi
 }
 
-cmd=$1
-if [ -z "$cmd" ]; then
+CMD=$1
+if [ -z "$CMD" ]; then
     usage
-elif [ "$cmd" == "create" ]; then
+elif [ "$CMD" == "create" ]; then
     ensure_no_exists
+    DEST=/root/$(echo $PWD | sed "s,$HOME/,,")
     podman create \
          -e TERM -it \
-         -v=$PWD:/host \
+         -v=$PWD:$DEST:ro \
          -v=$HOME/.bashrc:/root/.bashrc:ro \
+         --workdir $DEST \
          --name $NAME \
          --hostname codebox \
          -it $IMAGE >/dev/null
-elif [ "$cmd" == "enter" ]; then
+elif [ "$CMD" == "enter" ]; then
     ensure_exists
     podman start $NAME >/dev/null
     podman attach --detach-keys="ctrl-@" $NAME
-elif [ "$cmd" == "ls" ]; then
+elif [ "$CMD" == "ls" ]; then
     podman ps -a | grep $IMAGE
-elif [ "$cmd" == "rm" ]; then
+elif [ "$CMD" == "rm" ]; then
     ensure_exists
     podman rm -f $NAME >/dev/null
 else
