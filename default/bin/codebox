@@ -1,34 +1,35 @@
 #!/bin/bash
 
-progname="codebox"
+PROGNAME="codebox"
 
 usage() {
     echo "\
-Usage: $progname COMMAND [ARGS]
+Usage: $PROGNAME COMMAND [ARGS]
 
 Simple development environment within the current directory.
 
 Commands:
-    create      create new codebox container
-    enter       attach to codebox container
-    ls          list all codebox containers
-    rm          remove codebox container"
+    create      create new box
+    enter       attach to box
+    ls          list all boxes
+    rm          remove box"
     exit 1
 }
 
-NAME="codebox-"$(basename $PWD)
-IMAGE="codebox"
+NAME="$PROGNAME-"$(basename $PWD)
 
-ensure_exists() {
+ensure_box_exists() {
     if ! podman container exists $NAME; then
-        >&2 echo "No codebox exists here"
+        >&2 echo "No box has been created here yet"
+        >&2 echo "Use '$PROGNAME create'"
         exit 1
     fi
 }
 
-ensure_no_exists() {
+ensure_no_box_exists() {
     if podman container exists $NAME; then
-        >&2 echo "Codebox already exists here"
+        >&2 echo "Box already exists here"
+        >&2 echo "Use '$PROGNAME enter'"
         exit 1
     fi
 }
@@ -37,7 +38,12 @@ CMD=$1
 if [ -z "$CMD" ]; then
     usage
 elif [ "$CMD" == "create" ]; then
-    ensure_no_exists
+    ensure_no_box_exists
+    if ! podman image exists $NAME; then
+        >&2 echo "No box image exists"
+        >&2 echo "Create it with 'podman build -t $NAME /path/to/context'"
+        exit 1
+    fi
     DEST=/root/$(echo $PWD | sed "s,$HOME/,,")
     podman create \
          -e TERM -it \
@@ -45,16 +51,22 @@ elif [ "$CMD" == "create" ]; then
          -v=$HOME/.bashrc:/root/.bashrc:ro \
          --workdir $DEST \
          --name $NAME \
-         --hostname codebox \
-         -it $IMAGE >/dev/null
+         --hostname $PROGNAME \
+         -it $NAME >/dev/null
+    chcon -R -t container_file_t $PWD
+    echo "Box created, use '$PROGNAME enter'"
 elif [ "$CMD" == "enter" ]; then
-    ensure_exists
+    ensure_box_exists
     podman start $NAME >/dev/null
     podman attach --detach-keys="ctrl-@" $NAME
 elif [ "$CMD" == "ls" ]; then
-    podman ps -a | grep $IMAGE
+    OUTPUT=$(podman ps -a)
+    MATCHES=$(echo "$OUTPUT" | grep $PROGNAME)
+    [ "$MATCHES" == "" ] && exit 0
+    echo "$OUTPUT" | head -1
+    echo "$MATCHES"
 elif [ "$CMD" == "rm" ]; then
-    ensure_exists
+    ensure_box_exists
     podman rm -f $NAME >/dev/null
 else
     usage
