@@ -52,8 +52,8 @@ clean_containers() {
     local conts=$($bin ps -qa --filter=status=exited --no-trunc)
     local images=$($bin images -q --filter=dangling=true --no-trunc \
                  2>/dev/null)
-    [ -n "$conts" ] && $bin rm $conts
-    [ -n "$images" ] && $bin rmi $images || true
+    [ -n "$conts" ] && $bin rm -f $conts
+    [ -n "$images" ] && $bin rmi -f $images || true
 }
 
 ###############################################################################
