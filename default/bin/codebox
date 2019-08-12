@@ -47,7 +47,7 @@ elif [ "$CMD" == "create" ]; then
     DEST=/root/$(echo $PWD | sed "s,$HOME/,,")
     podman create \
          -e TERM -it \
-         -v=$PWD:$DEST:ro \
+         -v=$PWD:$DEST \
          -v=$HOME/.bashrc:/root/.bashrc:ro \
          --workdir $DEST \
          --name $NAME \
