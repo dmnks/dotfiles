@@ -90,7 +90,7 @@ RUN pip3 install --upgrade pip && pip3 install pudb
 RUN dnf clean all
 
 # Replace system installations with fake rpmdb entries
-ENV LIBDNF_VERSION 0.35.2
+ENV LIBDNF_VERSION 0.35.3
 ENV DNF_VERSION 4.2.8
 
 RUN rpm -e --nodeps \
