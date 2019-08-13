@@ -2,7 +2,7 @@
 
 FROM registry.fedoraproject.org/fedora:31
 
-ENV LIBDNF_VERSION 0.35.1
+ENV LIBDNF_VERSION 0.35.2
 ENV DNF_VERSION 4.2.8
 
 RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf
