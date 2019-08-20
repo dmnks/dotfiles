@@ -1,4 +1,5 @@
 # DNF stack development image
+# vi:syntax=dockerfile
 
 FROM registry.fedoraproject.org/fedora:31
 
@@ -108,6 +109,4 @@ RUN python3 -c "import rpmfluff; \
                 b.make(); print(b.get_built_rpm('noarch'))" \
     | xargs rpm -i --nodeps --justdb
 
-VOLUME /host
-WORKDIR /host
 CMD /bin/bash
