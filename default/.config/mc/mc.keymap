@@ -1,0 +1,8 @@
+[main]
+Quit = f10; ctrl-o
+
+[panel]
+Down = down; ctrl-n; j
+Up = up; ctrl-p; k
+PageUp = pgup; alt-v; ctrl-b
+PageDown = pgdn; ctrl-v; ctrl-f

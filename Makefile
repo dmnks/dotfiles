@@ -24,6 +24,7 @@ pkgs:
 	                    fzf \
 	                    powerline-fonts \
 	                    ranger \
+			    mc \
 	                    xterm
 	sudo systemctl enable docker
 	sudo systemctl start docker
