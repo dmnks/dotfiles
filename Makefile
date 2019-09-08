@@ -42,7 +42,7 @@ conf:
 	dconf load /org/gnome/ < gnome.conf
 
 swm:
-	stow -v --no-folding --ignore=Dockerfile swm
+	stow -v --no-folding --ignore=Dockerfile* swm
 
 restore:
 	stow -Dv default swm || true
