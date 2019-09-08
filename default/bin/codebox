@@ -48,7 +48,7 @@ elif [ "$CMD" == "create" ]; then
     podman create \
          -e TERM -it \
          -v=$PWD:$DEST \
-         -v=$HOME/.bashrc:/root/.bashrc:ro \
+         -v=$HOME/.bashrc:/root/.bashrc:ro,z \
          --workdir $DEST \
          --name $NAME \
          --hostname $PROGNAME \
