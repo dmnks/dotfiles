@@ -4,6 +4,7 @@ import sys
 from subprocess import call
 
 fname = sys.argv[1]
+start = int(sys.argv[2])
 root = os.path.dirname(os.path.abspath(fname))
 num2fn = {}
 order = []
@@ -14,10 +15,14 @@ with open(fname) as f:
         if line.lower().startswith('patch'):
             left, right = line.split(':')
             num = int(left[len('patch'):])
+            if num < start:
+                continue
             num2fn[num] = right.strip()
         elif line.lower().startswith('%patch'):
             left, args = line.split()
             num = int(left[len('%patch'):])
+            if num < start:
+                continue
             order.append(num)
 
 patches = [(i, num2fn[i]) for i in order]
