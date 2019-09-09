@@ -44,12 +44,11 @@ elif [ "$CMD" == "create" ]; then
         >&2 echo "Create it with 'podman build -t $NAME /path/to/context'"
         exit 1
     fi
-    DEST=/root/$(echo $PWD | sed "s,$HOME/,,")
     podman create \
          -e TERM -it \
-         -v=$PWD:$DEST \
+         -v=$PWD:$PWD \
          -v=$HOME/.bashrc:/root/.bashrc:ro,z \
-         --workdir $DEST \
+         --workdir $PWD \
          --name $NAME \
          --hostname $PROGNAME \
          --network host \
