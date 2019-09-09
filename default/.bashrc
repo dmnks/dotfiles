@@ -79,7 +79,7 @@ GIT_PS1_SHOWSTASHSTATE=1
 # Misc
 ###############################################################################
 
-bind '"\C-o":"mc -u\C-m"'
+bind '"\C-o":"mc -du\C-m"'
 
 if [ -d $HOME/.bashrc.d ]; then
     for script in $HOME/.bashrc.d/*.sh; do
