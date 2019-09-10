@@ -1,6 +1,3 @@
-[main]
-Quit = f10; ctrl-o
-
 [panel]
 Down = down; ctrl-n; j
 Up = up; ctrl-p; k
