@@ -92,9 +92,6 @@ RUN pip3 install --upgrade pip && pip3 install pudb
 RUN dnf clean all
 
 # Replace system installations with fake rpmdb entries
-ENV LIBDNF_VERSION 0.35.3
-ENV DNF_VERSION 4.2.8
-
 RUN rpm -e --nodeps \
     libdnf \
     python3-libdnf \
@@ -103,11 +100,17 @@ RUN rpm -e --nodeps \
     python3-dnf \
     python3-hawkey
 RUN ln -s /usr/local/bin/dnf-3 /usr/bin/dnf
-RUN python3 -c "import rpmfluff; \
-                b = rpmfluff.SimpleRpmBuild('libdnf', '${LIBDNF_VERSION}', '1'); \
-                b.make(); print(b.get_built_rpm('x86_64')); \
-                b = rpmfluff.SimpleRpmBuild('dnf', '${DNF_VERSION}', '1', buildArchs=['noarch']); \
-                b.make(); print(b.get_built_rpm('noarch'))" \
-    | xargs rpm -i --nodeps --justdb
+RUN echo "#!/usr/bin/python3" > /usr/local/bin/chver && \
+    echo "import sys, rpmfluff, subprocess, shlex; \
+          v1, v2 = sys.argv[1:]; \
+          a = rpmfluff.SimpleRpmBuild('libdnf', v1, '1'); \
+          b = rpmfluff.SimpleRpmBuild('dnf', v2, '1', buildArchs=['noarch']); \
+          a.make(); b.make(); \
+          paths = [a.get_built_rpm('x86_64'), b.get_built_rpm('noarch')]; \
+          subprocess.call(shlex.split('rpm -e --nodeps libdnf dnf')); \
+          subprocess.call(shlex.split('rpm -i --nodeps --justdb') + paths); \
+          a.clean(); b.clean()" >> /usr/local/bin/chver && \
+    chmod +x /usr/local/bin/chver
+RUN chver 0.35.3 4.2.8
 
 CMD /bin/bash
