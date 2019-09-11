@@ -46,13 +46,14 @@ elif [ "$CMD" == "create" ]; then
     fi
     podman create \
          -e TERM -it \
-         -v=$PWD:$PWD:z \
-         -v=$HOME/.bashrc:/root/.bashrc:ro,z \
+         -v=$PWD:$PWD \
+         -v=$HOME/.bashrc:/root/.bashrc:ro \
          --workdir $PWD \
          --name $NAME \
          --hostname $PROGNAME \
          --network host \
          -it $NAME >/dev/null
+    chcon -R -t container_file_t $PWD $HOME/.bashrc
     echo "Box created, use '$PROGNAME enter'"
 elif [ "$CMD" == "enter" ]; then
     ensure_box_exists
