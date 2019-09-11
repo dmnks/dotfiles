@@ -76,7 +76,8 @@ RUN dnf install -y \
         python3-sphinx \
         rpm-devel \
         sqlite-devel \
-        swig
+        swig \
+        zchunk-devel
 
 RUN dnf install -y --allowerasing libmodulemd1-devel
 
