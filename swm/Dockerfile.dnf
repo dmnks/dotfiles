@@ -59,6 +59,7 @@ RUN dnf install -y \
         gpgme-devel \
         gtk-doc \
         json-c-devel \
+        libfaketime \
         libmodulemd-devel \
         librepo-devel \
         libsmartcols-devel \
@@ -111,6 +112,6 @@ RUN echo "#!/usr/bin/python3" > /usr/local/bin/chver && \
           subprocess.call(shlex.split('rpm -i --nodeps --justdb') + paths); \
           a.clean(); b.clean()" >> /usr/local/bin/chver && \
     chmod +x /usr/local/bin/chver
-RUN chver 0.35.3 4.2.8
+RUN chver 0.35.4 4.2.11
 
 CMD /bin/bash
