@@ -90,9 +90,7 @@ RUN dnf install -y \
         vim
 RUN pip3 install --upgrade pip && pip3 install pudb
 
-RUN dnf clean all
-
-# Replace system installations with fake rpmdb entries
+# Remove system installation
 RUN rpm -e --nodeps \
     libdnf \
     python3-libdnf \
@@ -101,17 +99,25 @@ RUN rpm -e --nodeps \
     python3-dnf \
     python3-hawkey
 RUN ln -s /usr/local/bin/dnf-3 /usr/bin/dnf
+
+# Create useful scripts
 RUN echo "#!/usr/bin/python3" > /usr/local/bin/chver && \
-    echo "import sys, rpmfluff, subprocess, shlex; \
+    echo "import os, sys, rpmfluff; \
           v1, v2 = sys.argv[1:]; \
           a = rpmfluff.SimpleRpmBuild('libdnf', v1, '1'); \
           b = rpmfluff.SimpleRpmBuild('dnf', v2, '1', buildArchs=['noarch']); \
           a.make(); b.make(); \
           paths = [a.get_built_rpm('x86_64'), b.get_built_rpm('noarch')]; \
-          subprocess.call(shlex.split('rpm -e --nodeps libdnf dnf')); \
-          subprocess.call(shlex.split('rpm -i --nodeps --justdb') + paths); \
+          os.system('rpm -e --nodeps libdnf dnf 2>/dev/null'); \
+          os.system('rpm -i --nodeps --justdb %s 2>/dev/null' % ' '.join(paths)); \
           a.clean(); b.clean()" >> /usr/local/bin/chver && \
     chmod +x /usr/local/bin/chver
 RUN chver 0.35.4 4.2.11
+RUN echo "#!/usr/bin/bash" > /usr/local/bin/build && \
+    echo "pushd libdnf/build && make && make install && popd; \
+          pushd librepo/build && make && make install && popd; \
+          pushd dnf/build && make && make doc && make install && popd;" \
+          >> /usr/local/bin/build && \
+    chmod +x /usr/local/bin/build
 
 CMD /bin/bash
