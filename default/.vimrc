@@ -34,7 +34,7 @@ function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
     let named = map(listed, 'bufname(v:val)')
-    let named = map(filter(named, '!empty(v:val)'), 'v:val')
+    let named = filter(named, '!empty(v:val)')
     return named
 endfunction
 command! FZFBuffers call fzf#run(fzf#wrap({
