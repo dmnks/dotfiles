@@ -37,13 +37,6 @@ plugins:
 	git clone https://github.com/vimwiki/vimwiki $(PLUGINS)/vimwiki
 
 conf:
-	@[ -f ~/.bashrc ] && mv ~/.bashrc{,.orig} || true
-	stow -v --no-folding default
+	[[ -f ~/.bashrc && ! -L ~/.bashrc ]] && mv ~/.bashrc{,.orig} || true
+	stow -Rv --no-folding --ignore=Dockerfile.* default swm
 	dconf load /org/gnome/ < gnome.conf
-
-swm:
-	stow -v --no-folding --ignore=Dockerfile* swm
-
-restore:
-	stow -Dv default swm || true
-	@[ -f ~/.bashrc.orig ] && mv ~/.bashrc{.orig,} || true
