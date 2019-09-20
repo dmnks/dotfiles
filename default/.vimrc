@@ -140,7 +140,7 @@ set complete+=k
 
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>B :G '\# BREAKPOINT'<CR>
-nmap <leader>c :!git ctags<CR><CR>
+nmap <leader>c :!ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>r :redraw!<CR>
