@@ -65,8 +65,9 @@ let g:vimwiki_list = [wiki]
 
 syntax on
 set termguicolors
-set t_8f=[38;2;%lu;%lu;%lum  " for tmux
-set t_8b=[48;2;%lu;%lu;%lum  " for tmux
+" Needed for tmux, see :help xterm-true-color
+let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
 set t_ut=
 set background=dark
 map <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
@@ -80,7 +81,6 @@ let &colorcolumn=join(range(80, 999), ",")
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
-set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set scrolloff=0
 
 " #############################################################################
