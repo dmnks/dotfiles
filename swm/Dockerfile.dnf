@@ -32,6 +32,7 @@ RUN dnf install -y \
         passwd \
         pigz \
         procps-ng \
+        pyftpdlib \
         rsync \
         shadow-utils \
         sudo \
