@@ -115,9 +115,9 @@ RUN echo "#!/usr/bin/python3" > /usr/local/bin/chver && \
     chmod +x /usr/local/bin/chver
 RUN chver 0.35.5 4.2.11
 RUN echo "#!/usr/bin/bash" > /usr/local/bin/build && \
-    echo "make -C \$1/librepo/build && make -C \$1/librepo/build install; \
-          make -C \$1/libdnf/build && make -C \$1/libdnf/build install; \
-          make -C \$1/dnf/build && make -C \$1/dnf/build doc && make -C \$1/dnf/build install;" \
+    echo "make -C \$1/librepo/build && make -C \$1/librepo/build install && \
+          make -C \$1/libdnf/build && make -C \$1/libdnf/build install && \
+          make -C \$1/dnf/build && make -C \$1/dnf/build doc && make -C \$1/dnf/build install" \
           >> /usr/local/bin/build && \
     chmod +x /usr/local/bin/build
 
