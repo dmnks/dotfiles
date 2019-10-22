@@ -1,0 +1,58 @@
+# RPM development image
+# vi:syntax=dockerfile
+
+FROM registry.fedoraproject.org/fedora:31
+
+RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf
+
+# Install basic packages
+RUN dnf install -y \
+        bash-completion \
+        bzip2 \
+        diffutils \
+        dnf-plugins-core \
+        elfutils \
+        findutils \
+        flatpak-xdg-utils \
+        fpaste \
+        git \
+        gnupg \
+        gnupg2-smime \
+        hostname \
+        iputils \
+        jwhois \
+        keyutils \
+        krb5-libs \
+        less \
+        lsof \
+        man-db \
+        man-pages \
+        mlocate \
+        mtr \
+        openssh-clients \
+        passwd \
+        patch \
+        pigz \
+        procps-ng \
+        pyftpdlib \
+        rsync \
+        shadow-utils \
+        sudo \
+        tcpdump \
+        time \
+        traceroute \
+        tree \
+        unzip \
+        vte-profile \
+        wget \
+        which \
+        words \
+        xz \
+        zip \
+        /usr/bin/gdb-add-index
+
+# Install build deps
+RUN wget https://src.fedoraproject.org/rpms/rpm/raw/master/f/rpm.spec
+RUN dnf builddep -y --allowerasing rpm.spec && rm rpm.spec
+
+CMD /bin/bash

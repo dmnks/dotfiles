@@ -38,5 +38,5 @@ plugins:
 
 conf:
 	[[ -f ~/.bashrc && ! -L ~/.bashrc ]] && mv ~/.bashrc{,.orig} || true
-	stow -Rv --no-folding --ignore=Dockerfile.* default swm
+	stow -Rv --no-folding default swm
 	dconf load /org/gnome/ < gnome.conf
