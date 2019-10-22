@@ -6,30 +6,36 @@ usage() {
     echo "\
 Usage: $PROGNAME COMMAND [ARGS]
 
-Simple development environment within the current directory.
+Simple development environment within the current directory (a "project").
+
+Define your Dockerfiles in ~/.config/$PROGNAME/images/Dockerfile.PROJECT
+(replacing PROJECT with a directory name).
 
 Commands:
-    create      create new box
-    enter       attach to box
+    build       build a box image
+    create      create a new box
+    enter       attach to a box
     ls          list all boxes
-    rm          remove box"
+    rm          remove a box"
     exit 1
 }
 
-NAME="$PROGNAME-"$(basename $PWD)
+CONFDIR="$HOME/.config/$PROGNAME"
+PROJECT="$(basename $PWD)"
+NAME="$PROGNAME-$PROJECT"
 
 ensure_box_exists() {
     if ! podman container exists $NAME; then
-        >&2 echo "No box has been created here yet"
-        >&2 echo "Use '$PROGNAME create'"
+        >&2 echo "No box has been created here yet."
+        >&2 echo "Use: $PROGNAME create"
         exit 1
     fi
 }
 
 ensure_no_box_exists() {
     if podman container exists $NAME; then
-        >&2 echo "Box already exists here"
-        >&2 echo "Use '$PROGNAME enter'"
+        >&2 echo "Box already exists here."
+        >&2 echo "Use: $PROGNAME enter"
         exit 1
     fi
 }
@@ -37,11 +43,19 @@ ensure_no_box_exists() {
 CMD=$1
 if [ -z "$CMD" ]; then
     usage
+elif [ "$CMD" == "build" ]; then
+    DOCKERFILE="$CONFDIR/images/Dockerfile.$PROJECT"
+    if [ ! -f "$DOCKERFILE" ]; then
+        >&2 echo "No Dockerfile defined for this project."
+        >&2 echo "Create one at: $DOCKERFILE"
+        exit 1
+    fi
+    podman build $@ -t $NAME -f $DOCKERFILE .
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     if ! podman image exists $NAME; then
-        >&2 echo "No box image exists"
-        >&2 echo "Create it with 'podman build -t $NAME /path/to/context'"
+        >&2 echo "No image exists here."
+        >&2 echo "Use: $PROGNAME build"
         exit 1
     fi
     podman create \
@@ -54,17 +68,14 @@ elif [ "$CMD" == "create" ]; then
          --network host \
          -it $NAME >/dev/null
     chcon -R -t container_file_t $PWD $HOME/.bashrc
-    echo "Box created, use '$PROGNAME enter'"
+    echo "Box created."
+    echo "Enter with: $PROGNAME enter"
 elif [ "$CMD" == "enter" ]; then
     ensure_box_exists
     podman start $NAME >/dev/null
     podman attach --detach-keys="ctrl-@" $NAME
 elif [ "$CMD" == "ls" ]; then
-    OUTPUT=$(podman ps -a)
-    MATCHES=$(echo "$OUTPUT" | grep $PROGNAME)
-    [ "$MATCHES" == "" ] && exit 0
-    echo "$OUTPUT" | head -1
-    echo "$MATCHES"
+    podman ps -a --format '{{.Names}}' | egrep "^$NAME"
 elif [ "$CMD" == "rm" ]; then
     ensure_box_exists
     podman rm -f $NAME >/dev/null
