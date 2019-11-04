@@ -66,6 +66,15 @@ clean_containers() {
     [ -n "$images" ] && $bin rmi -f $images || true
 }
 
+podman-mc() {
+    local cont=$1
+    if [ -z "$cont" ]; then
+        echo >&2 "No container name specified"
+        return 1
+    fi
+    podman unshare mc -d $(podman unshare podman mount $cont)
+}
+
 ###############################################################################
 # Environment
 ###############################################################################
