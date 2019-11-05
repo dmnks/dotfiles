@@ -50,6 +50,7 @@ RUN dnf install -y \
         libarchive-devel \
         libcap-devel \
         libdb-devel \
+        libfaketime \
         libgcrypt-devel \
         libselinux-devel \
         libtool \
@@ -68,12 +69,15 @@ RUN dnf install -y \
         patch \
         pigz \
         pkgconfig \
+        pinentry \
         popt-devel \
         procps-ng \
         pyftpdlib \
         python3-devel \
         readline-devel \
         redhat-rpm-config \
+        rpm-build \
+        rpm-sign \
         rsync \
         sed \
         shadow-utils \
