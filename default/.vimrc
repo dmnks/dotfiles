@@ -12,6 +12,7 @@ let g:ale_linters = {
     \   'python': ['flake8', 'pyls'],
     \}
 let g:ale_lint_on_text_changed = 'never'
+let g:ale_c_parse_makefile = 1
 
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
