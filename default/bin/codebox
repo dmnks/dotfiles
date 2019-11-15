@@ -13,16 +13,26 @@ Define your Dockerfiles in ~/.config/$PROGNAME/images/Dockerfile.PROJECT
 
 Commands:
     build       build a box image
+    commit      update the box image
+    edit        edit the Dockerfile
     create      create a new box
-    enter       attach to a box
-    ls          list all boxes
-    rm          remove a box"
+    enter       attach to the box
+    ls          list all boxes (per branch)
+    rm          remove the box"
     exit 1
 }
 
 CONFDIR="$HOME/.config/$PROGNAME"
 PROJECT="$(basename $PWD)"
-NAME="$PROGNAME-$PROJECT"
+DOCKERFILE="$CONFDIR/images/Dockerfile.$PROJECT"
+PREFIX="$PROGNAME-$PROJECT"
+
+BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
+[ -z "$BRANCH" ] && BRANCH=master
+[ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
+
+IMAGE="$PREFIX:$BRANCH"
+NAME="$PREFIX-$BRANCH"
 
 ensure_box_exists() {
     if ! podman container exists $NAME; then
@@ -40,25 +50,32 @@ ensure_no_box_exists() {
     fi
 }
 
+ensure_image_exists() {
+    if ! podman image exists $IMAGE; then
+        >&2 echo "No image exists here."
+        >&2 echo "Use: $PROGNAME build"
+        exit 1
+    fi
+}
+
 CMD=$1
 OPT=$2
 if [ -z "$CMD" ]; then
     usage
 elif [ "$CMD" == "build" ]; then
-    DOCKERFILE="$CONFDIR/images/Dockerfile.$PROJECT"
     if [ ! -f "$DOCKERFILE" ]; then
         >&2 echo "No Dockerfile defined for this project."
         >&2 echo "Create one at: $DOCKERFILE"
         exit 1
     fi
-    podman build $@ -t $NAME -f $DOCKERFILE .
+    podman build $@ -t $IMAGE -f $DOCKERFILE .
+elif [ "$CMD" == "commit" ]; then
+    podman commit $NAME $IMAGE
+elif [ "$CMD" == "edit" ]; then
+    $EDITOR "$DOCKERFILE"
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
-    if ! podman image exists $NAME; then
-        >&2 echo "No image exists here."
-        >&2 echo "Use: $PROGNAME build"
-        exit 1
-    fi
+    ensure_image_exists
     podman create \
          -e TERM -it \
          -v=$PWD:$PWD \
@@ -68,7 +85,7 @@ elif [ "$CMD" == "create" ]; then
          --hostname $PROGNAME \
          --network host \
          $OPT \
-         -it $NAME >/dev/null
+         -it $IMAGE >/dev/null
     chcon -R -t container_file_t $PWD $HOME/.bashrc
     echo "Box created."
     echo "Enter with: $PROGNAME enter"
@@ -77,7 +94,17 @@ elif [ "$CMD" == "enter" ]; then
     podman start $NAME >/dev/null
     podman attach --detach-keys="ctrl-@" $NAME
 elif [ "$CMD" == "ls" ]; then
-    podman ps -a --format '{{.Names}}' | egrep "^$NAME"
+    for name in $(podman ps -a --format '{{.Names}}'); do
+        symbol="  "
+        color=""
+        [[ "$name" =~ ^$PREFIX ]] || continue
+        if [[ "$name" == "$NAME" ]]; then
+            symbol="* "
+            color=$(tput setaf 2)
+        fi
+        name=$(echo "$name" | sed "s/$PREFIX-//")
+        echo "$symbol$color$name$(tput sgr0)"
+    done
 elif [ "$CMD" == "rm" ]; then
     ensure_box_exists
     podman rm -f $NAME >/dev/null
