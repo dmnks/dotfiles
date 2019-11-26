@@ -65,7 +65,7 @@ if [ -z "$CMD" ]; then
 elif [ "$CMD" == "build" ]; then
     if [ ! -f "$DOCKERFILE" ]; then
         >&2 echo "No Dockerfile defined for this project."
-        >&2 echo "Create one at: $DOCKERFILE"
+        >&2 echo "Create one with: codebox edit"
         exit 1
     fi
     podman build $@ -t $IMAGE -f $DOCKERFILE .
