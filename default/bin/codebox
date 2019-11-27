@@ -108,6 +108,9 @@ elif [ "$CMD" == "ls" ]; then
 elif [ "$CMD" == "rm" ]; then
     ensure_box_exists
     podman rm -f $NAME >/dev/null
+elif [ "$CMD" == "mc" ]; then
+    ensure_box_exists
+    podman unshare mc -d $(podman unshare podman mount $NAME)
 else
     usage
 fi
