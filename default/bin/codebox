@@ -86,7 +86,8 @@ elif [ "$CMD" == "create" ]; then
          --network host \
          $OPT \
          -it $IMAGE >/dev/null
-    chcon -R -t container_file_t $PWD $HOME/.bashrc
+    chcon -R -t container_file_t $PWD
+    chcon -t container_file_t $HOME/.bashrc
     echo "Box created."
     echo "Enter with: $PROGNAME enter"
 elif [ "$CMD" == "enter" ]; then
