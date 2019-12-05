@@ -26,8 +26,6 @@ pkgs:
 	                    ranger \
 	                    mc \
 	                    xterm
-	sudo systemctl enable docker
-	sudo systemctl start docker
 
 plugins:
 	mkdir -p $(PLUGINS)
