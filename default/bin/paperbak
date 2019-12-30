@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -e
+
+PROGNAME="paperbak"
+TITLE="GnuPG Private Key"
+
+usage() {
+    echo "\
+Usage: $PROGNAME COMMAND [ARGS]
+
+Create a printable PDF paper backup of the given GnuPG private key using QR
+codes.
+
+Commands:
+    create KEYID FILE       generate PDF paper backup of KEYID named FILE
+    restore KEY FILE...     restore key from given QR codes (PNG files)"
+    exit 1
+}
+
+qrdump() {
+    local INFILE=$1
+    local OUTFILE=$2
+    split -b $SIZE $INFILE
+    local IDX=1
+    local COUNT=$(ls -1q xa* | wc -l)
+    for BLOCK in xa*; do
+        local HASH=$(sha1sum $BLOCK | awk '{print $1}' | head -c 7)
+        qrencode -l M -r $BLOCK -o $BLOCK.png
+        # Add a label
+        convert -density $DPI -splice 0x16 -font Courier-Bold -pointsize 10 \
+                -annotate +0+10 "BLOCK $IDX/$COUNT  SHA1 $HASH" \
+                -gravity south $BLOCK.png -append $BLOCK.png
+        IDX=$((IDX + 1))
+    done
+    montage -density $DPI -tile $TILE -geometry +0+0 xa*.png $OUTFILE
+}
+
+[ -z "$SIZE" ] &&       SIZE=512
+[ -z "$FORMAT" ] &&     FORMAT=A4
+[ -z "$DPI" ] &&        DPI=115     # Good fit for A4
+[ -z "$TILE" ] &&       TILE=3x3
+
+CMD=$1
+OPT=$2
+if [ -z "$CMD" ]; then
+    usage
+elif [ "$CMD" == "create" ]; then
+    shift
+    [ $# -lt 2 ] && usage
+    KEYID=$1
+    OUTFILE=$(readlink -f $2)
+    TEMPDIR=$(mktemp -d)
+    pushd $TEMPDIR >/dev/null
+
+    gpg2 --export-secret-key $KEYID | base64 -w0 > key.txt
+    qrdump key.txt codes.eps
+    (cat << EOF
+Base64-encoded data split into $SIZE-byte blocks encoded in QR codes, followed by a revocation certificate and a full hexdump as a backup.
+
+Fingerprint:        $(gpg2 --with-fingerprint --list-keys $KEYID | sed -n 2p | xargs)
+SHA1 (encoded):     $(sha1sum key.txt | awk '{print $1}')
+
+@epsf[c]{codes.eps}
+EOF
+    ) | enscript -q -t "$TITLE" --word-wrap -M $FORMAT -e@ \
+                 --header 'GnuPG Private Key|%W|Page $%/$=' --word-wrap \
+                 -o - | ps2pdf - $OUTFILE
+
+    popd >/dev/null
+    rm -rf "$TEMPDIR"
+else
+    usage
+fi
+
+exit 0
