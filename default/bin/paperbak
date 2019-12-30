@@ -21,14 +21,14 @@ Commands:
 qrdump() {
     local SIZE=$1
     local INFILE=$2
-    local OUTFILE=$3
-    split -b $SIZE $INFILE
+    split -d -b $SIZE $INFILE $INFILE-
     local IDX=1
-    local COUNT=$(ls -1q xa* | wc -l)
+    local COUNT=$(ls -1q $INFILE-* | wc -l)
     local WIDTH=
-    for BLOCK in xa*; do
+    for BLOCK in $INFILE-*; do
         local HASH=$(sha1sum $BLOCK | awk '{print $1}' | head -c 7)
         qrencode -l M -r $BLOCK -o $BLOCK.png
+        rm $BLOCK
         [ -z "$WIDTH" ] && WIDTH=$(identify -format '%w' $BLOCK.png)
         # Resize last to normal block size
         if [ $((COUNT - IDX)) == 0 ]; then
@@ -41,7 +41,6 @@ qrdump() {
                 -gravity south $BLOCK.png -append $BLOCK.png
         IDX=$((IDX + 1))
     done
-    montage -density $DPI -tile $TILE -geometry +0+0 xa*.png $OUTFILE
 }
 
 [ -z "$SIZE" ] &&       SIZE=512
@@ -61,13 +60,14 @@ elif [ "$CMD" == "create" ]; then
     TEMPDIR=$(mktemp -d)
     pushd $TEMPDIR >/dev/null
 
-    gpg2 --export-secret-key $KEYID | base64 -w0 > key.txt
-    qrdump $SIZE key.txt codes.eps
+    gpg2 --export-secret-key $KEYID | base64 -w0 > key
+    qrdump $SIZE key
+    montage -density $DPI -tile $TILE -geometry +0+0 key-*.png codes.eps
     (cat << EOF
 Base64-encoded data split into $SIZE-byte blocks encoded in QR codes, followed by a revocation certificate and a full hexdump as a backup.
 
 Fingerprint:        $(gpg2 --with-fingerprint --list-keys $KEYID | sed -n 2p | xargs)
-SHA1 (encoded):     $(sha1sum key.txt | awk '{print $1}')
+SHA1 (encoded):     $(sha1sum key | awk '{print $1}')
 
 @epsf[c]{codes.eps}
 EOF
