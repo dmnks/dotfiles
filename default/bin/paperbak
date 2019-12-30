@@ -19,25 +19,31 @@ Commands:
 }
 
 qrdump() {
-    local SIZE=$1
-    local INFILE=$2
+    local ID=$1
+    local SIZE=$2
+    local INFILE=$3
+
     split -d -b $SIZE $INFILE $INFILE-
     local IDX=1
     local COUNT=$(ls -1q $INFILE-* | wc -l)
     local WIDTH=
     for BLOCK in $INFILE-*; do
         local HASH=$(sha1sum $BLOCK | awk '{print $1}' | head -c 7)
+
         qrencode -l M -r $BLOCK -o $BLOCK.png
         rm $BLOCK
         [ -z "$WIDTH" ] && WIDTH=$(identify -format '%w' $BLOCK.png)
+
         # Resize last to normal block size
         if [ $((COUNT - IDX)) == 0 ]; then
             convert -density $DPI -gravity center \
                     -extent ${WIDTH}x $BLOCK.png $BLOCK.png
         fi
+
         # Add a label
+        [[ $((COUNT)) > 1 ]] && BLOCKID="BLK:$IDX/$COUNT " || BLOCKID=""
         convert -density $DPI -splice 0x16 -font Courier-Bold -pointsize 10 \
-                -annotate +0+10 "BLOCK $IDX/$COUNT  SHA1 $HASH" \
+                -annotate +0+10 "$ID ${BLOCKID}SHA1:$HASH" \
                 -gravity south $BLOCK.png -append $BLOCK.png
         IDX=$((IDX + 1))
     done
@@ -61,7 +67,7 @@ elif [ "$CMD" == "create" ]; then
     pushd $TEMPDIR >/dev/null
 
     gpg2 --export-secret-key $KEYID | base64 -w0 > key
-    qrdump $SIZE key
+    qrdump KEY $SIZE key
     montage -density $DPI -tile $TILE -geometry +0+0 key-*.png codes.eps
     (cat << EOF
 Base64-encoded data split into $SIZE-byte blocks encoded in QR codes, followed by a revocation certificate and a full hexdump as a backup.
