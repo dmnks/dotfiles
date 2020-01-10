@@ -1,0 +1,49 @@
+#!/usr/bin/python3
+# Dirty script to convert my journal file into a directory structure
+
+import calendar
+import sys
+import os
+
+fname = sys.argv[1]
+
+with open(fname) as f:
+    sections = []
+    section = ''
+    for line in f:
+        parts = line.split()
+        if parts:
+            sep = parts[0]
+        else:
+            sep = ''
+        if sep.startswith('=') and len(sep) < 5:
+            if section:
+                sections.append(section)
+            section = line + '\n'
+        else:
+            section += line
+    sections.append(section)
+
+    for section in sections:
+        lines = section.split('\n')
+        heading = lines[0]
+
+        if not heading.startswith('==== '):
+            continue
+
+        parts = heading.split()
+        date = parts[2]
+        year, month, day = date.split('-')
+        month = '%s-%s' % (month, calendar.month_name[int(month)])
+        prefix = os.path.join(year, month)
+        path = os.path.join(prefix, date + '.wiki')
+
+        lines[0] = heading.replace('====', '=')
+        data = '\n'.join(lines[:-1])
+
+        try:
+            os.makedirs(prefix)
+        except FileExistsError:
+            pass
+        with open(path, 'w') as f:
+            f.write(data)
