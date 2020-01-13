@@ -68,16 +68,29 @@ clean_containers() {
     [ -n "$images" ] && $bin rmi -f $images || true
 }
 
-journal() {
-    local path=${JOURNAL_PATH}/$(date +"%Y/%m-%B")
-    local date=$(date +"%Y-%m-%d")
-    local file=${path}/${date}.wiki
+jrn() {
+    local date="now"
+    [ -n "$1" ] && date="$@"
+    cmd() {
+        date -d "$date" "$@"
+    }
+
+    local base=$(cmd +"%Y-%m-%d")
+    local path=${JOURNAL_PATH}/$(cmd +"%Y/%m-%B")
+    local goals=${path}/0-GOALS.wiki
+    local today=${path}/${base}.wiki
     mkdir -p $path
-    if [ ! -f "$file" ]; then
-        local heading=$(date +"%A $date")
-        echo -e "= $heading =\n\n" > $file
+
+    if [ ! -f "$goals" ]; then
+        local heading=$(cmd +"%B")
+        echo -e "= $heading GOALS =\n\n" > $goals
     fi
-    vim '+normal G' $file
+    if [ ! -f "$today" ]; then
+        local heading=$(cmd +"%A $base")
+        echo -e "= $heading =\n\n" > $today
+    fi
+
+    vim '+normal G' -o $today $goals
 }
 
 ###############################################################################
