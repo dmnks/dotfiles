@@ -13,6 +13,7 @@ fi
 export PATH
 
 # User specific aliases and functions
+JOURNAL_PATH=$HOME/journal
 
 # If not running interactively, go with the distro defaults
 [ -z "$PS1" ] && return
@@ -65,6 +66,18 @@ clean_containers() {
                  2>/dev/null)
     [ -n "$conts" ] && $bin rm -f $conts
     [ -n "$images" ] && $bin rmi -f $images || true
+}
+
+journal() {
+    local path=${JOURNAL_PATH}/$(date +"%Y/%m-%B")
+    local date=$(date +"%Y-%m-%d")
+    local file=${path}/${date}.wiki
+    mkdir -p $path
+    if [ ! -f "$file" ]; then
+        local heading=$(date +"%A $date")
+        echo -e "= $heading =\n\n" > $file
+    fi
+    vim '+normal G' $file
 }
 
 ###############################################################################
