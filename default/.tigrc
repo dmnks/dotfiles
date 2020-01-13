@@ -1,7 +1,6 @@
 # BINDINGS
 bind generic S :source ~/.tigrc
 bind main E !git rebase -i %(commit)^
-bind main N @git branch "%(prompt Enter branch name: )" %(commit)
 bind status A !?git commit --amend
 bind main g move-first-line
 
