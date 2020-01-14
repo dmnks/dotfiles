@@ -8,13 +8,16 @@ Usage: $PROGNAME COMMAND [ARGS]
 
 Simple development environment within the current directory (a "project").
 
-Define your Dockerfiles in ~/.config/$PROGNAME/images/Dockerfile.PROJECT
-(replacing PROJECT with a directory name).
+Quick start:
+  $ $PROGNAME edit
+  $ $PROGNAME build
+  $ $PROGNAME create
+  $ $PROGNAME enter
 
 Commands:
     build       build a box image
     commit      update the box image
-    edit        edit the Dockerfile
+    edit        edit (or create) the Dockerfile
     create      create a new box
     enter       attach to the box
     ls          list all boxes (per branch)
@@ -33,7 +36,6 @@ NAME="$PREFIX-$BRANCH"
 IMAGEDIR="$CONFDIR/images/$PROJECT"
 TEMPLATE="$IMAGEDIR/master/Dockerfile"
 DOCKERFILE="$IMAGEDIR/$BRANCH/Dockerfile"
-
 mkdir -p $IMAGEDIR/{master,$BRANCH}
 [[ ! -f "$DOCKERFILE" && -f "$TEMPLATE" ]] && cp $TEMPLATE $DOCKERFILE
 
@@ -68,7 +70,7 @@ if [ -z "$CMD" ]; then
     usage
 elif [ "$CMD" == "build" ]; then
     if [ ! -f "$DOCKERFILE" ]; then
-        >&2 echo "No Dockerfile defined for this project."
+        >&2 echo "No Dockerfile defined here."
         >&2 echo "Create one with: codebox edit"
         exit 1
     fi
@@ -76,8 +78,7 @@ elif [ "$CMD" == "build" ]; then
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
 elif [ "$CMD" == "edit" ]; then
-    [ ! -f "$TEMPLATE" ] && path=$TEMPLATE || path=$DOCKERFILE
-    $EDITOR "$path"
+    $EDITOR $DOCKERFILE
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     ensure_image_exists
