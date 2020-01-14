@@ -1,5 +1,4 @@
 # SCL-UTILS development image
-# vi:syntax=dockerfile
 
 FROM registry.access.redhat.com/ubi8
 ARG BASEOS

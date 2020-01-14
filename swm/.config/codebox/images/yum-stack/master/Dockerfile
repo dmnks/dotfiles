@@ -1,5 +1,4 @@
 # YUM stack development image
-# vi:syntax=dockerfile
 
 FROM registry.access.redhat.com/rhel7
 ARG BASEURL

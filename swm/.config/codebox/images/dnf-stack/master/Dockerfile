@@ -1,5 +1,4 @@
 # DNF stack development image
-# vi:syntax=dockerfile
 
 FROM registry.fedoraproject.org/fedora:31
 
