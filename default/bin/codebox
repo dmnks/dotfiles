@@ -59,7 +59,8 @@ ensure_image_exists() {
 }
 
 CMD=$1
-OPT=$2
+shift
+ARGS=$@
 if [ -z "$CMD" ]; then
     usage
 elif [ "$CMD" == "build" ]; then
@@ -68,7 +69,7 @@ elif [ "$CMD" == "build" ]; then
         >&2 echo "Create one with: codebox edit"
         exit 1
     fi
-    podman build $@ -t $IMAGE -f $DOCKERFILE .
+    podman build $ARGS -t $IMAGE -f $DOCKERFILE .
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
 elif [ "$CMD" == "edit" ]; then
@@ -84,7 +85,7 @@ elif [ "$CMD" == "create" ]; then
          --name $NAME \
          --hostname $PROGNAME \
          --network host \
-         $OPT \
+         $ARGS \
          -it $IMAGE >/dev/null
     chcon -R -t container_file_t $PWD
     chcon -t container_file_t $HOME/.bashrc
