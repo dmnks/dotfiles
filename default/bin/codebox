@@ -24,15 +24,18 @@ Commands:
 
 CONFDIR="$HOME/.config/$PROGNAME"
 PROJECT="$(basename $PWD)"
-DOCKERFILE="$CONFDIR/images/Dockerfile.$PROJECT"
 PREFIX="$PROGNAME-$PROJECT"
-
 BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
 [ -z "$BRANCH" ] && BRANCH=master
 [ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
-
 IMAGE="$PREFIX:$BRANCH"
 NAME="$PREFIX-$BRANCH"
+IMAGEDIR="$CONFDIR/images/$PROJECT"
+TEMPLATE="$IMAGEDIR/master/Dockerfile"
+DOCKERFILE="$IMAGEDIR/$BRANCH/Dockerfile"
+
+mkdir -p $IMAGEDIR/{master,$BRANCH}
+[[ ! -f "$DOCKERFILE" && -f "$TEMPLATE" ]] && cp $TEMPLATE $DOCKERFILE
 
 ensure_box_exists() {
     if ! podman container exists $NAME; then
@@ -73,7 +76,8 @@ elif [ "$CMD" == "build" ]; then
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
 elif [ "$CMD" == "edit" ]; then
-    $EDITOR "$DOCKERFILE"
+    [ ! -f "$TEMPLATE" ] && path=$TEMPLATE || path=$DOCKERFILE
+    $EDITOR "$path"
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     ensure_image_exists
