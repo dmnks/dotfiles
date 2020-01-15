@@ -74,7 +74,7 @@ elif [ "$CMD" == "build" ]; then
         >&2 echo "Create one with: codebox edit"
         exit 1
     fi
-    podman build $ARGS -t $IMAGE -f $DOCKERFILE .
+    podman build $ARGS --build-arg=MOUNTDIR=$PWD -t $IMAGE -f $DOCKERFILE .
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
 elif [ "$CMD" == "edit" ]; then
