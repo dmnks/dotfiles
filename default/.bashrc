@@ -49,8 +49,16 @@ setup_ps1() {
     c_dollar() {
         [ $? -eq 0 ] && tput sgr0 || tput setaf 9
     }
+    os_release() {
+        grep "^$1=" /etc/os-release | cut -d'=' -f2 | tr -d \"
+    }
     PS1="\[${c_green}\]"
-    [ "$HOSTNAME" != "thinkpad" ] && PS1+="[$HOSTNAME]"
+    if [ "$HOSTNAME" != "thinkpad" ]; then
+        PS1+="[$HOSTNAME]"
+        local os=$(os_release ID)
+        local version=$(os_release VERSION_ID)
+        [[ -n "$os" && -n "$version" ]] && PS1+="(${os}-${version})"
+    fi
     PS1+="-> \[${c_cyan}\]\W"
     PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
     PS1+="\[\$(c_dollar)\]"
