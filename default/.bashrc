@@ -98,7 +98,7 @@ jrn() {
         echo -e "= $heading =\n\n" > $today
     fi
 
-    vim '+normal G' -O $today $goals
+    vim '+normal G' $today
 }
 
 ###############################################################################
