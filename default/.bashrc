@@ -82,6 +82,8 @@ jrn() {
     cmd() {
         date -d "$date" "$@"
     }
+    # Sanity check
+    cmd || return 1
 
     local base=$(cmd +"%Y-%m-%d")
     local path=${JOURNAL_PATH}/$(cmd +"%Y/%m-%B")
