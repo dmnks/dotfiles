@@ -87,7 +87,7 @@ jrn() {
 
     local base=$(cmd +"%Y-%m-%d")
     local path=${JOURNAL_PATH}/$(cmd +"%Y/%m-%B")
-    local goals=${path}/0-GOALS.wiki
+    local goals=${path}/GOALS.wiki
     local today=${path}/${base}.wiki
     mkdir -p $path
 
