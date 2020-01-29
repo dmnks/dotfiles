@@ -1,5 +1,3 @@
-let mapleader = ' '
-
 " #############################################################################
 " # Plugin setup
 " #############################################################################
@@ -47,9 +45,6 @@ command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \ 'sink':    'tag',
     \ 'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
-nmap <c-p> :FZFBuffers<CR>
-nmap <c-l> :FZF<CR>
-nmap <c-k> :FZFTags<CR>
 
 " Vimwiki
 let g:vimwiki_hl_headers = 1
@@ -71,7 +66,6 @@ let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
 let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
 set t_ut=
 set background=dark
-map <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 colorscheme gruvbox
 set number
 set wildmenu
@@ -96,10 +90,36 @@ set expandtab
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 set textwidth=79
-set foldlevel=99
+set foldlevel=3
 
 " #############################################################################
 " # Motion
+" #############################################################################
+
+" #############################################################################
+" # Searching
+" #############################################################################
+
+set hlsearch
+set ignorecase
+set smartcase
+" Highlight dynamically as pattern is typed
+set incsearch
+set grepprg=git\ grep\ -n\ $*
+command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
+    \ | copen | redraw!
+
+" #############################################################################
+" # Misc
+" #############################################################################
+
+set tags=tags
+set ttimeoutlen=10
+set dictionary=/usr/share/dict/words
+set complete+=k
+
+" #############################################################################
+" # Mappings
 " #############################################################################
 
 nmap ]q :cnext<CR>
@@ -114,37 +134,17 @@ nmap ]t :tnext<CR>
 nmap [t :tprev<CR>
 nmap ]T :tlast<CR>
 nmap [T :tfirst<CR>
-
-" #############################################################################
-" # Searching
-" #############################################################################
-
-set hlsearch
-set ignorecase
-set smartcase
-" Highlight dynamically as pattern is typed
-set incsearch
-nmap <leader>n :nohl<CR>
-set grepprg=git\ grep\ -n\ $*
-command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
-    \ | copen | redraw!
-nmap <leader>g :exec "G <cword>"<cr>
-
-" #############################################################################
-" # Misc
-" #############################################################################
-
-set tags=tags
-set ttimeoutlen=10
-set dictionary=/usr/share/dict/words
-set complete+=k
-
+nmap <space> za
+nmap <esc><esc> :nohl<CR>
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
-nmap <leader>B :G '\# BREAKPOINT'<CR>
 nmap <leader>c :!git ctags<CR><CR>
-nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
-nmap <leader>r :redraw!<CR>
+nmap <F3> :exec "G <cword>"<cr>
+nmap <F4> :r !date "+==== \%a \%Y-\%m-\%d ===="<CR>
+nmap <F5> :windo e<CR>
+nmap <c-p> :FZFBuffers<CR>
+nmap <c-l> :FZF<CR>
+nmap <c-k> :FZFTags<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
