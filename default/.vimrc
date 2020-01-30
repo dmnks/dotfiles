@@ -140,7 +140,7 @@ nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>s :set spell!<CR>
 nmap <F3> :exec "G <cword>"<cr>
-nmap <F4> :r !date "+==== \%a \%Y-\%m-\%d ===="<CR>
+nmap <F4> :exec search("^==== " . strftime("%a %Y-%m-%d") . " ====$")<CR>
 nmap <F5> :windo e<CR>
 nmap <c-p> :FZFBuffers<CR>
 nmap <c-l> :FZF<CR>
