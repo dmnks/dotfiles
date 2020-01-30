@@ -5,10 +5,17 @@ days() {
     local start=$1
     local end=$2
     local date=$start
+    local week=$(date -d"$date" +"%W")
+    local lastweek=
     while [ "$date" != "$end" ]; do
         local name=$(date -d"$date" +"%a")
         if [[ "$name" != "Sat" && "$name" != "Sun" ]]; then
-            echo $(date -d"$date" +"==== %a %Y-%m-%d ====")
+            week=$(date -d"$date" +"%W")
+            if [[ "$week" != "$lastweek" ]]; then
+                echo "==== Week $week ===="
+                lastweek=$week
+            fi
+            echo $(date -d"$date" +"===== %a %Y-%m-%d =====")
         fi
         date=$(date -I -d"$date +1day")
     done
