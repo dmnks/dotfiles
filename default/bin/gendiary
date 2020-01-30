@@ -1,6 +1,9 @@
 #!/bin/bash
 # Generate a diary for the given year.
 
+year=$1
+dailies=$2
+
 days() {
     local start=$1
     local end=$2
@@ -16,6 +19,8 @@ days() {
                 lastweek=$week
             fi
             echo $(date -d"$date" +"===== %a %Y-%m-%d =====")
+            local fname="$dailies/$date.wiki"
+            [[ -f "$fname" ]] && cat "$fname"
         fi
         date=$(date -I -d"$date +1day")
     done
@@ -36,7 +41,6 @@ quarter() {
     done
 }
 
-year=$1
 echo "== Quarter 1 =="
 quarter $year-03-01
 echo "== Quarter 2 =="
