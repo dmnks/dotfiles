@@ -10,7 +10,7 @@ days() {
     local date=$start
     local week=$(date -d"$date" +"%W")
     local lastweek=
-    while [ "$date" != "$end" ]; do
+    while [[ "$date" != "$end" ]]; do
         local name=$(date -d"$date" +"%a")
         if [[ "$name" != "Sat" && "$name" != "Sun" ]]; then
             week=$(date -d"$date" +"%W")
@@ -20,7 +20,10 @@ days() {
             fi
             echo $(date -d"$date" +"===== %a %Y-%m-%d =====")
             local fname="$dailies/$date.wiki"
-            [[ -f "$fname" ]] && cat "$fname"
+            if [[ -f "$fname" ]]; then
+                cat "$fname"
+                echo
+            fi
         fi
         date=$(date -I -d"$date +1day")
     done
