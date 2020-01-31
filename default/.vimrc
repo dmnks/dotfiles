@@ -139,7 +139,8 @@ nmap <esc><esc> :nohl<CR>
 nmap <c-p> :FZFBuffers<CR>
 nmap <c-l> :FZF<CR>
 nmap <c-k> :FZFTags<CR>
-nmap <c-j> :exec search("^\* \[\[diary:" . strftime("%Y-%m-%d"))<CR>
+autocmd BufRead,BufNewFile */diary/{diary,FY*}.wiki
+    \ nmap <c-j> :exec search("^\* \[\[diary:" . strftime("%Y-%m-%d"))<CR>
 nmap <F3> :exec "G <cword>"<cr>
 nmap <F4> :!git ctags<CR><CR>
 nmap <F5> :windo e<CR>
