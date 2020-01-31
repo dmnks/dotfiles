@@ -136,15 +136,15 @@ nmap ]T :tlast<CR>
 nmap [T :tfirst<CR>
 nmap <space> za
 nmap <esc><esc> :nohl<CR>
-nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
-nmap <leader>c :!git ctags<CR><CR>
-nmap <leader>s :set spell!<CR>
-nmap <F3> :exec "G <cword>"<cr>
-nmap <F5> :windo e<CR>
 nmap <c-p> :FZFBuffers<CR>
 nmap <c-l> :FZF<CR>
 nmap <c-k> :FZFTags<CR>
 nmap <c-j> :exec search("^\* \[\[diary:" . strftime("%Y-%m-%d"))<CR>
+nmap <F3> :exec "G <cword>"<cr>
+nmap <F4> :!git ctags<CR><CR>
+nmap <F5> :windo e<CR>
+nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
+nmap <leader>s :set spell!<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
