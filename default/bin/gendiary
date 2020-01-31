@@ -1,8 +1,7 @@
 #!/bin/bash
-# Generate a diary for the given year.
+# Generate a diary for the given RH fiscal year.
 
 year=$1
-dailies=$2
 
 days() {
     local start=$1
@@ -15,15 +14,12 @@ days() {
         if [[ "$name" != "Sat" && "$name" != "Sun" ]]; then
             week=$(date -d"$date" +"%W")
             if [[ "$week" != "$lastweek" ]]; then
+                [[ -n "$lastweek" ]] && echo
                 echo "==== Week $week ===="
                 lastweek=$week
             fi
-            echo $(date -d"$date" +"===== %a %Y-%m-%d =====")
-            local fname="$dailies/$date.wiki"
-            if [[ -f "$fname" ]]; then
-                cat "$fname"
-                echo
-            fi
+            local day=$(date -d"$date" +"%Y-%m-%d")
+            echo "* [[diary:$day|$name $day]]"
         fi
         date=$(date -I -d"$date +1day")
     done
@@ -41,9 +37,13 @@ quarter() {
         echo "=== "$(date -d"$date" +"%B")" ==="
         month $date
         date=$(date -I -d"$date +1month")
+        echo
     done
 }
 
+echo "= Journal FY$year ="
+echo
+year="20$(( $year - 1 ))"
 echo "== Quarter 1 =="
 quarter $year-03-01
 echo "== Quarter 2 =="

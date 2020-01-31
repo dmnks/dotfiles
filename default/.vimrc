@@ -140,11 +140,11 @@ nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>s :set spell!<CR>
 nmap <F3> :exec "G <cword>"<cr>
-nmap <F4> :exec search("^===== " . strftime("%a %Y-%m-%d") . " =====$")<CR>
 nmap <F5> :windo e<CR>
 nmap <c-p> :FZFBuffers<CR>
 nmap <c-l> :FZF<CR>
 nmap <c-k> :FZFTags<CR>
+nmap <c-j> :exec search("^\* \[\[diary:" . strftime("%Y-%m-%d"))<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
