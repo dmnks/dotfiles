@@ -19,7 +19,7 @@ days() {
                 lastweek=$week
             fi
             local day=$(date -d"$date" +"%Y-%m-%d")
-            echo "* [[diary:$day|$name $day]]"
+            echo "* [[$day|$name $day]]"
         fi
         date=$(date -I -d"$date +1day")
     done
@@ -41,7 +41,7 @@ quarter() {
     done
 }
 
-echo "= Journal FY$year ="
+echo "= Diary FY$year ="
 echo
 year="20$(( $year - 1 ))"
 echo "== Quarter 1 =="
