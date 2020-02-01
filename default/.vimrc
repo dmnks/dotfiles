@@ -64,6 +64,11 @@ set termguicolors
 " Needed for tmux, see :help xterm-true-color
 let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
 let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+" Enable vimwiki diary navigation (details: https://superuser.com/a/402084)
+if &term =~ '^screen'
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+endif
 set t_ut=
 set background=dark
 colorscheme gruvbox
@@ -116,7 +121,6 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
 set tags=tags
 set ttimeoutlen=10
 set dictionary=/usr/share/dict/words
-set complete+=k
 
 " #############################################################################
 " # Mappings
