@@ -145,6 +145,7 @@ nmap <c-l> :FZF<CR>
 nmap <c-k> :FZFTags<CR>
 autocmd BufRead,BufNewFile */diary/{diary,FY*}.wiki
     \ nmap <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>
+autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
 nmap <F3> :exec "G <cword>"<cr>
 nmap <F4> :!git ctags<CR><CR>
 nmap <F5> :windo e<CR>
