@@ -1,12 +1,14 @@
 #!/bin/bash
 # Generate a diary for the given RH fiscal year.
 
-year=$1
+WIKI=$HOME/vimwiki/diary
+FISCAL=$1
+TITLE="FY$FISCAL"
+BEGIN="20$(( $FISCAL - 1 ))-03-01"
 
 days() {
-    local start=$1
+    local date=$1
     local end=$2
-    local date=$start
     local week=$(date -d"$date" +"%W")
     local lastweek=
     while [[ "$date" != "$end" ]]; do
@@ -14,8 +16,8 @@ days() {
         if [[ "$name" != "Sat" && "$name" != "Sun" ]]; then
             week=$(date -d"$date" +"%W")
             if [[ "$week" != "$lastweek" ]]; then
-                [[ -n "$lastweek" ]] && echo
-                echo "==== Week $week ===="
+                echo
+                echo "== Week $week =="
                 lastweek=$week
             fi
             local day=$(date -d"$date" +"%Y-%m-%d")
@@ -25,30 +27,29 @@ days() {
     done
 }
 
-month() {
-    local start=$(date -I -d"$1")
-    local end=$(date -I -d"$start +1month")
-    days $start $end
-}
-
 quarter() {
     local date=$1
     for month in $(seq 1 3); do
-        echo "=== "$(date -d"$date" +"%B")" ==="
-        month $date
-        date=$(date -I -d"$date +1month")
-        echo
+        local name=$(date -d"$date" +"%b")
+        local file="$TITLE$name"
+        echo "* [[$file|"$(date -d"$date" +"%B")"]]"
+        end=$(date -I -d"$date +1month")
+        echo "= $name $TITLE =" > $file.wiki
+        days $date $end >> $file.wiki
+        date=$end
     done
 }
 
-echo "= Diary FY$year ="
-echo
-year="20$(( $year - 1 ))"
-echo "== Quarter 1 =="
-quarter $year-03-01
-echo "== Quarter 2 =="
-quarter $year-06-01
-echo "== Quarter 3 =="
-quarter $year-09-01
-echo "== Quarter 4 =="
-quarter $year-12-01
+fiscal() {
+    local date=$1
+    for quart in $(seq 1 4); do
+        echo
+        echo "== Quarter $quart =="
+        quarter $date
+        date=$(date -I -d"$date +3months")
+    done
+}
+
+cd $WIKI
+echo "= Diary $TITLE =" > $TITLE.wiki
+fiscal $BEGIN >> $TITLE.wiki
