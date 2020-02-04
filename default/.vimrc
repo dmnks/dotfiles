@@ -77,6 +77,8 @@ let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
 if &term =~ '^screen'
     execute "set <xUp>=\e[1;*A"
     execute "set <xDown>=\e[1;*B"
+    execute "set <xLeft>=\e[1;*D"
+    execute "set <xRight>=\e[1;*C"
 endif
 set t_ut=
 set background=dark
