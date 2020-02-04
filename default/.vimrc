@@ -47,6 +47,9 @@ command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \ 'sink':    'tag',
     \ 'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
+nmap <c-p> :FZFBuffers<CR>
+nmap <c-l> :FZF<CR>
+nmap <c-k> :FZFTags<CR>
 
 " Vimwiki
 let g:vimwiki_hl_headers = 1
@@ -55,6 +58,11 @@ let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
+autocmd BufRead,BufNewFile */diary/FY??.wiki
+    \ nmap <buffer> <c-j> :exec search("^\* \[\[FY.." . strftime("%b"))<CR>w
+autocmd BufRead,BufNewFile */diary/FY?????.wiki
+    \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>w
+autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
 
 " #############################################################################
 " # Appearance
@@ -101,6 +109,19 @@ set textwidth=79
 " # Motion
 " #############################################################################
 
+nmap ]q :cnext<CR>
+nmap [q :cprev<CR>
+nmap ]Q :clast<CR>
+nmap [Q :cfirst<CR>
+nmap ]l :lnext<CR>
+nmap [l :lprev<CR>
+nmap ]L :llast<CR>
+nmap [L :lfirst<CR>
+nmap ]t :tnext<CR>
+nmap [t :tprev<CR>
+nmap ]T :tlast<CR>
+nmap [T :tfirst<CR>
+
 " #############################################################################
 " # Searching
 " #############################################################################
@@ -122,29 +143,7 @@ set tags=tags
 set ttimeoutlen=10
 set dictionary=/usr/share/dict/words
 
-" #############################################################################
-" # Mappings
-" #############################################################################
-
-nmap ]q :cnext<CR>
-nmap [q :cprev<CR>
-nmap ]Q :clast<CR>
-nmap [Q :cfirst<CR>
-nmap ]l :lnext<CR>
-nmap [l :lprev<CR>
-nmap ]L :llast<CR>
-nmap [L :lfirst<CR>
-nmap ]t :tnext<CR>
-nmap [t :tprev<CR>
-nmap ]T :tlast<CR>
-nmap [T :tfirst<CR>
 nmap <esc><esc> :nohl<CR>
-nmap <c-p> :FZFBuffers<CR>
-nmap <c-l> :FZF<CR>
-nmap <c-k> :FZFTags<CR>
-autocmd BufRead,BufNewFile */diary/FY*.wiki
-    \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>w
-autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
 nmap <leader>g :exec "G <cword>"<cr>
 nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
