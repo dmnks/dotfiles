@@ -2,6 +2,8 @@
 " # Plugin setup
 " #############################################################################
 
+let mapleader = ' '
+
 " gruvbox
 let g:gruvbox_invert_tabline = 1
 
@@ -94,7 +96,6 @@ set expandtab
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 set textwidth=79
-set foldlevel=3
 
 " #############################################################################
 " # Motion
@@ -137,7 +138,6 @@ nmap ]t :tnext<CR>
 nmap [t :tprev<CR>
 nmap ]T :tlast<CR>
 nmap [T :tfirst<CR>
-nmap <space> za
 nmap <esc><esc> :nohl<CR>
 nmap <c-p> :FZFBuffers<CR>
 nmap <c-l> :FZF<CR>
@@ -145,9 +145,9 @@ nmap <c-k> :FZFTags<CR>
 autocmd BufRead,BufNewFile */diary/FY*.wiki
     \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>
 autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
-nmap <F3> :exec "G <cword>"<cr>
-nmap <F4> :!git ctags<CR><CR>
-nmap <F5> :windo e<CR>
+nmap <leader>g :exec "G <cword>"<cr>
+nmap <leader>c :!git ctags<CR><CR>
+nmap <leader>e :windo e<CR>
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>s :set spell!<CR>
 
