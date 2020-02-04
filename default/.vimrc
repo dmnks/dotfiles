@@ -49,7 +49,6 @@ command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
 " Vimwiki
 let g:vimwiki_hl_headers = 1
 let g:vimwiki_hl_cb_checked = 2
-let g:vimwiki_folding = 'expr'
 let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
@@ -143,7 +142,7 @@ nmap <esc><esc> :nohl<CR>
 nmap <c-p> :FZFBuffers<CR>
 nmap <c-l> :FZF<CR>
 nmap <c-k> :FZFTags<CR>
-autocmd BufRead,BufNewFile */diary/{diary,FY*}.wiki
+autocmd BufRead,BufNewFile */diary/FY*.wiki
     \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>
 autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
 nmap <F3> :exec "G <cword>"<cr>
