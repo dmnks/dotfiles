@@ -1,10 +1,10 @@
 #!/bin/bash
-# Generate a diary for the given RH fiscal year.
+# Generate a diary for the given IBM fiscal year.
 
 WIKI=$HOME/vimwiki/diary
 FISCAL=$1
-TITLE="FY$FISCAL"
-BEGIN="20$(( $FISCAL - 1 ))-03-01"
+TITLE="CY$FISCAL"
+BEGIN="20$FISCAL-01-01"
 
 days() {
     local date=$1
