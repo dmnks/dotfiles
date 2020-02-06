@@ -58,11 +58,11 @@ let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
-autocmd BufRead,BufNewFile */diary/FY??.wiki
+autocmd BufRead,BufNewFile */diary/{C,F}Y??.wiki
     \ nmap <buffer> <c-j> :exec search("^\* \[\[FY.." . strftime("%b"))<CR>w
-autocmd BufRead,BufNewFile */diary/FY?????.wiki
+autocmd BufRead,BufNewFile */diary/{C,F}Y?????.wiki
     \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>w
-autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
+autocmd BufNewFile */diary/2*.wiki silent 0r !gendaily '%'
 
 " #############################################################################
 " # Appearance
