@@ -9,12 +9,12 @@ BEGIN="20$FISCAL-01-01"
 days() {
     local date=$1
     local end=$2
-    local week=$(date -d"$date" +"%W")
+    local week=$(date -d"$date" +"%V")
     local lastweek=
     while [[ "$date" != "$end" ]]; do
         local name=$(date -d"$date" +"%a")
         if [[ "$name" != "Sat" && "$name" != "Sun" ]]; then
-            week=$(date -d"$date" +"%W")
+            week=$(date -d"$date" +"%V")
             if [[ "$week" != "$lastweek" ]]; then
                 echo
                 echo "== Week $week =="
