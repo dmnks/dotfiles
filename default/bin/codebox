@@ -8,9 +8,12 @@ Usage: $PROGNAME COMMAND [ARGS]
 
 Isolated development environment within the current directory.
 
-A simple wrapper around Podman to seamlessly manage development environments
-("boxes") for your project.  If the directory is a git repo, there is one box
-per git branch.
+A simple wrapper around Podman to seamlessly manage a development environment
+(a \"box\") for your project.  If the directory is a git repo, there is one box
+per branch.
+
+Some of the commands accept arguments for the corresponding Podman command (for
+example, \"$PROGNAME build\" passes any arguments down to \"podman build\").
 
 Quick start:
   $ $PROGNAME define
@@ -24,7 +27,7 @@ Commands:
     create      create a new box
     enter       attach to the box
     commit      update the box image
-    ls          list all boxes (per branch)
+    ls          list all branches with a box
     mc          browse the box with Midnight Commander
     rm          remove the box"
     exit 1
@@ -106,7 +109,7 @@ elif [ "$CMD" == "enter" ]; then
     podman start $NAME >/dev/null
     podman attach --detach-keys="ctrl-@" $NAME
 elif [ "$CMD" == "ls" ]; then
-    for name in $(podman ps -a --format '{{.Names}}'); do
+    for name in $(podman ps -a --format '{{.Names}}' | sort); do
         symbol="  "
         color=""
         [[ "$name" =~ ^$PREFIX ]] || continue
