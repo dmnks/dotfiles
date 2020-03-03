@@ -148,7 +148,7 @@ elif [ "$CMD" == "config" ]; then
     key=$1
     val=$2
     if [ -z "$key" ]; then
-        tree -I Dockerfile $IMAGEDIR
+        find $IMAGEDIR -type f ! -name "Dockerfile" -printf "%P\n"
         exit 0
     fi
     path="$IMAGEDIR/$key"
