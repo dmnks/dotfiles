@@ -6,21 +6,26 @@ usage() {
     echo "\
 Usage: $PROGNAME COMMAND [ARGS]
 
-Simple development environment within the current directory (a "project").
+Isolated development environment within the current directory.
+
+A simple wrapper around Podman to seamlessly manage development environments
+("boxes") for your project.  If the directory is a git repo, there is one box
+per git branch.
 
 Quick start:
-  $ $PROGNAME edit
+  $ $PROGNAME define
   $ $PROGNAME build
   $ $PROGNAME create
   $ $PROGNAME enter
 
 Commands:
+    define      create (or edit) the Dockerfile
     build       build a box image
-    commit      update the box image
-    edit        edit (or create) the Dockerfile
     create      create a new box
     enter       attach to the box
+    commit      update the box image
     ls          list all boxes (per branch)
+    mc          browse the box with Midnight Commander
     rm          remove the box"
     exit 1
 }
@@ -71,13 +76,13 @@ if [ -z "$CMD" ]; then
 elif [ "$CMD" == "build" ]; then
     if [ ! -f "$DOCKERFILE" ]; then
         >&2 echo "No Dockerfile defined here."
-        >&2 echo "Create one with: codebox edit"
+        >&2 echo "Create one with: codebox define"
         exit 1
     fi
     podman build $ARGS --build-arg=MOUNTDIR=$PWD -t $IMAGE -f $DOCKERFILE .
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
-elif [ "$CMD" == "edit" ]; then
+elif [ "$CMD" == "define" ]; then
     $EDITOR $DOCKERFILE
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
@@ -116,6 +121,10 @@ elif [ "$CMD" == "rm" ]; then
     ensure_box_exists
     podman rm -f $NAME >/dev/null
 elif [ "$CMD" == "mc" ]; then
+    if ! command -v mc >/dev/null 2>&1; then
+        >&2 echo "Midnight Commander not installed."
+        exit 1
+    fi
     ensure_box_exists
     podman unshare mc -d $(podman unshare podman mount $NAME)
 else
