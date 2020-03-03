@@ -28,6 +28,9 @@ Commands:
     enter       attach to the box
     commit      update the box image
     ls          list all branches with a box
+    config [--unset] [OPTION] [VALUE]
+                set OPTION to VALUE
+                (no VALUE prints current, no OPTION prints available)
     mc          browse the box with Midnight Commander
     rm          remove the box"
     exit 1
@@ -41,11 +44,15 @@ BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
 [ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
 IMAGE="$PREFIX:$BRANCH"
 NAME="$PREFIX-$BRANCH"
-IMAGEDIR="$CONFDIR/images/$PROJECT"
-TEMPLATE="$IMAGEDIR/master/Dockerfile"
-DOCKERFILE="$IMAGEDIR/$BRANCH/Dockerfile"
-mkdir -p $IMAGEDIR/{master,$BRANCH}
-[[ ! -f "$DOCKERFILE" && -f "$TEMPLATE" ]] && cp $TEMPLATE $DOCKERFILE
+TEMPLATE="$CONFDIR/images/$PROJECT/master"
+IMAGEDIR="$CONFDIR/images/$PROJECT/$BRANCH"
+DOCKERFILE="$IMAGEDIR/Dockerfile"
+if [[ ! -d "$IMAGEDIR" && -d "$TEMPLATE" ]]; then
+    cp -r $TEMPLATE $IMAGEDIR
+else
+    mkdir -p $IMAGEDIR/{build,create}
+    touch $IMAGEDIR/{build,create}/args
+fi
 
 ensure_box_exists() {
     if ! podman container exists $NAME; then
@@ -82,6 +89,7 @@ elif [ "$CMD" == "build" ]; then
         >&2 echo "Create one with: codebox define"
         exit 1
     fi
+    ARGS="$ARGS $(cat $IMAGEDIR/build/args)"
     podman build $ARGS --build-arg=MOUNTDIR=$PWD -t $IMAGE -f $DOCKERFILE .
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
@@ -90,6 +98,7 @@ elif [ "$CMD" == "define" ]; then
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     ensure_image_exists
+    ARGS="$ARGS $(cat $IMAGEDIR/create/args)"
     podman create \
          -e TERM -it \
          -v=$PWD:$PWD \
@@ -130,6 +139,32 @@ elif [ "$CMD" == "mc" ]; then
     fi
     ensure_box_exists
     podman unshare mc -d $(podman unshare podman mount $NAME)
+elif [ "$CMD" == "config" ]; then
+    delete=false
+    if [ "$1" == "--unset" ]; then
+        delete=true
+        shift
+    fi
+    key=$1
+    val=$2
+    if [ -z "$key" ]; then
+        tree -I Dockerfile $IMAGEDIR
+        exit 0
+    fi
+    path="$IMAGEDIR/$key"
+    if [ ! -f "$path" ]; then
+        >&2 echo "No such key"
+        exit 1
+    fi
+    if $delete; then
+        rm $path
+        exit 0
+    fi
+    if [ -z "$val" ]; then
+        cat $path
+        exit 0
+    fi
+    echo $val > $path
 else
     usage
 fi
