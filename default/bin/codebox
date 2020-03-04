@@ -28,9 +28,10 @@ Commands:
     enter       attach to the box
     commit      update the box image
     ls          list all branches with a box
-    config [--unset] [OPTION] [VALUE]
-                set OPTION to VALUE
-                (no VALUE prints current, no OPTION prints available)
+    config [--del] [KEY] [VALUE]
+                set KEY (in the form section.param) to VALUE
+                (no KEY launches editor, no VALUE prints current)
+    pwd         print config directory of the box
     mc          browse the box with Midnight Commander
     rm          remove the box"
     exit 1
@@ -46,13 +47,25 @@ IMAGE="$PREFIX:$BRANCH"
 NAME="$PREFIX-$BRANCH"
 TEMPLATE="$CONFDIR/projects/$PROJECT/master"
 PROJDIR="$CONFDIR/projects/$PROJECT/$BRANCH"
+CONFILE="$PROJDIR/config"
 DOCKERFILE="$PROJDIR/Dockerfile"
-if [[ ! -d "$PROJDIR" && -d "$TEMPLATE" ]]; then
-    cp -r $TEMPLATE $PROJDIR
-else
-    mkdir -p $PROJDIR/{build,create}
-    touch $PROJDIR/{build,create}/args
-fi
+[[ ! -d "$PROJDIR" && -d "$TEMPLATE" ]] && cp -r $TEMPLATE $PROJDIR
+
+parse_key() {
+    echo $@ | sed 's/\./ /'
+}
+
+get_conf() {
+    crudini --get $CONFILE $(parse_key $@)
+}
+
+set_conf() {
+    crudini --set $CONFILE $(parse_key $@)
+}
+
+del_conf() {
+    crudini --del $CONFILE $(parse_key $@)
+}
 
 ensure_box_exists() {
     if ! podman container exists $NAME; then
@@ -89,8 +102,11 @@ elif [ "$CMD" == "build" ]; then
         >&2 echo "Create one with: codebox define"
         exit 1
     fi
-    ARGS="$ARGS $(cat $PROJDIR/build/args)"
-    podman build $ARGS --build-arg=MOUNTDIR=$PWD -t $IMAGE -f $DOCKERFILE .
+    podman build \
+        $ARGS $(get_conf build args 2>/dev/null) \
+        --build-arg=MOUNTDIR=$PWD \
+        -t $IMAGE \
+        -f $DOCKERFILE .
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
 elif [ "$CMD" == "define" ]; then
@@ -98,7 +114,6 @@ elif [ "$CMD" == "define" ]; then
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     ensure_image_exists
-    ARGS="$ARGS $(cat $PROJDIR/create/args)"
     podman create \
          -e TERM -it \
          -v=$PWD:$PWD \
@@ -107,7 +122,7 @@ elif [ "$CMD" == "create" ]; then
          --name $NAME \
          --hostname $PROGNAME \
          --network host \
-         $ARGS \
+         $ARGS $(get_conf create args 2>/dev/null) \
          -it $IMAGE >/dev/null
     chcon -R -t container_file_t $PWD
     chcon -t container_file_t $HOME/.bashrc
@@ -139,32 +154,25 @@ elif [ "$CMD" == "mc" ]; then
     fi
     ensure_box_exists
     podman unshare mc -d $(podman unshare podman mount $NAME)
+elif [ "$CMD" == "pwd" ]; then
+    echo $PROJDIR
 elif [ "$CMD" == "config" ]; then
     delete=false
-    if [ "$1" == "--unset" ]; then
+    if [ "$1" == "--del" ]; then
         delete=true
         shift
     fi
     key=$1
     val=$2
     if [ -z "$key" ]; then
-        find $PROJDIR -type f ! -name "Dockerfile" -printf "%P\n"
-        exit 0
+        $EDITOR $CONFILE
+    elif $delete; then
+        del_conf $key
+    elif [ -z "$val" ]; then
+        get_conf $key
+    else
+        set_conf $key $val
     fi
-    path="$PROJDIR/$key"
-    if [ ! -f "$path" ]; then
-        >&2 echo "No such key"
-        exit 1
-    fi
-    if $delete; then
-        rm $path
-        exit 0
-    fi
-    if [ -z "$val" ]; then
-        cat $path
-        exit 0
-    fi
-    echo $val > $path
 else
     usage
 fi
