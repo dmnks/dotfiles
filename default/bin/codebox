@@ -16,10 +16,10 @@ Some of the commands accept arguments for the corresponding Podman command (for
 example, \"$PROGNAME build\" passes any arguments down to \"podman build\").
 
 Quick start:
-  $ $PROGNAME define
-  $ $PROGNAME build
-  $ $PROGNAME create
-  $ $PROGNAME enter
+    $ $PROGNAME define
+    $ $PROGNAME build
+    $ $PROGNAME create
+    $ $PROGNAME enter
 
 Commands:
     define      create (or edit) the Dockerfile
