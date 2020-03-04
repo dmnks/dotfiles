@@ -44,14 +44,14 @@ BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
 [ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
 IMAGE="$PREFIX:$BRANCH"
 NAME="$PREFIX-$BRANCH"
-TEMPLATE="$CONFDIR/images/$PROJECT/master"
-IMAGEDIR="$CONFDIR/images/$PROJECT/$BRANCH"
-DOCKERFILE="$IMAGEDIR/Dockerfile"
-if [[ ! -d "$IMAGEDIR" && -d "$TEMPLATE" ]]; then
-    cp -r $TEMPLATE $IMAGEDIR
+TEMPLATE="$CONFDIR/projects/$PROJECT/master"
+PROJDIR="$CONFDIR/projects/$PROJECT/$BRANCH"
+DOCKERFILE="$PROJDIR/Dockerfile"
+if [[ ! -d "$PROJDIR" && -d "$TEMPLATE" ]]; then
+    cp -r $TEMPLATE $PROJDIR
 else
-    mkdir -p $IMAGEDIR/{build,create}
-    touch $IMAGEDIR/{build,create}/args
+    mkdir -p $PROJDIR/{build,create}
+    touch $PROJDIR/{build,create}/args
 fi
 
 ensure_box_exists() {
@@ -89,7 +89,7 @@ elif [ "$CMD" == "build" ]; then
         >&2 echo "Create one with: codebox define"
         exit 1
     fi
-    ARGS="$ARGS $(cat $IMAGEDIR/build/args)"
+    ARGS="$ARGS $(cat $PROJDIR/build/args)"
     podman build $ARGS --build-arg=MOUNTDIR=$PWD -t $IMAGE -f $DOCKERFILE .
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
@@ -98,7 +98,7 @@ elif [ "$CMD" == "define" ]; then
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     ensure_image_exists
-    ARGS="$ARGS $(cat $IMAGEDIR/create/args)"
+    ARGS="$ARGS $(cat $PROJDIR/create/args)"
     podman create \
          -e TERM -it \
          -v=$PWD:$PWD \
@@ -148,10 +148,10 @@ elif [ "$CMD" == "config" ]; then
     key=$1
     val=$2
     if [ -z "$key" ]; then
-        find $IMAGEDIR -type f ! -name "Dockerfile" -printf "%P\n"
+        find $PROJDIR -type f ! -name "Dockerfile" -printf "%P\n"
         exit 0
     fi
-    path="$IMAGEDIR/$key"
+    path="$PROJDIR/$key"
     if [ ! -f "$path" ]; then
         >&2 echo "No such key"
         exit 1
