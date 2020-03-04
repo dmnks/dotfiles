@@ -31,8 +31,8 @@ Commands:
     config [--del] [KEY] [VALUE]
                 set KEY (in the form section.param) to VALUE
                 (no KEY launches editor, no VALUE prints current)
-    pwd         print config directory of the box
-    mc          browse the box with Midnight Commander
+    share       launch a shell inside the box share directory
+    mc          browse the box filesystem with Midnight Commander
     rm          remove the box"
     exit 1
 }
@@ -50,6 +50,7 @@ PROJDIR="$CONFDIR/projects/$PROJECT/$BRANCH"
 CONFILE="$PROJDIR/config"
 DOCKERFILE="$PROJDIR/Dockerfile"
 [[ ! -d "$PROJDIR" && -d "$TEMPLATE" ]] && cp -r $TEMPLATE $PROJDIR
+mkdir -p $PROJDIR/share
 
 parse_key() {
     echo $@ | sed 's/\./ /'
@@ -117,6 +118,7 @@ elif [ "$CMD" == "create" ]; then
     podman create \
          -e TERM -it \
          -v=$PWD:$PWD \
+         -v=$PROJDIR/share:/share \
          -v=$HOME/.bashrc:/root/.bashrc:ro \
          --workdir $PWD \
          --name $NAME \
@@ -125,6 +127,7 @@ elif [ "$CMD" == "create" ]; then
          $ARGS $(get_conf create args 2>/dev/null) \
          -it $IMAGE >/dev/null
     chcon -R -t container_file_t $PWD
+    chcon -R -t container_file_t $PROJDIR/share
     chcon -t container_file_t $HOME/.bashrc
     echo "Box created."
     echo "Enter with: $PROGNAME enter"
@@ -154,8 +157,8 @@ elif [ "$CMD" == "mc" ]; then
     fi
     ensure_box_exists
     podman unshare mc -d $(podman unshare podman mount $NAME)
-elif [ "$CMD" == "pwd" ]; then
-    echo $PROJDIR
+elif [ "$CMD" == "share" ]; then
+    sh -c "cd $PROJDIR/share; exec '${SHELL:-sh}'"
 elif [ "$CMD" == "config" ]; then
     delete=false
     if [ "$1" == "--del" ]; then
