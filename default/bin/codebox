@@ -56,15 +56,15 @@ parse_key() {
     echo $@ | sed 's/\./ /'
 }
 
-get_conf() {
+conf_get() {
     crudini --get $CONFILE $(parse_key $@)
 }
 
-set_conf() {
+conf_set() {
     crudini --set $CONFILE $(parse_key $@)
 }
 
-del_conf() {
+conf_del() {
     crudini --del $CONFILE $(parse_key $@)
 }
 
@@ -100,11 +100,11 @@ if [ -z "$CMD" ]; then
 elif [ "$CMD" == "build" ]; then
     if [ ! -f "$DOCKERFILE" ]; then
         >&2 echo "No Dockerfile defined here."
-        >&2 echo "Create one with: codebox define"
+        >&2 echo "Create one with: $PROGNAME define"
         exit 1
     fi
     podman build \
-        $ARGS $(get_conf build args 2>/dev/null) \
+        $ARGS $(conf_get build.args 2>/dev/null) \
         --build-arg=MOUNTDIR=$PWD \
         -t $IMAGE \
         -f $DOCKERFILE .
@@ -116,16 +116,16 @@ elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     ensure_image_exists
     podman create \
-         -e TERM -it \
-         -v=$PWD:$PWD \
-         -v=$PROJDIR/share:/share \
-         -v=$HOME/.bashrc:/root/.bashrc:ro \
-         --workdir $PWD \
-         --name $NAME \
-         --hostname $PROGNAME \
-         --network host \
-         $ARGS $(get_conf create args 2>/dev/null) \
-         -it $IMAGE >/dev/null
+        -e TERM -it \
+        -v=$PWD:$PWD \
+        -v=$PROJDIR/share:/share \
+        -v=$HOME/.bashrc:/root/.bashrc:ro \
+        --workdir $PWD \
+        --name $NAME \
+        --hostname $PROGNAME \
+        --network host \
+        $ARGS $(conf_get create.args 2>/dev/null) \
+        -it $IMAGE >/dev/null
     chcon -R -t container_file_t $PWD
     chcon -R -t container_file_t $PROJDIR/share
     chcon -t container_file_t $HOME/.bashrc
@@ -170,11 +170,11 @@ elif [ "$CMD" == "config" ]; then
     if [ -z "$key" ]; then
         $EDITOR $CONFILE
     elif $delete; then
-        del_conf $key
+        conf_del $key
     elif [ -z "$val" ]; then
-        get_conf $key
+        conf_get $key
     else
-        set_conf $key $val
+        conf_set $key $val
     fi
 else
     usage
