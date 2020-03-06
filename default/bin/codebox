@@ -6,11 +6,9 @@ usage() {
     echo "\
 Usage: $PROGNAME COMMAND [ARGS]
 
-Isolated development environment within the current directory (a \"project\").
-
-A simple wrapper around Podman to seamlessly manage a development container (a
-\"box\") for your project.  If the project is a git repo, each branch can have
-its own box (just use \"$PROGNAME branch\").
+Isolated development environment within the current directory (a \"project\")
+using Podman containers (\"boxes\"), with lightweight host integration and
+simple branching support.
 
 Quick start:
     $ $PROGNAME define
@@ -20,19 +18,24 @@ Quick start:
 
 Commands:
     define          create (or edit) the Dockerfile
-    build [ARGS]    build a box image (passes ARGS to \"podman build\")
+    build [ARGS]    build an image (passes ARGS to \"podman build\")
     create [ARGS]   create a new box (passes ARGS to \"podman create\")
     enter           attach to the box
     branch [--del]  clone the box template (Dockerfile, config file and share
-                    directory on \"master\") for this git branch
-    commit          update the box image
+                    directory on CODEBOX_BASE) for the current git branch
+    commit          update the image
     ls              list all boxes in this project (per branch)
     config [--del] [KEY] [VALUE]
                     set KEY (in the form section.param) to VALUE for the box
                     (no KEY launches editor, no VALUE prints current)
     share           launch a shell inside the box share directory
     mc              browse the box filesystem with Midnight Commander
-    rm              delete the box"
+    rm              delete the box
+
+Environment:
+    CODEBOX_BRANCH  overrides the current git branch
+    CODEBOX_BASE    fall-back branch to use if the box has not been branched
+                    for the current git branch (defaults to \"master\")"
     exit 1
 }
 
@@ -42,8 +45,9 @@ PROJDIR="$CONFDIR/projects/$PROJECT"
 mkdir -p $PROJDIR
 GITBRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
 [ -n "$CODEBOX_BRANCH" ] && GITBRANCH=$CODEBOX_BRANCH
+[ -z "$CODEBOX_BASE" ] && CODEBOX_BASE=master
 BRANCH=$GITBRANCH
-[[ -z "$BRANCH" || ! -d "$PROJDIR/$BRANCH" ]] && BRANCH=master
+[[ -z "$BRANCH" || ! -d "$PROJDIR/$BRANCH" ]] && BRANCH=$CODEBOX_BASE
 BOXDIR="$PROJDIR/$BRANCH"
 mkdir -p $BOXDIR/share
 CONFILE="$BOXDIR/config"
