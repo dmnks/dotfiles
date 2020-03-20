@@ -33,6 +33,7 @@ alias docker='sudo docker --config $HOME/.docker'
 alias docker-clean='clean_containers "sudo docker"'
 alias podman-clean='clean_containers podman'
 alias tmux="systemd-run --quiet --scope --user tmux"
+alias ppass="PASSWORD_STORE_DIR=$HOME/.password-store-private pass"
 
 ###############################################################################
 # Functions

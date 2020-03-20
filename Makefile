@@ -25,7 +25,8 @@ pkgs:
 	                    powerline-fonts \
 	                    ranger \
 	                    mc \
-	                    xterm
+	                    xterm \
+			    pass
 
 plugins:
 	mkdir -p $(PLUGINS)
