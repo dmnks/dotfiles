@@ -13,7 +13,6 @@ fi
 export PATH
 
 # User specific aliases and functions
-JOURNAL_PATH=$HOME/journal
 
 # If not running interactively, go with the distro defaults
 [ -z "$PS1" ] && return
@@ -33,7 +32,6 @@ alias docker='sudo docker --config $HOME/.docker'
 alias docker-clean='clean_containers "sudo docker"'
 alias podman-clean='clean_containers podman'
 alias tmux="systemd-run --quiet --scope --user tmux"
-alias ppass="PASSWORD_STORE_DIR=$HOME/.password-store-private pass"
 
 ###############################################################################
 # Functions
@@ -77,31 +75,10 @@ clean_containers() {
     [ -n "$images" ] && $bin rmi -f $images || true
 }
 
-jrn() {
-    local date="now"
-    [ -n "$1" ] && date="$@"
-    cmd() {
-        date -d "$date" "$@"
-    }
-    # Sanity check
-    cmd || return 1
-
-    local base=$(cmd +"%Y-%m-%d")
-    local path=${JOURNAL_PATH}/$(cmd +"%Y/%m-%B")
-    local goals=${path}/GOALS.wiki
-    local today=${path}/${base}.wiki
-    mkdir -p $path
-
-    if [ ! -f "$goals" ]; then
-        local heading=$(cmd +"%B")
-        echo -e "= $heading GOALS =\n\n" > $goals
-    fi
-    if [ ! -f "$today" ]; then
-        local heading=$(cmd +"%A $base")
-        echo -e "= $heading =\n\n" > $today
-    fi
-
-    vim '+normal G' $today
+chpass() {
+    local dir=$HOME/.password-store
+    [ -n "$1" ] && dir=$dir-$1
+    export PASSWORD_STORE_DIR=$dir
 }
 
 ###############################################################################
