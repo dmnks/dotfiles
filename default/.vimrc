@@ -58,11 +58,12 @@ let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
-autocmd BufRead,BufNewFile */diary/CY??.wiki
-    \ nmap <buffer> <c-j> :exec search("^\* \[\[CY.." . strftime("%b"))<CR>w
 autocmd BufRead,BufNewFile */diary/CY?????.wiki
     \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>w
 autocmd BufNewFile */diary/2*.wiki silent 0r !gendaily '%'
+" Automatically title new pages
+autocmd BufNewFile *.wiki :r! echo = %:t:r =
+autocmd BufNewFile *.wiki :norm kddo
 
 " #############################################################################
 " # Appearance
