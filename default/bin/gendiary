@@ -21,7 +21,7 @@ days() {
                 lastweek=$week
             fi
             date=$(date -d"$begin" +"%Y-%m-%d")
-            echo "* [[diary:$date|$name $date]]"
+            echo "* [[$date|$name $date]]"
         fi
         begin=$(date -I -d"$begin +1day")
     done
