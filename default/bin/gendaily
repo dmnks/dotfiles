@@ -1,0 +1,11 @@
+#!/bin/bash
+
+WIKI=$HOME/vimwiki
+FILE=$(basename $1)
+DATE=$(echo $FILE | sed 's/\.wiki//')
+WEEKDAY=$(date -d"$DATE" +"%a")
+TEMPL=$WIKI/diary/templates/$WEEKDAY.wiki
+
+echo "= $WEEKDAY $DATE ="
+echo
+[[ -f "$TEMPL" ]] && cat $TEMPL

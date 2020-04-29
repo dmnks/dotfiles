@@ -63,6 +63,7 @@ let g:vimwiki_list = [wiki]
 autocmd BufRead,BufNewFile Diary\ *.wiki
     \ nmap <buffer> <c-j> :exec search("^\* \[\[diary:" .
     \ strftime("%Y-%m-%d"))<CR>w
+autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
 " Automatically title new pages
 autocmd BufNewFile *.wiki :r! echo = %:t:r =
 autocmd BufNewFile *.wiki :norm kddo
