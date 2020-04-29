@@ -13,6 +13,7 @@ let g:ale_linters = {
     \}
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_c_parse_makefile = 1
+let g:ale_set_loclist = 0
 
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
@@ -58,12 +59,16 @@ let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
-autocmd BufRead,BufNewFile */diary/CY?????.wiki
-    \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>w
-autocmd BufNewFile */diary/2*.wiki silent 0r !gendaily '%'
 " Automatically title new pages
 autocmd BufNewFile *.wiki :r! echo = %:t:r =
 autocmd BufNewFile *.wiki :norm kddo
+" Enable diary navigation (details: https://superuser.com/a/402084)
+if &term =~ '^screen'
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xLeft>=\e[1;*D"
+    execute "set <xRight>=\e[1;*C"
+endif
 
 " #############################################################################
 " # Appearance
@@ -74,13 +79,6 @@ set termguicolors
 " Needed for tmux, see :help xterm-true-color
 let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
 let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
-" Enable vimwiki diary navigation (details: https://superuser.com/a/402084)
-if &term =~ '^screen'
-    execute "set <xUp>=\e[1;*A"
-    execute "set <xDown>=\e[1;*B"
-    execute "set <xLeft>=\e[1;*D"
-    execute "set <xRight>=\e[1;*C"
-endif
 set t_ut=
 set background=dark
 colorscheme gruvbox
