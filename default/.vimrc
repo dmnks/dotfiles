@@ -60,9 +60,8 @@ let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
 " Binding to jump to current day in Diary
-autocmd BufRead,BufNewFile Diary\ *.wiki
-    \ nmap <buffer> <c-j> :exec search("^\* \[\[diary:" .
-    \ strftime("%Y-%m-%d"))<CR>w
+autocmd BufRead,BufNewFile */diary/????.wiki
+    \ nmap <buffer> <c-j> :exec search("^\* \[\[" . strftime("%Y-%m-%d"))<CR>w
 autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
 " Enable diary navigation (details: https://superuser.com/a/402084)
 if &term =~ '^screen'
