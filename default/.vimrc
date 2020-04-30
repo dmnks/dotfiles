@@ -59,12 +59,13 @@ let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
+" Autogenerate diary files
+autocmd BufNewFile Diary\ *.wiki    silent 0r !gendiary year "%:t:r"
+autocmd BufNewFile */diary/*.wiki   silent 0r !gendiary day "%:t:r"
 " Binding to jump to current day in Diary
 autocmd BufRead,BufNewFile Diary\ *.wiki
     \ nmap <buffer> <c-j>
     \ :exec search("^\* \[\[diary:" . strftime("%Y-%m-%d"))<CR>w
-" Autogenerate daily file based on template
-autocmd BufNewFile */diary/*.wiki silent 0r !gendaily '%'
 " Enable diary navigation (details: https://superuser.com/a/402084)
 if &term =~ '^screen'
     execute "set <xUp>=\e[1;*A"
