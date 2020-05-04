@@ -60,8 +60,8 @@ let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
 " Autogenerate diary files
-autocmd BufNewFile Diary\ *.wiki    silent 0r !gendiary year "%:t:r"
-autocmd BufNewFile */diary/*.wiki   silent 0r !gendiary day "%:t:r"
+autocmd BufNewFile Diary\ *.wiki        silent 0r !gendiary year "%:t:r"
+autocmd BufNewFile */diary/[^d]*.wiki   silent 0r !gendiary day "%:t:r"
 " Binding to jump to current day in Diary
 autocmd BufRead,BufNewFile Diary\ *.wiki
     \ nmap <buffer> <c-j>
