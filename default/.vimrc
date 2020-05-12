@@ -3,6 +3,7 @@
 " #############################################################################
 
 let mapleader = ' '
+nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 
 " gruvbox
 let g:gruvbox_invert_tabline = 1
