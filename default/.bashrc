@@ -81,6 +81,15 @@ chpass() {
     export PASSWORD_STORE_DIR=$dir
 }
 
+toggle() {
+    local link=$HOME/.Xresources.d/theme
+    local source=$(readlink -f $link)
+    local variant=dark
+    [ "$(basename $source)" == "dark" ] && variant=light
+    ln -sf $variant $link
+    xrdb -I$HOME $HOME/.Xresources
+}
+
 ###############################################################################
 # Environment
 ###############################################################################
