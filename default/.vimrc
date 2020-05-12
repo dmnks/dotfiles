@@ -62,8 +62,8 @@ let g:vimwiki_list = [wiki]
 " Autogenerate diary files
 autocmd BufNewFile Diary\ *.wiki        silent 0r !gendiary year "%:t:r"
 autocmd BufNewFile */diary/[^d]*.wiki   silent 0r !gendiary day "%:t:r"
-" Binding to jump to current day in Diary
-autocmd BufRead,BufNewFile Diary\ *.wiki
+" Binding to jump to current day in diary index
+autocmd BufRead,BufNewFile Diary\ *.wiki,*/diary/diary.wiki
     \ nmap <buffer> <c-j>
     \ :exec search("^\* \[\[diary:" . strftime("%Y-%m-%d"))<CR>w
 " Enable diary navigation (details: https://superuser.com/a/402084)
