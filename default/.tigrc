@@ -1,3 +1,6 @@
+set show-changes = false
+set show-untracked = false
+
 # BINDINGS
 bind generic S :source ~/.tigrc
 bind main E !git rebase -i %(commit)^
