@@ -3,7 +3,6 @@
 " #############################################################################
 
 let mapleader = ' '
-nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 
 " gruvbox
 let g:gruvbox_invert_tabline = 1
@@ -97,6 +96,7 @@ autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set laststatus=2
 set scrolloff=0
+nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 
 " #############################################################################
 " # Editing
@@ -148,6 +148,7 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
 set tags=tags
 set ttimeoutlen=10
 set dictionary=/usr/share/dict/words
+runtime ftplugin/man.vim
 
 nmap <esc><esc> :nohl<CR>
 nmap <leader>g :exec "G <cword>"<cr>
