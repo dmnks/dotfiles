@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+
+import sys
+import bugzilla
+
+MAXLEN = 40
+NUMS = sys.argv[1:]
+
+bzapi = bugzilla.Bugzilla('bugzilla.redhat.com')
+
+for num in NUMS:
+    bz = bzapi.getbug(num)
+    summary = bz.summary
+    summary = (summary[:MAXLEN] + '...') if len(summary) > MAXLEN else summary
+    print('* [ ] BZ-%s: %s ([[%s|link]])' % (num, summary, bz.weburl))

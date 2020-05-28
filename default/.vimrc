@@ -73,6 +73,7 @@ if &term =~ '^screen'
     execute "set <xLeft>=\e[1;*D"
     execute "set <xRight>=\e[1;*C"
 endif
+command! -nargs=1 BZ execute "read !bzpull <f-args>"
 
 " #############################################################################
 " # Appearance
