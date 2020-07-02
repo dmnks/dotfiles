@@ -8,10 +8,11 @@ My dotfiles, inspired by:
  * [Tomas Tomecek](https://www.github.com/TomasTomecek/dotfiles)
  * and others
 
-Fonts are taken from: https://github.com/powerline/fonts
+Fonts were taken from: https://github.com/powerline/fonts
 
 ## Installation
 ```bash
 $ git clone --recursive git@github.com:dmnks/dotfiles.git ~/.dotfiles
-$ make -C ~/.dotfiles
+$ cd ~/.dotfiles
+$ make
 ```
