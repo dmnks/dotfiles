@@ -6,70 +6,53 @@ usage() {
     echo "\
 Usage: $PROGNAME COMMAND [ARGS]
 
-Isolated development environment within the current directory (a \"project\")
-using Podman containers (\"boxes\"), with lightweight host integration and
-simple branching support.
+Isolated development environment within \$PWD (a \"project\") using a Podman
+container (a \"box\"), with lightweight host integration and simple branching
+support.
+
+Configuration (in Dockerfile):
+    LABEL {build,create}.args=ARGS
+                    passes ARGS to the build or create command, respectively
 
 Quick start:
-    $ $PROGNAME define
+    $ $PROGNAME edit
     $ $PROGNAME build
     $ $PROGNAME create
     $ $PROGNAME enter
 
 Commands:
-    define          create (or edit) the Dockerfile
+    edit            edit (or create) the Dockerfile
     build [ARGS]    build an image (passes ARGS to \"podman build\")
     create [ARGS]   create a new box (passes ARGS to \"podman create\")
     enter           attach to the box
-    branch [--del]  clone the box template (Dockerfile, config file and share
-                    directory on CODEBOX_BASE) for the current git branch
-    commit          update the image
+    branch [rm]     clone the master Dockerfile for the current git branch
+                    (or remove)
+    commit          save changes made to the image
     ls              list all boxes in this project (per branch)
-    config [--del] [KEY] [VALUE]
-                    set KEY (in the form section.param) to VALUE for the box
-                    (no KEY launches editor, no VALUE prints current)
-    share           launch a shell inside the box share directory
     mc              browse the box filesystem with Midnight Commander
+    config          browse the project config directory with Midnight Commander
     rm              delete the box
 
 Environment:
-    CODEBOX_BRANCH  overrides the current git branch
-    CODEBOX_BASE    fall-back branch to use if the box has not been branched
-                    for the current git branch (defaults to \"master\")"
+    CODEBOX_BRANCH  overrides the current git branch"
     exit 1
 }
 
 CONFDIR="$HOME/.config/$PROGNAME"
 PROJECT="$(basename $PWD)"
-PROJDIR="$CONFDIR/projects/$PROJECT"
-mkdir -p $PROJDIR
-GITBRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
-[ -n "$CODEBOX_BRANCH" ] && GITBRANCH=$CODEBOX_BRANCH
-[ -z "$CODEBOX_BASE" ] && CODEBOX_BASE=master
-BRANCH=$GITBRANCH
-[[ -z "$BRANCH" || ! -d "$PROJDIR/$BRANCH" ]] && BRANCH=$CODEBOX_BASE
-BOXDIR="$PROJDIR/$BRANCH"
-mkdir -p $BOXDIR/share
-CONFILE="$BOXDIR/config"
-DOCKERFILE="$BOXDIR/Dockerfile"
+PROJDIR="$CONFDIR/$PROJECT"
+mkdir -p "$PROJDIR"
+DOCKERFILE="$PROJDIR/Dockerfile"
+BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
+[ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
+[ -z "$BRANCH" ] && BRANCH="master"
+[ -f "$DOCKERFILE:$BRANCH" ] && DOCKERFILE="$DOCKERFILE:$BRANCH"
 PREFIX="$PROGNAME-$PROJECT"
 IMAGE="$PREFIX:$BRANCH"
 NAME="$PREFIX-$BRANCH"
 
-parse_key() {
-    echo $@ | sed 's/\./ /'
-}
-
-conf_get() {
-    crudini --get $CONFILE $(parse_key $@)
-}
-
-conf_set() {
-    crudini --set $CONFILE $(parse_key $@)
-}
-
-conf_del() {
-    crudini --del $CONFILE $(parse_key $@)
+get_conf() {
+    grep "^LABEL $1" $DOCKERFILE | cut -f2 -d'='
 }
 
 ensure_box_exists() {
@@ -104,17 +87,17 @@ if [ -z "$CMD" ]; then
 elif [ "$CMD" == "build" ]; then
     if [ ! -f "$DOCKERFILE" ]; then
         >&2 echo "No Dockerfile defined here."
-        >&2 echo "Create one with: $PROGNAME define"
+        >&2 echo "Create one with: $PROGNAME edit"
         exit 1
     fi
     podman build \
-        $ARGS $(conf_get build.args 2>/dev/null) \
+        $ARGS $(get_conf build.args) \
         --build-arg=MOUNTDIR=$PWD \
         -t $IMAGE \
         -f $DOCKERFILE .
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
-elif [ "$CMD" == "define" ]; then
+elif [ "$CMD" == "edit" ]; then
     $EDITOR $DOCKERFILE
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
@@ -122,16 +105,16 @@ elif [ "$CMD" == "create" ]; then
     podman create \
         -e TERM -it \
         -v=$PWD:$PWD \
-        -v=$BOXDIR/share:/share \
+        -v=$PROJDIR:/data \
         -v=$HOME/.bashrc:/root/.bashrc:ro \
         --workdir $PWD \
         --name $NAME \
         --hostname $PROGNAME \
         --network host \
-        $ARGS $(conf_get create.args 2>/dev/null) \
+        $ARGS $(get_conf create.args) \
         -it $IMAGE >/dev/null
     chcon -R -t container_file_t $PWD
-    chcon -R -t container_file_t $BOXDIR/share
+    chcon -R -t container_file_t $PROJDIR
     chcon -t container_file_t $HOME/.bashrc
     echo "Box created."
     echo "Enter with: $PROGNAME enter"
@@ -140,21 +123,26 @@ elif [ "$CMD" == "enter" ]; then
     podman start $NAME >/dev/null
     podman attach --detach-keys="ctrl-@" $NAME
 elif [ "$CMD" == "branch" ]; then
-    target="$PROJDIR/$GITBRANCH"
-    if [ "$1" == "--del" ]; then
-        rm -rf "$target"
-    elif [ -d "$target" ]; then
+    target="$PROJDIR/Dockerfile:$BRANCH"
+    if [ "$BRANCH" == "master" ]; then
+        >&2 echo "On master, nothing to do."
+        exit 1
+    elif [ -f "$target" ]; then
+        if [ "$1" == "rm" ]; then
+            rm -i $target
+            exit 0
+        fi
         >&2 echo "Already branched."
         exit 1
-    else
-        mkdir -p $target
-        cp -r $BOXDIR/* $target/
     fi
+    cp $PROJDIR/Dockerfile $target
 elif [ "$CMD" == "ls" ]; then
     for name in $(podman ps -a --format '{{.Names}}' | sort); do
         symbol="  "
         color=""
-        [[ "$name" =~ ^$PREFIX ]] || continue
+        if ! echo $name | grep -q "^$PREFIX-"; then
+            continue
+        fi
         if [[ "$name" == "$NAME" ]]; then
             symbol="* "
             color=$(tput setaf 2)
@@ -166,31 +154,18 @@ elif [ "$CMD" == "rm" ]; then
     ensure_box_exists
     podman rm -f $NAME >/dev/null
 elif [ "$CMD" == "mc" ]; then
+    ensure_box_exists
     if ! command -v mc >/dev/null 2>&1; then
         >&2 echo "Midnight Commander not installed."
         exit 1
     fi
-    ensure_box_exists
-    podman unshare mc -d $(podman unshare podman mount $NAME)
-elif [ "$CMD" == "share" ]; then
-    sh -c "cd $BOXDIR/share; exec '${SHELL:-sh}'"
+    podman unshare mc -d $(podman unshare podman mount $NAME) $PROJDIR
 elif [ "$CMD" == "config" ]; then
-    delete=false
-    if [ "$1" == "--del" ]; then
-        delete=true
-        shift
+    if ! command -v mc >/dev/null 2>&1; then
+        >&2 echo "Midnight Commander not installed."
+        exit 1
     fi
-    key=$1
-    val=$2
-    if [ -z "$key" ]; then
-        $EDITOR $CONFILE
-    elif $delete; then
-        conf_del $key
-    elif [ -z "$val" ]; then
-        conf_get $key
-    else
-        conf_set $key $val
-    fi
+    mc $PROJDIR
 else
     usage
 fi
