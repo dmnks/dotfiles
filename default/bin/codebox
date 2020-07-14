@@ -30,7 +30,9 @@ Commands:
     commit          save changes made to the image
     ls              list all boxes in this project (per branch)
     mc              browse the box filesystem with Midnight Commander
-    config          browse the project config directory with Midnight Commander
+    config          browse the config directory with Midnight Commander
+    git             run git(1) with the given arguments from the config
+                    directory
     rm              delete the box
 
 Environment:
@@ -166,6 +168,8 @@ elif [ "$CMD" == "config" ]; then
         exit 1
     fi
     mc $PROJDIR
+elif [ "$CMD" == "git" ]; then
+    git -C $PROJDIR $@
 else
     usage
 fi
