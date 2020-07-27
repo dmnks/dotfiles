@@ -41,7 +41,8 @@ Environment:
 }
 
 CONFDIR="$HOME/.config/$PROGNAME"
-PROJECT="$(basename $PWD)"
+PROJECT="$(git worktree list | head -n1 | cut -d' ' -f1 | xargs basename)"
+[ -z "$PROJECT" ] && PROJECT="$(basename $PWD)"
 PROJDIR="$CONFDIR/$PROJECT"
 mkdir -p "$PROJDIR"
 DOCKERFILE="$PROJDIR/Dockerfile"
