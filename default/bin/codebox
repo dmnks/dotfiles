@@ -109,6 +109,7 @@ elif [ "$CMD" == "create" ]; then
         -v=$PWD:$PWD \
         -v=$PROJDIR:/data \
         -v=$HOME/.bashrc:/root/.bashrc:ro \
+        -v=$HOME/.tmux.conf:/root/.tmux.conf:ro \
         --workdir $PWD \
         --name $NAME \
         --hostname $PROGNAME \
@@ -118,6 +119,7 @@ elif [ "$CMD" == "create" ]; then
     chcon -R -t container_file_t $PWD
     chcon -R -t container_file_t $PROJDIR
     chcon -t container_file_t $HOME/.bashrc
+    chcon -t container_file_t $HOME/.tmux.conf
     echo "Box created."
     echo "Enter with: $PROGNAME enter"
 elif [ "$CMD" == "enter" ]; then
