@@ -1,9 +1,74 @@
 #!/bin/bash
-# Generate a vimwiki diary entry from a template.
+# Generate a vimwiki diary for the given year.
 
-DAY=$1
-WEEKDAY=$(date -d"$DAY" +"%a")
-echo "= $WEEKDAY $DAY ="
-echo
-TEMPLATE=$HOME/vimwiki/diary/templates/$WEEKDAY.wiki
-[[ -f "$TEMPLATE" ]] && cat $TEMPLATE
+WIKI=$HOME/vimwiki
+
+days() {
+    local begin=$1
+    local end=$2
+    local week
+    local lastweek
+    local name
+    local date
+    while [[ "$begin" != "$end" ]]; do
+        name=$(date -d"$begin" +"%a")
+        if [[ "$name" != "Sat" && "$name" != "Sun" ]]; then
+            week=$(date -d"$begin" +"%V")
+            if [[ "$week" != "$lastweek" ]]; then
+                echo
+                echo "==== Week $week ===="
+                lastweek=$week
+            fi
+            date=$(date -d"$begin" +"%Y-%m-%d")
+            echo "* [[diary:$date|$name $date]]"
+        fi
+        begin=$(date -I -d"$begin +1day")
+    done
+}
+
+quarter() {
+    local begin=$1
+    local end
+    for month in $(seq 1 3); do
+        echo "=== "$(date -d"$begin" +"%B")" ==="
+        end=$(date -I -d"$begin +1month")
+        days $begin $end
+        echo
+        echo
+        begin=$end
+    done
+}
+
+year() {
+    local begin=$1
+    for quart in $(seq 1 4); do
+        echo "== Quarter $quart =="
+        echo
+        quarter $begin
+        for i in $(seq 1 79); do echo -n -; done
+        echo
+        begin=$(date -I -d"$begin +3months")
+    done
+}
+
+CMD=$1
+shift
+if [ "$CMD" == "day" ]; then
+    day=$1
+    weekday=$(date -d"$day" +"%a")
+    template=$WIKI/diary/templates/$weekday.wiki
+    echo "= $weekday $day ="
+    echo
+    [[ -f "$template" ]] && cat $template
+elif [ "$CMD" == "year" ]; then
+    title=$1
+    year=$(echo $title | cut -d' ' -f2)
+    begin="$year-01-01"
+    echo "= $title ="
+    echo
+    year $begin
+elif [ -z "$CMD" ]; then
+    exit 1
+else
+    exit 1
+fi
