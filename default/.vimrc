@@ -142,6 +142,7 @@ set tags=tags
 set ttimeoutlen=10
 set dictionary=/usr/share/dict/words
 runtime ftplugin/man.vim
+set keywordprg=:Man
 
 nmap <esc><esc> :nohl<CR>
 nmap <leader>g :exec "G <cword>"<cr>
