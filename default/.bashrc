@@ -81,6 +81,13 @@ chpass() {
     export PASSWORD_STORE_DIR=$dir
 }
 
+# http://en.leoiannacone.com/2014/09/use-gtk-3-0-dark-variant-theme-for-your-gtk-2-terminal-emulator/
+dark() {
+    xprop -f _GTK_THEME_VARIANT 8u \
+          -set _GTK_THEME_VARIANT "dark" -id \
+          $(xprop -root | awk '/^_NET_ACTIVE_WINDOW/ {print $5}')
+}
+
 ###############################################################################
 # Environment
 ###############################################################################
@@ -103,11 +110,3 @@ if [ -d $HOME/.bashrc.d ]; then
 fi
 
 export EDITOR=vim
-
-# Set dark theme for xterm
-# http://en.leoiannacone.com/2014/09/use-gtk-3-0-dark-variant-theme-for-your-gtk-2-terminal-emulator/
-if [[ "$TERM" =~ "xterm" ]] ; then
-    xprop -f _GTK_THEME_VARIANT 8u \
-          -set _GTK_THEME_VARIANT "dark" -id \
-          $(xprop -root | awk '/^_NET_ACTIVE_WINDOW/ {print $5}')
-fi
