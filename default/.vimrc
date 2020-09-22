@@ -40,9 +40,9 @@ command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \ 'sink':    'tag',
     \ 'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
-nmap <c-p> :FZFBuffers<CR>
-nmap <c-l> :FZF<CR>
-nmap <c-k> :FZFTags<CR>
+nmap <leader><leader> :FZFBuffers<CR>
+nmap <leader>f :FZF<CR>
+nmap <leader>t :FZFTags<CR>
 
 " Vimwiki
 let g:vimwiki_hl_headers = 1
@@ -66,6 +66,8 @@ if &term =~ '^screen'
     execute "set <xRight>=\e[1;*C"
 endif
 command! -nargs=1 BZ execute "read !bzpull <f-args>"
+nmap <c-n> <Plug>VimwikiNextLink
+nmap <c-p> <Plug>VimwikiPrevLink
 
 " #############################################################################
 " # Appearance
@@ -103,23 +105,6 @@ set expandtab
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 set textwidth=79
-
-" #############################################################################
-" # Motion
-" #############################################################################
-
-nmap ]q :cnext<CR>
-nmap [q :cprev<CR>
-nmap ]Q :clast<CR>
-nmap [Q :cfirst<CR>
-nmap ]l :lnext<CR>
-nmap [l :lprev<CR>
-nmap ]L :llast<CR>
-nmap [L :lfirst<CR>
-nmap ]t :tnext<CR>
-nmap [t :tprev<CR>
-nmap ]T :tlast<CR>
-nmap [T :tfirst<CR>
 
 " #############################################################################
 " # Searching
