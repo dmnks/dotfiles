@@ -51,16 +51,6 @@ let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
-" Autogenerate diary files
-autocmd BufNewFile */diary/[^d]*.wiki   silent 0r !gendiary day "%:t:r"
-" Enable diary navigation (details: https://superuser.com/a/402084)
-if &term =~ '^screen'
-    execute "set <xUp>=\e[1;*A"
-    execute "set <xDown>=\e[1;*B"
-    execute "set <xLeft>=\e[1;*D"
-    execute "set <xRight>=\e[1;*C"
-endif
-command! -nargs=1 BZ execute "read !bzpull <f-args>"
 nmap <c-n> <Plug>VimwikiNextLink
 nmap <c-p> <Plug>VimwikiPrevLink
 
@@ -130,6 +120,17 @@ nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>s :set spell!<CR>
+
+" Simple todo toggling for .diff journals
+function! s:toggleTodo()
+    let l:symbs = ['-', '+', '>']
+    let l:line = getline('.')
+    let l:idx = index(l:symbs, l:line[0])
+    let l:symb = symbs[(l:idx + 1) % len(l:symbs)]
+    call setline('.', l:symb . l:line[1:])
+endfunction
+autocmd BufRead,BufNewFile journal*.diff
+    \ nmap <buffer> <silent> <c-t> :call <sid>toggleTodo()<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
