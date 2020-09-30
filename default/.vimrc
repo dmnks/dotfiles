@@ -105,6 +105,49 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
     \ | copen | redraw!
 
 " #############################################################################
+" # Simple .plan support
+" #############################################################################
+
+function! s:planToggle()
+    let l:symbs = ['*', '+', '-', ' ']
+    let l:line = getline('.')
+    let l:idx = index(l:symbs, l:line[0])
+    let l:symb = symbs[(l:idx + 1) % len(l:symbs)]
+    call setline('.', l:symb . l:line[1:])
+endfunction
+function! s:planNextDay()
+    let l:format = '%a %b %d, %Y'
+    let l:line = getline(search('^@ ', 'bn'))
+    let l:prev = strptime(l:format, l:line[2:])
+    let l:next = strftime(l:format, l:prev + 24*60*60)
+    call append(line('.'), '')
+    normal! j
+    call append(line('.'), '@ ' . l:next)
+    normal! j
+    call append(line('.'), '')
+    normal! j
+endfunction
+function! s:planInit()
+    " Syntax
+    syntax match todoOpen "^  .*"
+    syntax match todoPost "^+ .*"
+    syntax match todoDrop "^- .*"
+    syntax match todoDate "^@ .*"
+    syntax match todoNote "^#.*"
+    highlight def link todoOpen Define
+    highlight def link todoPost Typedef
+    highlight def link todoDrop Comment
+    highlight def link todoDate Constant
+    highlight def link todoNote Comment
+    " Mappings
+    nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
+    nmap <buffer> <silent> <c-n> :call search('^  ')<CR>
+    nmap <buffer> <silent> <c-p> :call search('^  ', 'b')<CR>
+    nmap <buffer> <silent> <CR> :call <sid>planNextDay()<CR>
+endfunction
+autocmd BufRead,BufNewFile *.plan call <sid>planInit()
+
+" #############################################################################
 " # Misc
 " #############################################################################
 
@@ -120,17 +163,6 @@ nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>s :set spell!<CR>
-
-" Simple todo toggling for .diff journals
-function! s:toggleTodo()
-    let l:symbs = ['-', '+', '>']
-    let l:line = getline('.')
-    let l:idx = index(l:symbs, l:line[0])
-    let l:symb = symbs[(l:idx + 1) % len(l:symbs)]
-    call setline('.', l:symb . l:line[1:])
-endfunction
-autocmd BufRead,BufNewFile journal*.diff
-    \ nmap <buffer> <silent> <c-t> :call <sid>toggleTodo()<CR>
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
