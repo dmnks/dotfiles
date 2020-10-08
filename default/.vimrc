@@ -106,35 +106,40 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
 
 " #############################################################################
 " # Simple .plan support
+" # More info: https://garbagecollected.org/2017/10/24/the-carmack-plan/
 " #############################################################################
 
 function! s:planToggle()
-    let l:symbs = ['*', '+', '-', ' ']
+    let l:symbs = [' ', '*', '+', '-', '@']
     let l:line = getline('.')
     let l:idx = index(l:symbs, l:line[0])
     let l:symb = symbs[(l:idx + 1) % len(l:symbs)]
     call setline('.', l:symb . l:line[1:])
 endfunction
-function! s:planNextDay()
-    let l:format = '%a %b %d, %Y'
-    let l:trail = 20
+
+function! s:planNext()
+    let l:delim = repeat('=', 20)
+    if expand('%:t:r') == 'weekly'
+        let l:format = '= Week %V, %b %d, %Y ' . l:delim
+        let l:delta = 24*60*60*7
+    else
+        let l:format = '= %a %b %d, %Y ' . l:delim
+        let l:delta = 24*60*60
+    endif
     let l:line = getline(search('^= ', 'bn'))
-    let l:prev = strptime(l:format, l:line[2:-l:trail])
-    let l:next = strftime(l:format, l:prev + 24*60*60)
-    call append(line('.'), '')
-    normal! j
-    call append(line('.'), '= ' . l:next . ' ' . repeat('=', l:trail))
-    normal! j
-    call append(line('.'), '')
-    normal! j
+    let l:prev = strptime(l:format, l:line)
+    let l:next = strftime(l:format, l:prev + l:delta)
+    call append(line('.'), ['', l:next, ''])
+    normal! 3j
 endfunction
+
 function! s:planInit()
     " Syntax
-    syntax match todoDate "^= .*"
-    syntax match todoOpen "^  .*"
-    syntax match todoGoal "^@ .*"
-    syntax match todoPost "^+ .*"
-    syntax match todoDrop "^- .*"
+    syntax match todoDate "^= .*$"
+    syntax match todoOpen "^  .*$"
+    syntax match todoGoal "^@ .*$"
+    syntax match todoPost "^+ .*$"
+    syntax match todoDrop "^- .*$"
     highlight def link todoDate Constant
     highlight def link todoOpen Define
     highlight def link todoGoal Identifier
@@ -142,10 +147,11 @@ function! s:planInit()
     highlight def link todoDrop Comment
     " Mappings
     nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
-    nmap <buffer> <silent> <c-n> :call search('^  ')<CR>
-    nmap <buffer> <silent> <c-p> :call search('^  ', 'b')<CR>
-    nmap <buffer> <silent> <CR> :call <sid>planNextDay()<CR>
+    nmap <buffer> <silent> <c-n> :call search('^[ @] ')<CR>
+    nmap <buffer> <silent> <c-p> :call search('^[ @] ', 'b')<CR>
+    nmap <buffer> <silent> <CR> :call <sid>planNext()<CR>
 endfunction
+
 autocmd BufRead,BufNewFile *.plan call <sid>planInit()
 
 " #############################################################################
