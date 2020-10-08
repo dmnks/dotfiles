@@ -117,28 +117,29 @@ function! s:planToggle()
 endfunction
 function! s:planNextDay()
     let l:format = '%a %b %d, %Y'
-    let l:line = getline(search('^@ ', 'bn'))
-    let l:prev = strptime(l:format, l:line[2:])
+    let l:trail = 20
+    let l:line = getline(search('^= ', 'bn'))
+    let l:prev = strptime(l:format, l:line[2:-l:trail])
     let l:next = strftime(l:format, l:prev + 24*60*60)
     call append(line('.'), '')
     normal! j
-    call append(line('.'), '@ ' . l:next)
+    call append(line('.'), '= ' . l:next . ' ' . repeat('=', l:trail))
     normal! j
     call append(line('.'), '')
     normal! j
 endfunction
 function! s:planInit()
     " Syntax
+    syntax match todoDate "^= .*"
     syntax match todoOpen "^  .*"
+    syntax match todoGoal "^@ .*"
     syntax match todoPost "^+ .*"
     syntax match todoDrop "^- .*"
-    syntax match todoDate "^@ .*"
-    syntax match todoNote "^#.*"
+    highlight def link todoDate Constant
     highlight def link todoOpen Define
+    highlight def link todoGoal Identifier
     highlight def link todoPost Typedef
     highlight def link todoDrop Comment
-    highlight def link todoDate Constant
-    highlight def link todoNote Comment
     " Mappings
     nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
     nmap <buffer> <silent> <c-n> :call search('^  ')<CR>
