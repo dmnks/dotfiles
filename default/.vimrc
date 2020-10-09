@@ -147,8 +147,8 @@ function! s:planInit()
     highlight def link todoDrop Comment
     " Mappings
     nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
-    nmap <buffer> <silent> <c-n> :call search('^[ @] ')<CR>
-    nmap <buffer> <silent> <c-p> :call search('^[ @] ', 'b')<CR>
+    nmap <buffer> <silent> <c-n> :call search('^[ @] ', '', line('$'))<CR>
+    nmap <buffer> <silent> <c-p> :call search('^[ @] ', 'b', 10)<CR>
     nmap <buffer> <silent> <CR> :call <sid>planNext()<CR>
 endfunction
 
