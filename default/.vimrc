@@ -24,6 +24,8 @@ let g:fzf_colors = {
     \ 'marker':  ['fg', 'Keyword'],
     \ 'spinner': ['fg', 'Label'],
     \ 'header':  ['fg', 'Comment'] }
+let g:fzf_layout = {
+    \ 'window': {'width': 0.9, 'height': 0.6, 'border': 'sharp'}}
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
