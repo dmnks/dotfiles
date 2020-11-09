@@ -90,7 +90,8 @@ elif [ "$cmd" == "spawn" ]; then
     ensure_domain_undefined $name
 
     echo "Creating new thin image"
-    qemu-img create -f qcow2 -o backing_file=$base $image >/dev/null
+    qemu-img create -f qcow2 -o backing_file=$base,backing_fmt=qcow2 $image \
+             >/dev/null
 
     echo "Configuring image"
     virt-sysprep -a $image --hostname $name --ssh-inject root \
