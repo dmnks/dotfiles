@@ -1,6 +1,8 @@
 XTerm.vt100.faceName: Inconsolata:size=15:antialias=true
 XTerm.vt100.foreground: gray
 XTerm.vt100.background: black
+! Make blue readable on black background
+XTerm.vt100.color4: CornflowerBlue
 XTerm.vt100.scrollBar: false
 XTerm.vt100.translations: #override \n\
     Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
