@@ -1,6 +1,7 @@
 XTerm.vt100.faceName: Inconsolata:size=15:antialias=true
 XTerm.vt100.foreground: gray
 XTerm.vt100.background: black
+XTerm.vt100.cursorColor: *XtDefaultForeground
 ! Make blue readable on black background
 XTerm.vt100.color4: CornflowerBlue
 XTerm.vt100.scrollBar: false

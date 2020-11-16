@@ -10,6 +10,7 @@ let g:gruvbox_invert_tabline = 1
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
+packadd! fzf  " add local plugin to runtimepath before system-wide one
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Normal'],
@@ -25,7 +26,8 @@ let g:fzf_colors = {
     \ 'spinner': ['fg', 'Label'],
     \ 'header':  ['fg', 'Comment'] }
 let g:fzf_layout = {
-    \ 'window': {'width': 0.9, 'height': 0.6, 'border': 'sharp'}}
+    \ 'window': {'yoffset': 0, 'width': 0.5, 'height': 0.5, 'border': 'sharp',
+    \            'highlight': 'Normal'}}
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
@@ -33,14 +35,16 @@ function! s:buflist()
     let named = filter(named, '!empty(v:val)')
     return named
 endfunction
-command! FZFBuffers call fzf#run(fzf#wrap({
-    \ 'source':  reverse(<sid>buflist()),
-    \ 'options': '+m --prompt "buffer> "',
+command! FZFBuffers
+    \ call fzf#run(fzf#wrap({
+    \   'source':  reverse(<sid>buflist()),
+    \   'options': '+m --prompt "buffer> "',
     \ }))
-command! FZFTags if !empty(tagfiles()) | call fzf#run(fzf#wrap({
-    \ 'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
-    \ 'sink':    'tag',
-    \ 'options': '+m --prompt "tag> "',
+command! FZFTags
+    \ if !empty(tagfiles()) | call fzf#run(fzf#wrap({
+    \   'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
+    \   'sink':    'tag',
+    \   'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
 nmap <leader><leader> :FZFBuffers<CR>
 nmap <leader>f :FZF<CR>
@@ -68,6 +72,11 @@ let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
 set t_ut=
 set background=dark
 colorscheme gruvbox
+" https://github.com/lifepillar/vim-gruvbox8
+let g:terminal_ansi_colors = [
+    \ '#282828', '#cc241d', '#98971a', '#d79921', '#458588', '#b16286',
+    \ '#689d6a', '#a89984', '#928374', '#fb4934', '#b8bb26', '#fabd2f',
+    \ '#83a598', '#d3869b', '#8ec07c', '#ebdbb2']
 set number
 set wildmenu
 set title
