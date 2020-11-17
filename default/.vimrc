@@ -11,6 +11,7 @@ let g:gruvbox_invert_tabline = 1
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
 packadd! fzf  " add local plugin to runtimepath before system-wide one
+let $FZF_DEFAULT_OPTS='--layout=reverse'
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Normal'],
