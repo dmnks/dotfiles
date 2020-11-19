@@ -33,6 +33,7 @@ Commands:
     config          browse the config directory with Midnight Commander
     git             run git(1) with the given arguments from the config
                     directory
+    make            run make(1) in the box
     rm              delete the box
 
 Environment:
@@ -174,6 +175,9 @@ elif [ "$CMD" == "config" ]; then
     mc $PROJDIR
 elif [ "$CMD" == "git" ]; then
     git -C $PROJDIR $@
+elif [ "$CMD" == "make" ]; then
+    podman exec -it $NAME make $@
+    exit $?
 else
     usage
 fi
