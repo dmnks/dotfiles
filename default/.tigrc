@@ -9,7 +9,7 @@ bind main g move-first-line
 
 # COLORS
 color title-focus           black       white       bold
-color cursor                white       blue        bold
+color cursor                white       blue
 color "Refs: "              default     default
 color "Author: "            default     default
 color "AuthorDate: "        default     default
