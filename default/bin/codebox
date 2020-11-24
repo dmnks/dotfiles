@@ -31,6 +31,7 @@ Commands:
     ls              list all boxes in this project (per branch)
     mc              browse the box filesystem with Midnight Commander
     config          browse the config directory with Midnight Commander
+    pwd             print the config directory path
     git             run git(1) with the given arguments from the config
                     directory
     make            run make(1) in the box
@@ -173,6 +174,8 @@ elif [ "$CMD" == "config" ]; then
         exit 1
     fi
     mc $PROJDIR
+elif [ "$CMD" == "pwd" ]; then
+    echo $PROJDIR
 elif [ "$CMD" == "git" ]; then
     git -C $PROJDIR $@
 elif [ "$CMD" == "make" ]; then

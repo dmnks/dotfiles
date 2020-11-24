@@ -47,9 +47,16 @@ command! FZFTags
     \   'sink':    'tag',
     \   'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
+command! FZFBox
+    \ call fzf#run(fzf#wrap({
+    \   'source':  'ls',
+    \   'dir':     trim(system('codebox pwd')),
+    \   'options': '-m --prompt "box> "',
+    \ }))
 nmap <leader><leader> :FZFBuffers<CR>
 nmap <leader>f :FZF<CR>
 nmap <leader>t :FZFTags<CR>
+nmap <leader>b :FZFBox<CR>
 
 " Vimwiki
 let g:vimwiki_hl_headers = 1
@@ -180,7 +187,6 @@ nmap <esc><esc> :nohl<CR>
 nmap <leader>g :exec "G <cword>"<CR>
 nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
-nmap <leader>b Oimport pudb; pu.db  # BREAKPOINT<esc>
 nmap <leader>s :set spell!<CR>
 nmap <F8> :exec "!codebox make \|\| read"<CR><CR>
 
