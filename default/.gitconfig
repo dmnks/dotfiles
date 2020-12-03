@@ -39,3 +39,5 @@
     ra = rebase --abort
 [merge]
     tool = vimdiff
+[pull]
+	ff = only
