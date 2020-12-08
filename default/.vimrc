@@ -65,8 +65,22 @@ let wiki = {}
 let wiki.path = '~/vimwiki/'
 let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
 let g:vimwiki_list = [wiki]
-nmap <c-n> <Plug>VimwikiNextLink
-nmap <c-p> <Plug>VimwikiPrevLink
+" Autogenerate diary files
+autocmd BufNewFile Diary\ *.wiki        silent 0r !gendiary year "%:t:r"
+autocmd BufNewFile */diary/[^d]*.wiki   silent 0r !gendiary day "%:t:r"
+" Binding to jump to current week in diary index
+autocmd BufRead,BufNewFile Diary\ *.wiki,*/diary/diary.wiki
+    \ nmap <buffer> <c-j>
+    \ :exec search("^==== Week " . strftime("%V"))<CR>zt
+" Enable diary navigation (details: https://superuser.com/a/402084)
+if &term =~ '^screen'
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xLeft>=\e[1;*D"
+    execute "set <xRight>=\e[1;*C"
+endif
+nmap <c-j> <Plug>VimwikiNextLink
+nmap <c-k> <Plug>VimwikiPrevLink
 
 " #############################################################################
 " # Appearance
