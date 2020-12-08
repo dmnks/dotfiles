@@ -54,9 +54,9 @@ command! FZFBox
     \   'options': '-m --prompt "box> "',
     \ }))
 nmap <leader><leader> :FZFBuffers<CR>
-nmap <leader>f :FZF<CR>
-nmap <leader>t :FZFTags<CR>
-nmap <leader>b :FZFBox<CR>
+nmap <leader>ff :FZF<CR>
+nmap <leader>fs :FZFTags<CR>
+nmap <leader>fb :FZFBox<CR>
 
 " Vimwiki
 let g:vimwiki_hl_headers = 1
