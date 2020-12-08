@@ -30,23 +30,28 @@ quarter() {
     local begin=$1
     local end
     for month in $(seq 1 3); do
+        echo
+        echo
         echo "=== "$(date -d"$begin" +"%B")" ==="
         end=$(date -I -d"$begin +1month")
         days $begin $end
-        echo
-        echo
         begin=$end
     done
 }
 
 year() {
     local begin=$1
-    for quart in $(seq 1 4); do
-        echo "== Quarter $quart =="
-        echo
-        quarter $begin
-        for i in $(seq 1 79); do echo -n -; done
-        echo
+    local quart=$2
+    for q in $(seq 1 4); do
+        if [[ -z "$quart" || "$q" == "$quart" ]]; then
+            echo
+            echo "== Quarter $q =="
+            quarter $begin
+            if [[ -z "$quart" ]]; then
+                echo
+                for i in $(seq 1 79); do echo -n -; done
+            fi
+        fi
         begin=$(date -I -d"$begin +3months")
     done
 }
@@ -63,10 +68,9 @@ if [ "$CMD" == "day" ]; then
 elif [ "$CMD" == "year" ]; then
     title=$1
     year=$(echo $title | cut -d' ' -f2)
-    begin="$year-01-01"
-    echo "= $title ="
-    echo
-    year $begin
+    quart=$(echo $title | cut -d' ' -f3 | sed 's/Q//')
+    echo "= Diary $year ="
+    year "$year-01-01" $quart
 elif [ -z "$CMD" ]; then
     exit 1
 else
