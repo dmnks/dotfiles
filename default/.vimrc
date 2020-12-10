@@ -70,17 +70,12 @@ autocmd BufNewFile Diary\ *.wiki        silent 0r !gendiary year "%:t:r"
 autocmd BufNewFile */diary/[^d]*.wiki   silent 0r !gendiary day "%:t:r"
 " Binding to jump to current week in diary index
 autocmd BufRead,BufNewFile Diary\ *.wiki,*/diary/diary.wiki
-    \ nmap <buffer> <c-j>
+    \ nmap <buffer> <silent> <c-j>
     \ :exec search("^==== Week " . strftime("%V"))<CR>zt
-" Enable diary navigation (details: https://superuser.com/a/402084)
-if &term =~ '^screen'
-    execute "set <xUp>=\e[1;*A"
-    execute "set <xDown>=\e[1;*B"
-    execute "set <xLeft>=\e[1;*D"
-    execute "set <xRight>=\e[1;*C"
-endif
-nmap <c-j> <Plug>VimwikiNextLink
-nmap <c-k> <Plug>VimwikiPrevLink
+nmap <c-p> <Plug>VimwikiPrevLink
+nmap <c-n> <Plug>VimwikiNextLink
+nmap <c-k> <Plug>VimwikiDiaryPrevDay
+nmap <c-j> <Plug>VimwikiDiaryNextDay
 
 " #############################################################################
 " # Appearance
