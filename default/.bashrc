@@ -82,9 +82,9 @@ chpass() {
 }
 
 # http://en.leoiannacone.com/2014/09/use-gtk-3-0-dark-variant-theme-for-your-gtk-2-terminal-emulator/
-dark() {
+chvar() {
     xprop -f _GTK_THEME_VARIANT 8u \
-          -set _GTK_THEME_VARIANT "dark" -id \
+          -set _GTK_THEME_VARIANT "$1" -id \
           $(xprop -root | awk '/^_NET_ACTIVE_WINDOW/ {print $5}')
 }
 
