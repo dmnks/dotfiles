@@ -2,7 +2,14 @@ XTerm.vt100.faceName: Inconsolata:size=15:antialias=true
 XTerm.vt100.foreground: gray
 XTerm.vt100.background: black
 XTerm.vt100.cursorColor: *XtDefaultForeground
-XTerm.vt100.scrollBar: false
+XTerm.vt100.colorInnerBorder: true
+XTerm.vt100.borderColor: #555555
+XTerm.vt100.internalBorder: 1
+XTerm.vt100.scrollBar: true
+XTerm.vt100.Scrollbar.background: #333333
+XTerm.vt100.Scrollbar.foreground: white
+XTerm.vt100.rightScrollBar: true
+XTerm.vt100.scrollTtyOutput: false
 XTerm.vt100.translations: #override \n\
     Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
     Ctrl Shift <Key>V: insert-selection(CLIPBOARD) \n\
