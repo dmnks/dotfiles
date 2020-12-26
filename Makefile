@@ -1,10 +1,11 @@
-PLUGINS = ~/.vim/pack/git/start
+PACKAGES = bash vim git tmux mc utils desktop xterm
+VIMPACK = ~/.vim/pack/git/start
 
-.PHONY: all pkgs plugins conf swm restore
+.PHONY: all software plugins conf
 
-all: pkgs plugins conf
+all: software plugins conf
 
-pkgs:
+software:
 	sudo dnf install -y vim \
 	                    ctags \
 	                    docker \
@@ -29,13 +30,17 @@ pkgs:
 	                    xterm
 
 plugins:
-	mkdir -p $(PLUGINS)
-	git clone https://github.com/morhetz/gruvbox $(PLUGINS)/gruvbox
-	git clone https://github.com/tpope/vim-commentary $(PLUGINS)/commentary
-	git clone https://github.com/vimwiki/vimwiki $(PLUGINS)/vimwiki
-	git clone https://github.com/cyberkov/openhab-vim $(PLUGINS)/openhab
+	mkdir -p $(VIMPACK)
+	git clone \
+	    https://github.com/morhetz/gruvbox $(VIMPACK)/gruvbox
+	git clone \
+	    https://github.com/tpope/vim-commentary $(VIMPACK)/commentary
+	git clone \
+	    https://github.com/vimwiki/vimwiki $(VIMPACK)/vimwiki
+	git clone \
+	    https://github.com/cyberkov/openhab-vim $(VIMPACK)/openhab
 
 conf:
 	[[ -f ~/.bashrc && ! -L ~/.bashrc ]] && mv ~/.bashrc{,.orig} || true
-	stow -Rv --no-folding default swm
+	stow -Rv --no-folding $(PACKAGES)
 	dconf load /org/gnome/ < gnome.conf
