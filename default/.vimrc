@@ -1,8 +1,12 @@
 " #############################################################################
-" # Plugin setup
+" # My vimrc file (extends /etc/vimrc in Fedora)
 " #############################################################################
 
 let mapleader = ' '
+
+" #############################################################################
+" # Plugin setup
+" #############################################################################
 
 " gruvbox
 let g:gruvbox_invert_tabline = 1
@@ -81,7 +85,6 @@ nmap <c-j> <Plug>VimwikiDiaryNextDay
 " # Appearance
 " #############################################################################
 
-syntax on
 set termguicolors
 " Needed for tmux, see :help xterm-true-color
 let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
@@ -95,7 +98,6 @@ let g:terminal_ansi_colors = [
     \ '#689d6a', '#a89984', '#928374', '#fb4934', '#b8bb26', '#fabd2f',
     \ '#83a598', '#d3869b', '#8ec07c', '#ebdbb2']
 set number
-set wildmenu
 set title
 set nowrap
 set cursorline
@@ -110,24 +112,18 @@ nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 " # Editing
 " #############################################################################
 
-" Have the Pythonic indentation regardless of the indent file used
 set autoindent
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-" Allow backspace in insert mode
-set backspace=indent,eol,start
 set textwidth=79
 
 " #############################################################################
 " # Searching
 " #############################################################################
 
-set hlsearch
 set ignorecase
 set smartcase
-" Highlight dynamically as pattern is typed
-set incsearch
 set grepprg=git\ grep\ -n\ $*
 command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
     \ | copen | redraw!
