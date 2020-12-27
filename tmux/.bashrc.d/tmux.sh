@@ -1,3 +1,5 @@
+alias tmux="systemd-run --quiet --scope --user tmux"
+
 tmux-ide() {
     NAME=$(basename $PWD)
     tmux new-session -ds "$NAME" -n "code"

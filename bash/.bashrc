@@ -31,7 +31,6 @@ alias gdiff='git diff --no-index --'
 alias docker='sudo docker --config $HOME/.docker'
 alias docker-clean='clean_containers "sudo docker"'
 alias podman-clean='clean_containers podman'
-alias tmux="systemd-run --quiet --scope --user tmux"
 
 ###############################################################################
 # Functions
