@@ -44,8 +44,8 @@ Icon=org.gnome.Terminal
 Categories=System;TerminalEmulator;
 Keywords=shell;prompt;command;commandline;cmd;
 X-Desktop-File-Install-Version=0.23
-Actions=new-full-window;
+Actions=new-plain-window;
 
-[Desktop Action new-full-window]
-Name=New Full-Screen Window
-Exec=xterm -b 0 +sb -fullscreen
+[Desktop Action new-plain-window]
+Name=New Plain Window
+Exec=xterm -b 0 +sb
