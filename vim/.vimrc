@@ -96,6 +96,7 @@ let g:terminal_ansi_colors = [
 set number
 set title
 set nowrap
+set guicursor=a:blinkon0
 set cursorline
 let &colorcolumn=join(range(80, 999), ",")
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
