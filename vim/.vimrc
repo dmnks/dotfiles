@@ -87,7 +87,6 @@ nmap <c-j> <Plug>VimwikiDiaryNextDay
 
 set termguicolors
 set t_ut=
-set background=dark
 colorscheme gruvbox
 " https://github.com/lifepillar/vim-gruvbox8
 let g:terminal_ansi_colors = [
@@ -101,7 +100,6 @@ set cursorline
 let &colorcolumn=join(range(80, 999), ",")
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
-set laststatus=2
 set scrolloff=0
 nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 
@@ -109,7 +107,6 @@ nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 " # Editing
 " #############################################################################
 
-set autoindent
 set softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -132,7 +129,6 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
 set tags=tags
 set ttimeoutlen=10
 set dictionary=/usr/share/dict/words
-runtime ftplugin/man.vim
 set keywordprg=:Man
 
 nmap <esc><esc> :nohl<CR>
@@ -141,6 +137,13 @@ nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <F8> :exec "!codebox make \|\| read"<CR><CR>
+
+if !has('nvim')
+    set autoindent
+    set background=dark
+    set laststatus=2
+    runtime ftplugin/man.vim
+endif
 
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
