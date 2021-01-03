@@ -81,13 +81,6 @@ chpass() {
     export PASSWORD_STORE_DIR=$dir
 }
 
-# http://en.leoiannacone.com/2014/09/use-gtk-3-0-dark-variant-theme-for-your-gtk-2-terminal-emulator/
-chvar() {
-    xprop -f _GTK_THEME_VARIANT 8u \
-          -set _GTK_THEME_VARIANT "$1" -id \
-          $(xprop -root | awk '/^_NET_ACTIVE_WINDOW/ {print $5}')
-}
-
 ###############################################################################
 # Environment
 ###############################################################################
