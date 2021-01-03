@@ -134,7 +134,12 @@ nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <F8> :exec "!codebox make \|\| read"<CR><CR>
 
-if !has('nvim')
+if has('nvim')
+    autocmd BufReadPost *
+        \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+        \ |   exe "normal! g`\""
+        \ | endif
+else
     set autoindent
     set background=dark
     set laststatus=2
