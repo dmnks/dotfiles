@@ -83,8 +83,8 @@ nmap <c-j> <Plug>VimwikiDiaryNextDay
 " #############################################################################
 
 set termguicolors
-set t_ut=
 colorscheme gruvbox
+set t_ut=
 set number
 set title
 set nowrap
