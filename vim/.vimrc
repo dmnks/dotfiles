@@ -8,9 +8,6 @@ let mapleader = ' '
 " # Plugin setup
 " #############################################################################
 
-" gruvbox
-let g:gruvbox_invert_tabline = 1
-
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
