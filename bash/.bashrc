@@ -94,6 +94,7 @@ GIT_PS1_SHOWSTASHSTATE=1
 # Misc
 ###############################################################################
 
+export EDITOR=nvim
 bind '"\C-o":"mc -d\C-m"'
 
 if [ -d $HOME/.bashrc.d ]; then
@@ -101,5 +102,3 @@ if [ -d $HOME/.bashrc.d ]; then
         [ -f $script ] && source $script
     done
 fi
-
-export EDITOR=nvim
