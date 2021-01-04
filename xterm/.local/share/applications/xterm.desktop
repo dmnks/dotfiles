@@ -36,7 +36,7 @@
 Name=XTerm
 GenericName=Terminal
 Comment=standard terminal emulator for the X window system
-Exec=xterm
+Exec=xterm -b 0
 Terminal=false
 Type=Application
 Encoding=UTF-8

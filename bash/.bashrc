@@ -80,6 +80,15 @@ chpass() {
     export PASSWORD_STORE_DIR=$dir
 }
 
+# Set dark theme on current window
+# http://en.leoiannacone.com/2014/09/
+# use-gtk-3-0-dark-variant-theme-for-your-gtk-2-terminal-emulator/
+if [[ "$TERM" =~ "xterm" ]]; then
+    xprop -f _GTK_THEME_VARIANT 8u \
+          -set _GTK_THEME_VARIANT "dark" -id \
+          $(xprop -root | awk '/^_NET_ACTIVE_WINDOW/ {print $5}')
+fi
+
 ###############################################################################
 # Environment
 ###############################################################################
