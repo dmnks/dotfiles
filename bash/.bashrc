@@ -27,7 +27,6 @@ source /usr/share/git-core/contrib/completion/git-prompt.sh
 # Aliases
 ###############################################################################
 
-alias vim='nvim'
 alias gdiff='git diff --no-index --'
 alias docker='sudo docker --config $HOME/.docker'
 alias docker-clean='clean_containers "sudo docker"'
@@ -90,11 +89,12 @@ GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUPSTREAM="auto"
 GIT_PS1_SHOWSTASHSTATE=1
 
+export EDITOR=vim
+
 ###############################################################################
 # Misc
 ###############################################################################
 
-export EDITOR=nvim
 bind '"\C-o":"mc -d\C-m"'
 
 if [ -d $HOME/.bashrc.d ]; then
