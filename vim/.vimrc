@@ -129,7 +129,8 @@ function! s:planInit()
         \ '= %a %b %d, %Y ' . repeat('=', 20))<CR><Esc>
 endfunction
 
-autocmd BufRead,BufNewFile *.plan call <sid>planInit()
+autocmd BufRead,BufNewFile *.plan   call <sid>planInit()
+autocmd BufNewFile *.plan           0r ~/.vim/skeleton.plan | norm G
 
 " #############################################################################
 " # Misc
