@@ -109,22 +109,6 @@ function! s:planToggle()
     call setline('.', l:symb . l:line[1:])
 endfunction
 
-function! s:planNext()
-    let l:delim = repeat('=', 20)
-    if expand('%:t:r') == 'weekly'
-        let l:format = '= Week %V, %b %d, %Y ' . l:delim
-        let l:delta = 24*60*60*7
-    else
-        let l:format = '= %a %b %d, %Y ' . l:delim
-        let l:delta = 24*60*60
-    endif
-    let l:line = getline(search('^= ', 'bn'))
-    let l:prev = strptime(l:format, l:line)
-    let l:next = strftime(l:format, l:prev + l:delta)
-    call append(line('.'), ['', l:next, ''])
-    normal! 3j
-endfunction
-
 function! s:planInit()
     " Syntax
     syntax match todoDate "^= .*$"
@@ -141,7 +125,8 @@ function! s:planInit()
     nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
     nmap <buffer> <silent> <c-n> :call search('^[ @] ', '', line('$'))<CR>
     nmap <buffer> <silent> <c-p> :call search('^[ @] ', 'b', 10)<CR>
-    nmap <buffer> <silent> <CR> :call <sid>planNext()<CR>
+    nmap <buffer> <silent> <CR> o<C-R>=strftime(
+        \ '= %a %b %d, %Y ' . repeat('=', 20))<CR><Esc>
 endfunction
 
 autocmd BufRead,BufNewFile *.plan call <sid>planInit()
