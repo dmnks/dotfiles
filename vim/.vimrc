@@ -111,11 +111,11 @@ endfunction
 
 function! s:planInit()
     " Syntax
-    syntax match todoDate "^= .*$"
-    syntax match todoOpen "^  .*$"
-    syntax match todoGoal "^@ .*$"
-    syntax match todoPost "^+ .*$"
-    syntax match todoDrop "^- .*$"
+    syntax match todoDate "^= .\+$"
+    syntax match todoOpen "^  \S.\+$"
+    syntax match todoGoal "^@ .\+$"
+    syntax match todoPost "^+ .\+$"
+    syntax match todoDrop "^- .\+$"
     highlight def link todoDate Constant
     highlight def link todoOpen Define
     highlight def link todoGoal Identifier
