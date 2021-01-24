@@ -142,6 +142,8 @@ else
     runtime ftplugin/man.vim
 endif
 
+autocmd BufWritePost ~/.Xresources silent !xrdb <afile>
+
 " Load additional config files
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
