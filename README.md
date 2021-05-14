@@ -8,7 +8,7 @@ My dotfiles, inspired by:
  * [Tomas Tomecek](https://www.github.com/TomasTomecek/dotfiles)
  * and others
 
-Fonts were taken from: https://github.com/powerline/fonts
+Inconsolata font from: https://levien.com/type/myfonts/inconsolata.html
 
 ## Installation
 ```bash

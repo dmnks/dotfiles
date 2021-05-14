@@ -80,12 +80,12 @@ chpass() {
     export PASSWORD_STORE_DIR=$dir
 }
 
-# Set dark theme on current window
-# http://en.leoiannacone.com/2014/09/
-# use-gtk-3-0-dark-variant-theme-for-your-gtk-2-terminal-emulator/
+# Remove window decorations for XTerm
+# https://askubuntu.com/questions/906424/
+#   remove-decoration-of-single-window-in-gnome-3
 if [[ "$TERM" =~ "xterm" ]]; then
-    xprop -f _GTK_THEME_VARIANT 8u \
-          -set _GTK_THEME_VARIANT "dark" -id \
+    xprop -f _MOTIF_WM_HINTS 32c \
+          -set _MOTIF_WM_HINTS '0x2, 0x0, 0x0, 0x0, 0x0' -id \
           $(xprop -root | awk '/^_NET_ACTIVE_WINDOW/ {print $5}')
 fi
 
