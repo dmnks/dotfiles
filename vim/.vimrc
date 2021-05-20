@@ -125,7 +125,7 @@ function! s:planInit()
     nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
     nmap <buffer> <silent> <c-n> :call search('^[ @] ', '', line('$'))<CR>
     nmap <buffer> <silent> <c-p> :call search('^[ @] ', 'b', 10)<CR>
-    nmap <buffer> <silent> <CR> o<C-R>=strftime(
+    nmap <buffer> <silent> <CR> o<CR><C-W><C-R>=strftime(
         \ '= %a %b %d, %Y ' . repeat('=', 20))<CR><Esc>
 endfunction
 
