@@ -58,26 +58,6 @@ nmap <leader>ff :FZF<CR>
 nmap <leader>fs :FZFTags<CR>
 nmap <leader>fb :FZFBox<CR>
 
-" Vimwiki
-let g:vimwiki_hl_headers = 1
-let g:vimwiki_hl_cb_checked = 2
-let wiki = {}
-let wiki.path = '~/vimwiki/'
-let wiki.nested_syntaxes = {'python': 'python', 'cpp': 'cpp', 'sh': 'sh'}
-let g:vimwiki_list = [wiki]
-" Autogenerate diary files
-autocmd BufNewFile Diary\ *.wiki        silent 0r !gendiary year "%:t:r"
-autocmd BufNewFile */diary/[^d]*.wiki   silent 0r !gendiary day "%:t:r"
-" Binding to jump to current week in diary index
-autocmd BufRead,BufNewFile Diary\ *.wiki,*/diary/diary.wiki
-    \ nmap <buffer> <silent> <c-j>
-    \ :exec search("^==== Week " . strftime("%V"))<CR>zt
-nmap <c-p> <Plug>VimwikiPrevLink
-nmap <c-n> <Plug>VimwikiNextLink
-nmap <c-k> <Plug>VimwikiDiaryPrevDay
-nmap <c-j> <Plug>VimwikiDiaryNextDay
-command! -nargs=+ BZ execute "read !bzpull '<f-args>'"
-
 " #############################################################################
 " # Appearance
 " #############################################################################
