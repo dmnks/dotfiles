@@ -80,14 +80,14 @@ chpass() {
     export PASSWORD_STORE_DIR=$dir
 }
 
-# Remove window decorations for XTerm
+# Remove window decorations
 # https://askubuntu.com/questions/906424/
-#   remove-decoration-of-single-window-in-gnome-3
-if [[ "$TERM" =~ "xterm" ]]; then
+#         remove-decoration-of-single-window-in-gnome-3
+zen() {
     xprop -f _MOTIF_WM_HINTS 32c \
           -set _MOTIF_WM_HINTS '0x2, 0x0, 0x0, 0x0, 0x0' -id \
           $(xprop -root | awk '/^_NET_ACTIVE_WINDOW/ {print $5}')
-fi
+}
 
 ###############################################################################
 # Environment
