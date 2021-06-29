@@ -122,6 +122,7 @@ set tags=tags
 set ttimeoutlen=10
 set dictionary=/usr/share/dict/words
 set keywordprg=:Man
+let g:ft_man_open_mode = 'vert'
 
 nmap <esc><esc> :nohl<CR>
 nmap <leader>g :exec "G <cword>"<CR>
