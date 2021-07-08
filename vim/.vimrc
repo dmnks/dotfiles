@@ -76,6 +76,7 @@ nmap <c-p> <Plug>VimwikiPrevLink
 nmap <c-n> <Plug>VimwikiNextLink
 nmap <c-k> <Plug>VimwikiDiaryPrevDay
 nmap <c-j> <Plug>VimwikiDiaryNextDay
+command! -nargs=+ BZ execute "read !bzpull '<f-args>'"
 
 " #############################################################################
 " # Appearance
