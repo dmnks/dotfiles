@@ -1,5 +1,6 @@
 set show-changes = false
 set show-untracked = false
+set main-view-id-display = yes
 
 # BINDINGS
 bind generic S :source ~/.tigrc
