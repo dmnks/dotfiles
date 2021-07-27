@@ -1,4 +1,4 @@
-PACKAGES = bash vim git tmux mc utils desktop xterm
+PACKAGES = bash vim git tmux mc utils desktop xterm gdb
 VIMPACK = ~/.vim/pack/git/start
 
 .PHONY: all software plugins conf
@@ -10,6 +10,7 @@ software:
 	                    ctags \
 	                    docker \
 	                    fzf \
+			    gdb \
 	                    git \
 	                    ipython3 \
 	                    libguestfs-tools-c \
