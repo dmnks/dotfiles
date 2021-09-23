@@ -117,7 +117,6 @@ elif [ "$CMD" == "create" ]; then
         --workdir $PWD \
         --name $NAME \
         --hostname $PROGNAME \
-        --network host \
         $ARGS $(get_conf create.args) \
         -it $IMAGE >/dev/null
     chcon -R -t container_file_t $PWD
