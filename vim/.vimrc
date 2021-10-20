@@ -103,6 +103,7 @@ nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+autocmd BufRead,BufNewFile */rpm/*.[ch] set noexpandtab
 set textwidth=79
 
 " #############################################################################
