@@ -102,7 +102,7 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
 " #############################################################################
 
 function! s:planToggle()
-    let l:symbs = [' ', '*', '+', '-', '@']
+    let l:symbs = [' ', '*', '+', '-']
     let l:line = getline('.')
     let l:idx = index(l:symbs, l:line[0])
     let l:symb = symbs[(l:idx + 1) % len(l:symbs)]
@@ -113,18 +113,16 @@ function! s:planInit()
     " Syntax
     syntax match todoDate "^= .\+$"
     syntax match todoOpen "^  \S.\+$"
-    syntax match todoGoal "^@ .\+$"
     syntax match todoPost "^+ .\+$"
     syntax match todoDrop "^- .\+$"
     highlight def link todoDate Constant
     highlight def link todoOpen Define
-    highlight def link todoGoal Identifier
     highlight def link todoPost Typedef
     highlight def link todoDrop Comment
     " Mappings
     nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
-    nmap <buffer> <silent> <c-n> :call search('^[ @] ', '', line('$'))<CR>
-    nmap <buffer> <silent> <c-p> :call search('^[ @] ', 'b', 10)<CR>
+    nmap <buffer> <silent> <c-n> :call search('^ ', '', line('$'))<CR>
+    nmap <buffer> <silent> <c-p> :call search('^ ', 'b', 10)<CR>
     nmap <buffer> <silent> <CR> o<CR><C-W><C-R>=strftime(
         \ '= %a %b %d, %Y ' . repeat('=', 20))<CR><Esc>
 endfunction
