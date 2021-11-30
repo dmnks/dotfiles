@@ -111,14 +111,16 @@ endfunction
 
 function! s:planInit()
     " Syntax
-    syntax match todoDate "^= .\+$"
-    syntax match todoOpen "^  \S.\+$"
-    syntax match todoPost "^+ .\+$"
-    syntax match todoDrop "^- .\+$"
-    highlight def link todoDate Constant
-    highlight def link todoOpen Define
-    highlight def link todoPost Typedef
-    highlight def link todoDrop Comment
+    syntax match planDate "^= .\+$"
+    syntax match planOpen "^  \S.\+$"
+    syntax match planPost "^+ .\+$"
+    syntax match planDrop "^- .\+$"
+    syntax match planDefn "^@ .\+$"
+    highlight def link planDate Constant
+    highlight def link planOpen Define
+    highlight def link planPost Typedef
+    highlight def link planDrop Comment
+    highlight def link planDefn Identifier
     " Mappings
     nmap <buffer> <silent> <NUL> :call <sid>planToggle()<CR>
     nmap <buffer> <silent> <c-n> :call search('^ ', '', line('$'))<CR>

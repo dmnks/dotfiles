@@ -8,3 +8,4 @@ Legend:
 * completed on that day
 + completed on a later day
 - decided against on a later day
+@ ticket alias (name: id)
