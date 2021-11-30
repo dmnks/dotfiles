@@ -120,7 +120,7 @@ function! s:planInit()
     highlight def link todoPost Typedef
     highlight def link todoDrop Comment
     " Mappings
-    nmap <buffer> <silent> <c-t> :call <sid>planToggle()<CR>
+    nmap <buffer> <silent> <NUL> :call <sid>planToggle()<CR>
     nmap <buffer> <silent> <c-n> :call search('^ ', '', line('$'))<CR>
     nmap <buffer> <silent> <c-p> :call search('^ ', 'b', 10)<CR>
     nmap <buffer> <silent> <CR> o<CR><C-W><C-R>=strftime(
