@@ -122,15 +122,29 @@ function! s:planInit()
     highlight def link planDrop Comment
     highlight def link planDefn Identifier
     " Mappings
-    nmap <buffer> <silent> <NUL> :call <sid>planToggle()<CR>
     nmap <buffer> <silent> <c-n> :call search('^ ', '', line('$'))<CR>
     nmap <buffer> <silent> <c-p> :call search('^ ', 'b', 10)<CR>
-    nmap <buffer> <silent> <CR> o<CR><C-W><C-R>=strftime(
-        \ '= %a %b %d, %Y ' . repeat('=', 20))<CR><Esc>
+    nmap <buffer> <silent> <NUL> :call <sid>planToggle()<CR>
 endfunction
 
-autocmd BufRead,BufNewFile *.plan   call <sid>planInit()
+function! s:planNext()
+    let l:format = '= %a %b %d, %Y ' . repeat('=', 20)
+    let l:line = getline(search('^= ', 'bn'))
+    let l:prev = strptime(l:format, l:line)
+    " +1 hour to cover for DST changes
+    let l:next = strftime(l:format, l:prev + 25*60*60)
+    call append(line('.'), ['', l:next, ''])
+    normal! 3j
+endfunction
+
+function! s:planDaily()
+    nmap <buffer> <silent> <CR> :call <sid>planNext()<CR>
+endfunction
+
+autocmd BufNewFile,BufRead *.plan   set filetype=plan
 autocmd BufNewFile *.plan           0r ~/.vim/skeleton.plan | norm G
+autocmd BufRead daily.plan          call <sid>planDaily()
+autocmd FileType plan               call <sid>planInit()
 
 " #############################################################################
 " # Misc
