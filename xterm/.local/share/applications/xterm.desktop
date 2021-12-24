@@ -33,10 +33,10 @@
 # -----------------------------------------------------------------------------
 
 [Desktop Entry]
-Name=XTerm
+Name=Terminal
 GenericName=Terminal
 Comment=standard terminal emulator for the X window system
-Exec=xterm -b 0
+Exec=xterm
 Terminal=false
 Type=Application
 Encoding=UTF-8
