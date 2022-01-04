@@ -167,7 +167,7 @@ elif [ "$CMD" == "mc" ]; then
         >&2 echo "Midnight Commander not installed."
         exit 1
     fi
-    podman unshare mc -d $(podman unshare podman mount $NAME)
+    podman unshare mc -d $(podman unshare podman mount $NAME) $@
 elif [ "$CMD" == "config" ]; then
     if ! command -v mc >/dev/null 2>&1; then
         >&2 echo "Midnight Commander not installed."
