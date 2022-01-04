@@ -49,7 +49,6 @@ command! FZFTags
     \ })) | else | echoerr 'No tags found' | endif
 command! FZFBox
     \ call fzf#run(fzf#wrap({
-    \   'source':  'ls',
     \   'dir':     trim(system('codebox pwd')),
     \   'options': '-m --prompt "box> "',
     \ }))
