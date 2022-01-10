@@ -69,7 +69,7 @@ set title
 set nowrap
 set guicursor=a:blinkon0
 set cursorline
-let &colorcolumn=join(range(80, 999), ",")
+set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set scrolloff=0
