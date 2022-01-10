@@ -7,6 +7,7 @@ bind generic S :source ~/.tigrc
 bind main E !git rebase -i %(commit)^
 bind status A !?git commit --amend
 bind main g move-first-line
+bind generic H @sh -c "echo -n %(commit) | xclip -selection c"
 
 # COLORS
 color title-focus           black       white       bold
