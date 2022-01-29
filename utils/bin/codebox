@@ -179,7 +179,7 @@ elif [ "$CMD" == "pwd" ]; then
 elif [ "$CMD" == "git" ]; then
     git -C $PROJDIR $@
 elif [ "$CMD" == "make" ]; then
-    podman exec -it $NAME make $@
+    podman exec $NAME make $@
     exit $?
 else
     usage

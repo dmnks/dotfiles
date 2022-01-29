@@ -1,0 +1,50 @@
+#!/bin/bash
+
+TMPFILE=$(mktemp)
+TEXT=$1
+shift
+
+cleanup() {
+    rm "$TMPFILE"
+}
+
+spinner() {
+    local len=${#TEXT}
+    local row=$(( $(tput lines) / 2 ))
+    local col=$(( ($(tput cols) - $len - 4) / 2 ))
+    local i=0
+
+    tput cup $row $col
+    echo -n "$TEXT "
+    col=$(( $col + $len + 1 ))
+
+    while true
+    do
+        if [ $i == 3 ]; then
+            tput cup $row $col
+            tput el
+            i=0
+        else
+            echo -n "."
+            i=$((i + 1))
+        fi
+        sleep 0.2
+    done
+}
+
+trap cleanup EXIT
+
+tput civis
+tput clear
+
+spinner &
+pid=$!
+$@ >/dev/null 2>$TMPFILE
+rc=$?
+kill $pid
+
+tput reset
+tput cnorm
+
+cat $TMPFILE
+exit $rc

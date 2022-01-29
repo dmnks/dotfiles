@@ -157,10 +157,8 @@ let g:ft_man_open_mode = 'vert'
 
 nmap <esc><esc> :nohl<CR>
 nmap <leader>g :exec "G <cword>"<CR>
-nmap <leader>c :!git ctags<CR><CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
-nmap <F8> :exec "!codebox make \|\| read"<CR><CR>
 
 if has('nvim')
     autocmd BufReadPost *
