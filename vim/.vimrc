@@ -63,7 +63,6 @@ nmap <leader>fb :FZFBox<CR>
 
 set termguicolors
 colorscheme gruvbox
-set t_ut=
 set number
 set title
 set nowrap
