@@ -160,6 +160,18 @@ elif [ "$CMD" == "ls" ]; then
         name=$(echo "$name" | sed "s/$PROGNAME-//")
         echo "$symbol$color$name$(tput sgr0)"
     done
+elif [ "$CMD" == "images" ]; then
+    for name in $(podman images --format '{{.Repository}}:{{.Tag}}' | sort); do
+        symbol="  "
+        color=""
+        ! echo $name | grep -q "^localhost/$PROGNAME-" && continue
+        if [[ "$name" == "localhost/$IMAGE" ]]; then
+            symbol="* "
+            color=$(tput setaf 2)
+        fi
+        name=$(echo "$name" | sed "s/localhost\/$PROGNAME-//")
+        echo "$symbol$color$name$(tput sgr0)"
+    done
 elif [ "$CMD" == "rm" ]; then
     ensure_box_exists
     podman rm -f $NAME >/dev/null
