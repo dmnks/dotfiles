@@ -27,11 +27,10 @@ Commands:
     enter           attach to the box
     commit          save changes made to the image
     ls              list all boxes
-    mc              browse the box filesystem with mc(1)
     pwd             print the config directory path
-    git             run git(1) with the given arguments from the config
-                    directory
-    make            run make(1) in the box
+    mc [ARGS]       browse the box filesystem with mc(1), passing ARGS
+    git [ARGS]      run git(1) from the config directory, passing ARGS
+    make [ARGS]     run make(1) in the box, passing ARGS
     rm              delete the box
 
 Environment:
