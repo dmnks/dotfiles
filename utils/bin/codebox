@@ -22,15 +22,12 @@ Quick start:
 
 Commands:
     edit            edit (or create) the Dockerfile
-    build [ARGS]    build an image (passes ARGS to \"podman build\")
+    build [ARGS]    build the image (passes ARGS to \"podman build\")
     create [ARGS]   create a new box (passes ARGS to \"podman create\")
     enter           attach to the box
-    branch [rm]     clone the master Dockerfile for the current git branch
-                    (or remove)
     commit          save changes made to the image
-    ls              list all boxes in this project (per branch)
-    mc              browse the box filesystem with Midnight Commander
-    config          browse the config directory with Midnight Commander
+    ls              list all boxes
+    mc              browse the box filesystem with mc(1)
     pwd             print the config directory path
     git             run git(1) with the given arguments from the config
                     directory
@@ -47,16 +44,25 @@ PROJECT="$(git worktree list | head -n1 | cut -d' ' -f1 | xargs basename)"
 [ -z "$PROJECT" ] && PROJECT="$(basename $PWD)"
 PROJDIR="$CONFDIR/$PROJECT"
 mkdir -p "$PROJDIR"
-DOCKERFILE="$PROJDIR/Dockerfile"
+
 BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
 [ "$BRANCH" == "HEAD" ] && BRANCH="$(git describe --tags)"
 BRANCH="$(echo "$BRANCH" | sed 's/-v[0-9]\+$//')"
-[ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
 [ -z "$BRANCH" ] && BRANCH="master"
-[ -f "$DOCKERFILE:$BRANCH" ] && DOCKERFILE="$DOCKERFILE:$BRANCH"
+[ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
+
 PREFIX="$PROGNAME-$PROJECT"
 IMAGE="$PREFIX:$BRANCH"
 NAME="$PREFIX-$BRANCH"
+
+DOCKERFILE="$PROJDIR/Dockerfile"
+[ "$BRANCH" != "master" ] && DOCKERFILE="$DOCKERFILE:$BRANCH"
+SKELETON="\
+# ${PROJECT^^} development image
+# vi:syntax=dockerfile
+
+FROM $PREFIX:master
+"
 
 get_conf() {
     grep "^LABEL $1" $DOCKERFILE | cut -f2 -d'='
@@ -105,7 +111,20 @@ elif [ "$CMD" == "build" ]; then
 elif [ "$CMD" == "commit" ]; then
     podman commit $NAME $IMAGE
 elif [ "$CMD" == "edit" ]; then
-    $EDITOR $DOCKERFILE
+    pushd $PROJDIR
+    if [ ! -f "$DOCKERFILE" ]; then
+        TMPFILE=$(mktemp)
+        echo "$SKELETON" > $TMPFILE
+        $EDITOR $TMPFILE
+        if [ -s "$TMPFILE" ]; then
+            mv $TMPFILE $DOCKERFILE
+        else
+            rm "$TMPFILE"
+        fi
+    else
+        $EDITOR $DOCKERFILE
+    fi
+    popd
 elif [ "$CMD" == "create" ]; then
     ensure_no_box_exists
     ensure_image_exists
@@ -130,32 +149,16 @@ elif [ "$CMD" == "enter" ]; then
     ensure_box_exists
     podman start $NAME >/dev/null
     podman attach --detach-keys="ctrl-@" $NAME
-elif [ "$CMD" == "branch" ]; then
-    target="$PROJDIR/Dockerfile:$BRANCH"
-    if [ "$BRANCH" == "master" ]; then
-        >&2 echo "On master, nothing to do."
-        exit 1
-    elif [ -f "$target" ]; then
-        if [ "$1" == "rm" ]; then
-            rm -i $target
-            exit 0
-        fi
-        >&2 echo "Already branched."
-        exit 1
-    fi
-    cp $PROJDIR/Dockerfile $target
 elif [ "$CMD" == "ls" ]; then
     for name in $(podman ps -a --format '{{.Names}}' | sort); do
         symbol="  "
         color=""
-        if ! echo $name | grep -q "^$PREFIX-"; then
-            continue
-        fi
+        ! echo $name | grep -q "^$PROGNAME-" && continue
         if [[ "$name" == "$NAME" ]]; then
             symbol="* "
             color=$(tput setaf 2)
         fi
-        name=$(echo "$name" | sed "s/$PREFIX-//")
+        name=$(echo "$name" | sed "s/$PROGNAME-//")
         echo "$symbol$color$name$(tput sgr0)"
     done
 elif [ "$CMD" == "rm" ]; then
@@ -168,12 +171,6 @@ elif [ "$CMD" == "mc" ]; then
         exit 1
     fi
     podman unshare mc -d $(podman unshare podman mount $NAME) $@
-elif [ "$CMD" == "config" ]; then
-    if ! command -v mc >/dev/null 2>&1; then
-        >&2 echo "Midnight Commander not installed."
-        exit 1
-    fi
-    mc $PROJDIR
 elif [ "$CMD" == "pwd" ]; then
     echo $PROJDIR
 elif [ "$CMD" == "git" ]; then
