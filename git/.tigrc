@@ -10,8 +10,9 @@ bind main g move-first-line
 bind generic H @sh -c "echo -n %(commit) | xclip -selection c"
 
 # COLORS
-color title-focus           black       white       bold
-color cursor                white       blue
+color title-focus           default     color237       bold
+color title-blur            default     color234
+color cursor                default     color237
 color "Refs: "              default     default
 color "Author: "            default     default
 color "AuthorDate: "        default     default
