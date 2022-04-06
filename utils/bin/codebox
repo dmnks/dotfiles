@@ -31,6 +31,7 @@ Commands:
     mc [ARGS]       browse the box filesystem with mc(1), passing ARGS
     git [ARGS]      run git(1) from the config directory, passing ARGS
     make [ARGS]     run make(1) in the box, passing ARGS
+    test [ARGS]     run test suite in the box, passing ARGS
     rm              delete the box
 
 Environment:
@@ -187,7 +188,10 @@ elif [ "$CMD" == "pwd" ]; then
 elif [ "$CMD" == "git" ]; then
     git -C $PROJDIR $@
 elif [ "$CMD" == "make" ]; then
-    podman exec $NAME make $@
+    podman exec -it $NAME make $@
+    exit $?
+elif [ "$CMD" == "test" ]; then
+    podman exec -it $NAME /data/test "$@"
     exit $?
 else
     usage
