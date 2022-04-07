@@ -28,7 +28,7 @@ let g:fzf_colors = {
     \ 'header':  ['fg', 'Comment'] }
 let g:fzf_layout = {
     \ 'window': {'yoffset': 0, 'width': 0.5, 'height': 0.5, 'border': 'sharp',
-    \            'highlight': 'Normal'}}
+    \            'highlight': 'Comment'}}
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
@@ -63,6 +63,10 @@ nmap <leader>fb :FZFBox<CR>
 
 set termguicolors
 colorscheme gruvbox
+set background=dark
+hi ColorColumn guibg=#282828
+hi TabLineFill guibg=#282828
+set fillchars=vert:│
 set number
 set title
 set nowrap
@@ -73,6 +77,34 @@ autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set scrolloff=0
 nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
+
+" Simplify tabline
+" Taken from: https://www.reddit.com/r/vim/comments/ghedcp/
+"             is_it_possible_to_make_the_tab_name_only_be_the/
+function! Tabline() abort
+    let l:line = ''
+    let l:current = tabpagenr()
+
+    for l:i in range(1, tabpagenr('$'))
+        if l:i == l:current
+            let l:line .= '%#TabLineSel#'
+        else
+            let l:line .= '%#TabLine#'
+        endif
+
+        let l:label = fnamemodify(
+            \ bufname(tabpagebuflist(l:i)[tabpagewinnr(l:i) - 1]),
+            \ ':t'
+        \ )
+
+        let l:line .= '  ' . l:label . '  '
+    endfor
+
+    let l:line .= '%#TabLineFill#'
+
+    return l:line
+endfunction
+set tabline=%!Tabline()
 
 " #############################################################################
 " # Editing
@@ -167,7 +199,6 @@ if has('nvim')
         \ | endif
 else
     set autoindent
-    set background=dark
     set laststatus=2
     runtime ftplugin/man.vim
 endif
