@@ -61,18 +61,15 @@ nmap <leader>fb :FZFBox<CR>
 " # Appearance
 " #############################################################################
 
-set termguicolors
-colorscheme gruvbox
+colorscheme dim
 set background=dark
-hi ColorColumn guibg=#282828
-hi TabLineFill guibg=#282828
+"hi ColorColumn guibg=#282828
+"hi TabLineFill guibg=#282828
 set fillchars=vert:│
 set number
 set title
 set nowrap
 set guicursor=a:blinkon0
-set cursorline
-set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set scrolloff=0
