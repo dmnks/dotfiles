@@ -13,6 +13,7 @@ software:
 		gdb \
 		git \
 		ipython3 \
+		jetbrains-mono-nl-fonts \
 		libguestfs-tools-c \
 		libvirt-daemon-config-network \
 		mc \
