@@ -13,10 +13,12 @@ software:
 		gdb \
 		git \
 		ipython3 \
+		isync \
 		jetbrains-mono-nl-fonts \
 		libguestfs-tools-c \
 		libvirt-daemon-config-network \
 		mc \
+		mutt \
 		pass \
 		podman \
 		stow \
