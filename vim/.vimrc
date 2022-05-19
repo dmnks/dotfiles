@@ -125,6 +125,7 @@ set smartcase
 set grepprg=git\ grep\ -n\ $*
 command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
     \ | copen | redraw!
+nnoremap * :let @/='\<'.expand('<cword>').'\>'<bar>set hlsearch<CR>
 
 " #############################################################################
 " # Simple .plan support
