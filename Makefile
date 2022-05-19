@@ -41,4 +41,3 @@ conf:
 	[[ -f ~/.bashrc && ! -L ~/.bashrc ]] && mv ~/.bashrc{,.orig} || true
 	stow -Rv --no-folding $(PACKAGES)
 	dconf load /org/gnome/ < gnome.conf
-	xrdb ~/.Xresources
