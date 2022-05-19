@@ -1,4 +1,4 @@
-PACKAGES = bash vim git tmux mc utils desktop xterm foot gdb
+PACKAGES = bash vim git tmux mc utils desktop foot gdb
 VIMPACK = ~/.vim/pack/git/start
 
 .PHONY: all software plugins conf
@@ -8,7 +8,6 @@ all: software plugins conf
 software:
 	sudo dnf install -y \
 		ctags \
-		docker \
 		foot \
 		fzf \
 		gdb \
@@ -19,18 +18,13 @@ software:
 		mc \
 		pass \
 		podman \
-		powerline-fonts \
-		python3-flake8 \
-		python3-pudb \
-		ranger \
 		stow \
 		tig \
 		tmux \
 		vim \
 		virt-install \
 		virt-manager \
-		weechat \
-		xterm
+		weechat
 
 plugins:
 	mkdir -p $(VIMPACK)
