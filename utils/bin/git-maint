@@ -1,0 +1,111 @@
+#!/bin/bash
+# Git helper for cherry-picking a maintenance release of RPM.
+#
+# Generates a plain-text list similar to the interactive git rebase, between
+# the last cherry-picked commit on the current branch and master.
+#
+# Installation:
+# $ git alias maint /path/to/this/script
+#
+# Usage:
+# $ git checkout rpm-X.Y.x
+# $ git maint           # generate a list and open $EDITOR, do your edits
+# $ git maint status    # print a summary of your progress
+# $ git maint apply     # apply all picked commits (stop at first conflict)
+# $ git maint reset     # undo picked commits (tweak your picks and re-apply)
+
+GITDIR=$(git rev-parse --show-toplevel)/.git
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+FILE=${GITDIR}/${BRANCH}.maint
+SKELETON="\
+# RPM maintenance release plan
+# vi:syntax=gitrebase
+#
+# Base tag: TAG
+# Base commit: COMMIT
+#
+# Commands:
+# pick <commit> = use commit
+# drop <commit> = do not use commit
+# open <commit> = candidate commit, discuss with community first
+#
+# Priority:
+# 1) Regression, crash, build and security fixes
+# 2) User-visible breakage with no workarounds
+# 3) User-visible breakage with major impact
+# 4) Other major impact stuff if budget allows (super useful macro, ...)
+#
+# Budget: 50 commits
+# Commits tagged with #docs or #test do not count against the budget.
+"
+
+function base() {
+    base=$(git merge-base $BRANCH master)
+    git log --format=%B $base.. | \
+    sed -n 's/(cherry picked from commit \(.*\))/\1/p' | \
+    head -1
+}
+
+function pick() {
+    grep -e '^pick ' $FILE | sed 's/^pick //'
+}
+
+function open() {
+    grep -e '^open ' $FILE | sed 's/^open //'
+}
+
+function todo() {
+    grep -e '^     ' $FILE | sed 's/^     //'
+}
+
+function count() {
+    grep -v -e '^#' -e '^$' $FILE | wc -l
+}
+
+CMD=$1
+shift
+if [ "$CMD" == "ls" ]; then
+    find $GITDIR -name "*.maint" -printf "%f\n" | sed 's/\.maint$//'
+    exit 0
+elif [ "$CMD" == "pick" ]; then
+    pick
+    exit 0
+elif [ "$CMD" == "open" ]; then
+    open
+    exit 0
+elif [ "$CMD" == "todo" ]; then
+    todo
+    exit 0
+elif [ "$CMD" == "status" ]; then
+    budget=$(sed -n 's/^# Budget: \(.*\) commits$/\1/p' $FILE)
+    pick=$(pick | grep -v '#\(test\|docs\)' | wc -l)
+    open=$(open | wc -l)
+    todo=$(todo | wc -l)
+    count=$(count)
+    done=$(( $count - $todo ))
+    percent=$(( $done / $count * 100 ))
+    echo "$pick/$budget picked, $open open, $done/$count ($percent%) done"
+    exit 0
+elif [ "$CMD" == "apply" ]; then
+    head=$(git rev-parse HEAD)
+    edit=$1
+    pick | while read line; do
+        echo "Applying $line"
+        hash=$(echo $line | cut -d' ' -f1)
+        if echo "$line" | grep -q '#backport'; then x=""; else x="-x"; fi
+        git cherry-pick $x $hash >/dev/null || break
+        [ "$hash" == "$edit" ] && break
+    done
+    exit 0
+elif [ "$CMD" == "reset" ]; then
+    tag=$(sed -n 's/^# Base tag: \(.*\)$/\1/p' $FILE)
+    git cherry-pick --abort >/dev/null 2>&1
+    git reset $tag --hard >/dev/null
+    exit 0
+elif [ ! -f "$FILE" ]; then
+    tag=$(git describe --tags)
+    base=$(base)
+    echo "$SKELETON" | sed "4s/TAG/$tag/" | sed "5s/COMMIT/$base/" > $FILE
+    git log --reverse --format="     %h %s" $base..master >> $FILE
+fi
+$EDITOR $FILE
