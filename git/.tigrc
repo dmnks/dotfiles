@@ -8,6 +8,7 @@ bind main E !git rebase -i %(commit)^
 bind status A !?git commit --amend
 bind main g move-first-line
 bind generic H @sh -c "echo -n %(commit) | xclip -selection c"
+bind diff V @sh -c "xdg-open https://github.com/rpm-software-management/rpm/commit/%(commit)"
 
 # COLORS
 color title-focus           black       white       bold

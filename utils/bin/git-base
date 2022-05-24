@@ -1,0 +1,5 @@
+#!/bin/bash
+BASE=$(git merge-base $(git rev-parse --abbrev-ref HEAD) master)
+git log --format=%B ${BASE}.. | \
+sed -n 's/(cherry picked from commit \(.*\))/\1/p' | \
+head -1

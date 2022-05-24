@@ -128,17 +128,22 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
 nnoremap * :let @/='\<'.expand('<cword>').'\>'<bar>set hlsearch<CR>
 
 " #############################################################################
+" # Common helpers
+" #############################################################################
+
+function! s:cycle(symbs)
+    let l:len = len(a:symbs[0])
+    let l:line = getline('.')
+    let l:idx = index(a:symbs, l:line[:l:len - 1])
+    echom l:line[:l:len]
+    let l:symb = a:symbs[(l:idx + 1) % len(a:symbs)]
+    call setline('.', l:symb . l:line[l:len:])
+endfunction
+
+" #############################################################################
 " # Simple .plan support
 " # More info: https://garbagecollected.org/2017/10/24/the-carmack-plan/
 " #############################################################################
-
-function! s:planToggle()
-    let l:symbs = [' ', '*', '+', '-']
-    let l:line = getline('.')
-    let l:idx = index(l:symbs, l:line[0])
-    let l:symb = symbs[(l:idx + 1) % len(l:symbs)]
-    call setline('.', l:symb . l:line[1:])
-endfunction
 
 function! s:planInit()
     " Syntax
@@ -153,7 +158,7 @@ function! s:planInit()
     highlight def link planDrop Comment
     highlight def link planDefn Identifier
     " Mappings
-    nmap <buffer> <silent> <NUL> :call <sid>planToggle()<CR>
+    nmap <buffer> <silent> <NUL> :call <sid>cycle([' ', '*', '+', '-'])<CR>
     nmap <buffer> <silent> <CR>  :call <sid>planNext()<CR>
 endfunction
 
@@ -173,6 +178,39 @@ endfunction
 autocmd BufNewFile,BufRead *.plan   set filetype=plan
 autocmd BufNewFile *.plan           0r ~/.vim/skeleton.plan | norm G
 autocmd FileType plan               call <sid>planInit()
+
+" #############################################################################
+" # Maintenance release mode
+" #############################################################################
+
+function! s:maintInit()
+    set filetype=gitrebase
+    set colorcolumn=
+
+    syntax match gitrebaseOpen "\v^o%(pen)=>" nextgroup=gitrebaseCommit skipwhite
+    highlight def link gitrebaseOpen PreProc
+
+    nmap <buffer> <silent> <NUL> :call <sid>cycle(['    ', 'drop', 'pick', 'open'])<CR>
+    nmap <buffer> <silent> <CR>  :call <sid>maintShow()<CR>
+    nmap <buffer> <silent> <C-s> :call <sid>maintStatus()<CR>
+endfunction
+
+function! s:maintShow()
+    let l:hash = split(getline('.')[5:], ' ')[0]
+    silent exec "!tig show " . l:hash | redraw!
+endfunction
+
+function! s:maintStatus()
+    let l:budget = split(getline(search('# Budget', 'n')))[2]
+    let l:pick = system("grep -e '^pick ' " . expand('%r') . " | wc -l")[:-2]
+    let l:todo = system("grep -e '^     ' " . expand('%r') . " | wc -l")[:-2]
+    let l:total = system("grep -v -e '^#' -e '^$' " . expand('%r') . " | wc -l")[:-2]
+    let l:done = str2nr(l:total) - str2nr(l:todo)
+    let l:percent = float2nr(l:done / str2float(l:total) * 100)
+    echom l:pick . "/" . l:budget . " picked, " . l:done . "/" . l:total . " done (" . l:percent . "%)"
+endfunction
+
+autocmd BufNewFile,BufRead *.maint  call <sid>maintInit()
 
 " #############################################################################
 " # Misc

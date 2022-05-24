@@ -1,0 +1,32 @@
+#!/bin/bash
+
+GITDIR=$(git rev-parse --show-toplevel)/.git
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+FILE=${GITDIR}/${BRANCH}.maint
+SKELETON="\
+# RPM maintenance release plan
+#
+# Commands:
+# pick <commit> = use commit
+# drop <commit> = do not use commit
+# open <commit> = candidate commit, discuss with community first
+#
+# Priority:
+# 1) Regression, crash and security fixes
+# 2) User-visible breakage with no workarounds
+# 3) User-visible breakage with major impact
+# 4) Other major impact stuff if budget allows (super useful macro, ...)
+#
+# Budget: 50 commits
+"
+
+CMD=$1
+shift
+if [ "$CMD" == "ls" ]; then
+    find $GITDIR -name "*.maint" -printf "%f\n" | sed 's/\.maint$//'
+    exit 0
+elif [ ! -f "$FILE" ]; then
+    echo "$SKELETON" > $FILE
+    git log --reverse --format="     %h %s" $(git base)..master >> $FILE
+fi
+$EDITOR $FILE

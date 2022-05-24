@@ -37,6 +37,8 @@
         --python-kinds=-i
     rc = rebase --continue
     ra = rebase --abort
+    base = git-base
+    maint = git-maint
 [merge]
     tool = vimdiff
 [pull]
