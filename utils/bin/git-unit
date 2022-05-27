@@ -1,0 +1,12 @@
+#!/bin/bash
+HASH=$1
+GITDIR=$(git rev-parse --show-toplevel)/.git
+UNITDIR=$GITDIR/refs/remotes/upstream/unit
+UNIT=$UNITDIR/$HASH
+
+if [ ! -f "$UNIT" ]; then
+    mkdir -p $UNITDIR
+    gh pr list --search "$HASH" --state=merged --json=number | \
+    jq '.[].number' | head -1 > $UNIT
+fi
+cat $UNIT

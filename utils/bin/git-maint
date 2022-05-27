@@ -27,6 +27,11 @@ if [ "$CMD" == "ls" ]; then
     exit 0
 elif [ ! -f "$FILE" ]; then
     echo "$SKELETON" > $FILE
-    git log --reverse --format="     %h %s" $(git base)..master >> $FILE
+    git log --reverse --format=%H $(git base)..master | \
+    while read hash; do \
+        unit="#$(git unit $hash)"; \
+        [ "$unit" == "#" ] && unit="     "; \
+        git log -1 --format="     %h $unit %s" $hash; \
+    done >> $FILE
 fi
 $EDITOR $FILE

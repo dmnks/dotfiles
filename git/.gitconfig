@@ -38,6 +38,7 @@
     rc = rebase --continue
     ra = rebase --abort
     base = git-base
+    unit = git-unit
     maint = git-maint
 [merge]
     tool = vimdiff
