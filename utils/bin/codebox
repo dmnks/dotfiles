@@ -105,7 +105,6 @@ elif [ "$CMD" == "build" ]; then
     fi
     podman build \
         $ARGS $(get_conf build.args) \
-        --build-arg=MOUNTDIR=$PWD \
         -t $IMAGE \
         -f $DOCKERFILE $PROJDIR
 elif [ "$CMD" == "commit" ]; then
@@ -130,11 +129,11 @@ elif [ "$CMD" == "create" ]; then
     ensure_image_exists
     podman create \
         -e TERM -it \
-        -v=$PWD:$PWD \
+        -v=$PWD:/src/$PROJECT \
         -v=$PROJDIR:/data \
         -v=$HOME/.bashrc:/root/.bashrc:ro \
         -v=$HOME/.tmux.conf:/root/.tmux.conf:ro \
-        --workdir $PWD \
+        --workdir /src/$PROJECT \
         --name $NAME \
         --hostname $PROGNAME \
         $ARGS $(get_conf create.args) \
