@@ -87,14 +87,16 @@ elif [ "$CMD" == "status" ]; then
     echo "$pick/$budget picked, $open open, $done/$count ($percent%) done"
     exit 0
 elif [ "$CMD" == "apply" ]; then
-    head=$(git rev-parse HEAD)
-    edit=$1
+    from=$1
+    upto=$2
     pick | while read line; do
-        echo "Applying $line"
         hash=$(echo $line | cut -d' ' -f1)
+        [ -n "$from" ] && [ "$from" != "-" ] && [ "$hash" != "$from" ] && continue
+        from=
         if echo "$line" | grep -q '#backport'; then x=""; else x="-x"; fi
+        echo "Applying $line"
         git cherry-pick $x $hash >/dev/null || break
-        [ "$hash" == "$edit" ] && break
+        [ "$hash" == "$upto" ] && break
     done
     exit 0
 elif [ "$CMD" == "reset" ]; then
