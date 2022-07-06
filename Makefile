@@ -1,46 +1,46 @@
-PACKAGES = bash vim git tmux mc utils desktop foot gdb
+PACKAGES = bash vim git tmux utils foot
 VIMPACK = ~/.vim/pack/git/start
 
-.PHONY: all software plugins conf
+.PHONY: all software install uninstall vim gnome
 
-all: software plugins conf
+all: software install vim gnome
 
 software:
 	sudo dnf install -y \
-		ctags \
-		foot \
-		fzf \
-		gdb \
-		git \
-		ipython3 \
-		isync \
-		jetbrains-mono-nl-fonts \
-		libguestfs-tools-c \
-		libvirt-daemon-config-network \
-		mc \
-		mutt \
-		pass \
-		podman \
-		stow \
-		tig \
-		tmux \
-		vim \
-		virt-install \
-		virt-manager \
-		weechat
+		 ctags \
+		 foot \
+		 fzf \
+		 git \
+		 isync \
+		 jetbrains-mono-nl-fonts \
+		 libguestfs-tools-c \
+		 libvirt-daemon-config-network \
+		 mc \
+		 mutt \
+		 pass \
+		 podman \
+		 stow \
+		 tig \
+		 tmux \
+		 vim \
+		 virt-install \
+		 virt-manager \
+		 weechat
 
-plugins:
+install:
+	stow -Rv $(PACKAGES)
+
+uninstall:
+	stow -Dv $(PACKAGES)
+
+vim:
 	mkdir -p $(VIMPACK)
 	git clone \
 	    https://github.com/morhetz/gruvbox $(VIMPACK)/gruvbox
 	git clone \
 	    https://github.com/tpope/vim-commentary $(VIMPACK)/commentary
 	git clone \
-	    https://github.com/vimwiki/vimwiki $(VIMPACK)/vimwiki
-	git clone \
 	    https://github.com/cyberkov/openhab-vim $(VIMPACK)/openhab
 
-conf:
-	[[ -f ~/.bashrc && ! -L ~/.bashrc ]] && mv ~/.bashrc{,.orig} || true
-	stow -Rv --no-folding $(PACKAGES)
+gnome:
 	dconf load /org/gnome/ < gnome.conf
