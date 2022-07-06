@@ -1,8 +1,0 @@
-{
-  "name": "Disable window animations",
-  "description": "Disable animations related to window management.",
-  "uuid": "mdomonko@redhat.com",
-  "shell-version": [
-    "41"
-  ]
-}
