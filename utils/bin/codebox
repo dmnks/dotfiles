@@ -39,7 +39,7 @@ Environment:
     exit 1
 }
 
-CONFDIR="$HOME/.config/$PROGNAME"
+CONFDIR="$HOME/.$PROGNAME"
 PROJECT="$(git worktree list | head -n1 | cut -d' ' -f1 | xargs basename)"
 [ -z "$PROJECT" ] && PROJECT="$(basename $PWD)"
 PROJDIR="$CONFDIR/$PROJECT"
