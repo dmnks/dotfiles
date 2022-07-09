@@ -28,7 +28,7 @@ software:
 		 weechat
 
 install:
-	stow -Rv $(PACKAGES)
+	stow -Rv --no-folding $(PACKAGES)
 
 uninstall:
 	stow -Dv $(PACKAGES)
