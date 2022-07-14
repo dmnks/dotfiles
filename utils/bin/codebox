@@ -1,199 +1,40 @@
 #!/bin/bash
 
-PROGNAME="codebox"
+PROGRAM=codebox
+PROJECT=$(basename $PWD)
+DOCKERFILE=Dockerfile
+IMAGE=$PROGRAM/$PROJECT
+NAME=$PROGRAM-$PROJECT
 
-usage() {
-    echo "\
-Usage: $PROGNAME COMMAND [ARGS]
-
-Isolated development environment within \$PWD (a \"project\") using a Podman
-container (a \"box\"), with lightweight host integration and simple branching
-support.
-
-Configuration (in Dockerfile):
-    LABEL {build,create}.args=ARGS
-                    passes ARGS to the build or create command, respectively
-
-Quick start:
-    $ $PROGNAME edit
-    $ $PROGNAME build
-    $ $PROGNAME create
-    $ $PROGNAME enter
-
-Commands:
-    edit            edit (or create) the Dockerfile
-    build [ARGS]    build the image (passes ARGS to \"podman build\")
-    create [ARGS]   create a new box (passes ARGS to \"podman create\")
-    enter           attach to the box
-    commit          save changes made to the image
-    ls              list all boxes
-    pwd             print the config directory path
-    mc [ARGS]       browse the box filesystem with mc(1), passing ARGS
-    git [ARGS]      run git(1) from the config directory, passing ARGS
-    make [ARGS]     run make(1) in the box, passing ARGS
-    test [ARGS]     run test suite in the box, passing ARGS
-    rm              delete the box
-
-Environment:
-    CODEBOX_BRANCH  overrides the current git branch"
-    exit 1
+build() {
+    local file=Dockerfile
+    [ -n "$1" ] && file=$1
+    podman build -t $IMAGE -f $file
+    chcon -R -t container_file_t $PWD
 }
 
-CONFDIR="$HOME/.$PROGNAME"
-PROJECT="$(git worktree list | head -n1 | cut -d' ' -f1 | xargs basename)"
-[ -z "$PROJECT" ] && PROJECT="$(basename $PWD)"
-PROJDIR="$CONFDIR/$PROJECT"
-mkdir -p "$PROJDIR"
-
-BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null)"
-[ "$BRANCH" == "HEAD" ] && BRANCH="$(git describe --tags)"
-BRANCH="$(echo "$BRANCH" | sed 's/-v[0-9]\+$//')"
-[ -z "$BRANCH" ] && BRANCH="master"
-[ -n "$CODEBOX_BRANCH" ] && BRANCH="$CODEBOX_BRANCH"
-
-PREFIX="$PROGNAME-$PROJECT"
-IMAGE="$PREFIX:$BRANCH"
-NAME="$PREFIX-$BRANCH"
-
-DOCKERFILE="$PROJDIR/Dockerfile"
-[ "$BRANCH" != "master" ] && DOCKERFILE="$DOCKERFILE:$BRANCH"
-SKELETON="\
-# ${PROJECT^^} development image
-# vi:syntax=dockerfile
-
-FROM $PREFIX:master
-"
-
-get_conf() {
-    grep "^LABEL $1" $DOCKERFILE | cut -f2 -d'='
+run() {
+    podman run \
+        -it -e TERM -v=$PWD:/src/$PROJECT \
+        --workdir /src/$PROJECT \
+        --name $NAME \
+        --hostname $PROGRAM \
+        $@ $IMAGE
 }
 
-ensure_box_exists() {
-    if ! podman container exists $NAME; then
-        >&2 echo "No box has been created here yet."
-        >&2 echo "Use: $PROGNAME create"
-        exit 1
-    fi
-}
-
-ensure_no_box_exists() {
-    if podman container exists $NAME; then
-        >&2 echo "Box already exists here."
-        >&2 echo "Use: $PROGNAME enter"
-        exit 1
-    fi
-}
-
-ensure_image_exists() {
-    if ! podman image exists $IMAGE; then
-        >&2 echo "No image exists here."
-        >&2 echo "Use: $PROGNAME build"
-        exit 1
-    fi
-}
-
-CMD=$1
-shift
-ARGS=$@
+CMD=$1; shift
 if [ -z "$CMD" ]; then
     usage
 elif [ "$CMD" == "build" ]; then
-    if [ ! -f "$DOCKERFILE" ]; then
-        >&2 echo "No Dockerfile defined here."
-        >&2 echo "Create one with: $PROGNAME edit"
-        exit 1
-    fi
-    podman build \
-        $ARGS $(get_conf build.args) \
-        -t $IMAGE \
-        -f $DOCKERFILE $PROJDIR
-elif [ "$CMD" == "commit" ]; then
-    podman commit $NAME $IMAGE
-elif [ "$CMD" == "edit" ]; then
-    pushd $PROJDIR
-    if [ ! -f "$DOCKERFILE" ]; then
-        TMPFILE=$(mktemp)
-        echo "$SKELETON" > $TMPFILE
-        $EDITOR $TMPFILE
-        if [ -s "$TMPFILE" ]; then
-            mv $TMPFILE $DOCKERFILE
-        else
-            rm "$TMPFILE"
-        fi
+    build $@
+elif [ "$CMD" == "sh" ]; then
+    podman image exists $IMAGE || build $@
+    if podman container exists $NAME; then
+        podman start $NAME >/dev/null
+        podman attach $NAME
     else
-        $EDITOR $DOCKERFILE
+        run $@
     fi
-    popd
-elif [ "$CMD" == "create" ]; then
-    ensure_no_box_exists
-    ensure_image_exists
-    podman create \
-        -e TERM -it \
-        -v=$PWD:/src/$PROJECT \
-        -v=$PROJDIR:/data \
-        -v=$HOME/.bashrc:/root/.bashrc:ro \
-        -v=$HOME/.tmux.conf:/root/.tmux.conf:ro \
-        --workdir /src/$PROJECT \
-        --name $NAME \
-        --hostname $PROGNAME \
-        $ARGS $(get_conf create.args) \
-        -it $IMAGE >/dev/null
-    chcon -R -t container_file_t $PWD
-    chcon -R -t container_file_t $PROJDIR
-    chcon -t container_file_t $HOME/.bashrc
-    chcon -t container_file_t $HOME/.tmux.conf
-    echo "Box created."
-    echo "Enter with: $PROGNAME enter"
-elif [ "$CMD" == "enter" ]; then
-    ensure_box_exists
-    podman start $NAME >/dev/null
-    podman attach --detach-keys="ctrl-@" $NAME
-elif [ "$CMD" == "ls" ]; then
-    for name in $(podman ps -a --format '{{.Names}}' | sort); do
-        symbol="  "
-        color=""
-        ! echo $name | grep -q "^$PROGNAME-" && continue
-        if [[ "$name" == "$NAME" ]]; then
-            symbol="* "
-            color=$(tput setaf 2)
-        fi
-        name=$(echo "$name" | sed "s/$PROGNAME-//")
-        echo "$symbol$color$name$(tput sgr0)"
-    done
-elif [ "$CMD" == "images" ]; then
-    for name in $(podman images --format '{{.Repository}}:{{.Tag}}' | sort); do
-        symbol="  "
-        color=""
-        ! echo $name | grep -q "^localhost/$PROGNAME-" && continue
-        if [[ "$name" == "localhost/$IMAGE" ]]; then
-            symbol="* "
-            color=$(tput setaf 2)
-        fi
-        name=$(echo "$name" | sed "s/localhost\/$PROGNAME-//")
-        echo "$symbol$color$name$(tput sgr0)"
-    done
 elif [ "$CMD" == "rm" ]; then
-    ensure_box_exists
-    podman rm -f $NAME >/dev/null
-elif [ "$CMD" == "mc" ]; then
-    ensure_box_exists
-    if ! command -v mc >/dev/null 2>&1; then
-        >&2 echo "Midnight Commander not installed."
-        exit 1
-    fi
-    podman unshare mc -d $(podman unshare podman mount $NAME) $@
-elif [ "$CMD" == "pwd" ]; then
-    echo $PROJDIR
-elif [ "$CMD" == "git" ]; then
-    git -C $PROJDIR $@
-elif [ "$CMD" == "make" ]; then
-    podman exec -it $NAME make $@
-    exit $?
-elif [ "$CMD" == "test" ]; then
-    podman exec -it $NAME /data/test "$@"
-    exit $?
-else
-    usage
+    podman container exists $NAME && podman rm $NAME
 fi
-
-exit 0
