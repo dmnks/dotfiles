@@ -25,6 +25,8 @@ if [ -z "$CMD" ]; then
 	    --workdir /src \
 	    $ARGS $IMAGE
     fi
+elif [ "$CMD" == "exec" ]; then
+    podman exec -it $PROJECT $@
 elif [ "$CMD" == "rm" ]; then
-    podman container exists $PROJECT && podman rm $PROJECT
+    podman rm $PROJECT
 fi
