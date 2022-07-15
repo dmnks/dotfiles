@@ -3,6 +3,7 @@
 PROGRAM=$(basename $0)
 PROJECT=$(basename $PWD)
 IMAGE=$PROGRAM/$PROJECT
+ARGS=--detach-keys="ctrl-@"
 CMD=$1; shift
 
 if [ -z "$CMD" ]; then
@@ -11,8 +12,8 @@ if [ -z "$CMD" ]; then
 	exit 1
     fi
     if podman container exists $PROJECT; then
-        podman start $PROJECT >/dev/null
-        podman attach $PROJECT
+	podman start $PROJECT >/dev/null
+	podman attach $ARGS $PROJECT
     else
 	podman run \
 	    -it -e TERM \
@@ -21,9 +22,8 @@ if [ -z "$CMD" ]; then
 	    --privileged \
 	    --volume=$PWD:/src \
 	    --volume=$PWD/.data:/data \
-	    --detach-keys="ctrl-@" \
 	    --workdir /src \
-	    $IMAGE
+	    $ARGS $IMAGE
     fi
 elif [ "$CMD" == "rm" ]; then
     podman container exists $PROJECT && podman rm $PROJECT
