@@ -2,12 +2,11 @@
 
 PROGRAM=codebox
 PROJECT=$(basename $PWD)
-DOCKERFILE=Dockerfile
 IMAGE=$PROGRAM/$PROJECT
 NAME=$PROGRAM-$PROJECT
 
 build() {
-    local file=Dockerfile
+    local file=.Dockerfile
     [ -n "$1" ] && file=$1
     podman build -t $IMAGE -f $file
     chcon -R -t container_file_t $PWD
@@ -15,11 +14,14 @@ build() {
 
 run() {
     podman run \
-        -it -e TERM -v=$PWD:/src/$PROJECT \
-        --workdir /src/$PROJECT \
+        -it -e TERM \
+        --volume=$PWD:/src \
+        --volume=$PWD/.data:/data \
+        --privileged \
+        --workdir /src \
         --name $NAME \
         --hostname $PROGRAM \
-        $@ $IMAGE
+        $IMAGE
 }
 
 CMD=$1; shift
@@ -28,12 +30,12 @@ if [ -z "$CMD" ]; then
 elif [ "$CMD" == "build" ]; then
     build $@
 elif [ "$CMD" == "sh" ]; then
-    podman image exists $IMAGE || build $@
+    podman image exists $IMAGE || build
     if podman container exists $NAME; then
         podman start $NAME >/dev/null
         podman attach $NAME
     else
-        run $@
+        run
     fi
 elif [ "$CMD" == "rm" ]; then
     podman container exists $NAME && podman rm $NAME
