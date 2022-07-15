@@ -17,6 +17,7 @@ if [ -z "$CMD" ]; then
 	podman run \
 	    -it -e TERM \
 	    --name $PROJECT \
+	    --hostname $PROJECT \
 	    --privileged \
 	    --volume=$PWD:/src \
 	    --volume=$PWD/.data:/data \
