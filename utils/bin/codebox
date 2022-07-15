@@ -1,26 +1,26 @@
 #!/bin/bash
 
 PROGRAM=codebox
+DATADIR=.$PROGRAM
 PROJECT=$(basename $PWD)
 IMAGE=$PROGRAM/$PROJECT
 NAME=$PROGRAM-$PROJECT
 
 build() {
-    local file=.Dockerfile
-    [ -n "$1" ] && file=$1
-    podman build -t $IMAGE -f $file
+    podman build -t $IMAGE $DATADIR
     chcon -R -t container_file_t $PWD
 }
 
 run() {
     podman run \
         -it -e TERM \
-        --volume=$PWD:/src \
-        --volume=$PWD/.data:/data \
-        --privileged \
-        --workdir /src \
         --name $NAME \
         --hostname $PROGRAM \
+        --privileged \
+        --workdir /src \
+        --volume=$PWD:/src \
+        --volume=$PWD/$DATADIR:/data \
+	--detach-keys="ctrl-@" \
         $IMAGE
 }
 
