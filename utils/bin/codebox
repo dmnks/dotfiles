@@ -1,42 +1,31 @@
 #!/bin/bash
 
-PROGRAM=codebox
-DATADIR=.$PROGRAM
+PROGRAM=$0
 PROJECT=$(basename $PWD)
 IMAGE=$PROGRAM/$PROJECT
-NAME=$PROGRAM-$PROJECT
-
-build() {
-    podman build -t $IMAGE $DATADIR
-    chcon -R -t container_file_t $PWD
-}
-
-run() {
-    podman run \
-        -it -e TERM \
-        --name $NAME \
-        --hostname $PROGRAM \
-        --privileged \
-        --workdir /src \
-        --volume=$PWD:/src \
-        --volume=$PWD/$DATADIR:/data \
-	--detach-keys="ctrl-@" \
-        $IMAGE
-}
-
 CMD=$1; shift
+
 if [ -z "$CMD" ]; then
     usage
-elif [ "$CMD" == "build" ]; then
-    build $@
 elif [ "$CMD" == "sh" ]; then
-    podman image exists $IMAGE || build
-    if podman container exists $NAME; then
-        podman start $NAME >/dev/null
-        podman attach $NAME
+    if ! podman image exists $IMAGE; then
+	echo "No image $IMAGE" >&2
+	exit 1
+    fi
+    if podman container exists $PROJECT; then
+        podman start $PROJECT >/dev/null
+        podman attach $PROJECT
     else
-        run
+	podman run \
+	    -it -e TERM \
+	    --name $PROJECT \
+	    --privileged \
+	    --volume=$PWD:/src \
+	    --volume=$PWD/.data:/data \
+	    --detach-keys="ctrl-@" \
+	    --workdir /src \
+	    $IMAGE
     fi
 elif [ "$CMD" == "rm" ]; then
-    podman container exists $NAME && podman rm $NAME
+    podman container exists $PROJECT && podman rm $PROJECT
 fi
