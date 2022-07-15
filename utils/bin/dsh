@@ -1,13 +1,11 @@
 #!/bin/bash
 
-PROGRAM=$0
+PROGRAM=$(basename $0)
 PROJECT=$(basename $PWD)
 IMAGE=$PROGRAM/$PROJECT
 CMD=$1; shift
 
 if [ -z "$CMD" ]; then
-    usage
-elif [ "$CMD" == "sh" ]; then
     if ! podman image exists $IMAGE; then
 	echo "No image $IMAGE" >&2
 	exit 1
