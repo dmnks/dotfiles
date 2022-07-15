@@ -51,7 +51,7 @@ mangrep() {
 }
 
 plan() {
-    grep '^  ' ~/plan/daily.plan | tail -n +2 | sed 's/^  //g'
+    grep '^  ' ~/.plan | tail -n +2 | sed 's/^  //g'
 }
 
 setup_ps1
