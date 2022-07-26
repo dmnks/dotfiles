@@ -147,17 +147,23 @@ endfunction
 " #############################################################################
 
 function! s:planInit()
-    " Syntax
+    " Appearance
+    colorscheme default
+    set background=dark
+    set nocursorline
+    set nonumber
+    set colorcolumn=0
+    set laststatus=0
     syntax match planDate "^= .\+$"
     syntax match planOpen "^  \S.\+$"
     syntax match planPost "^+ .\+$"
     syntax match planDrop "^- .\+$"
-    syntax match planDefn "^@ .\+$"
-    highlight def link planDate Constant
-    highlight def link planOpen Define
-    highlight def link planPost Typedef
+    syntax match planGoal "^@ .\+$"
+    highlight def link planDate PreProc
+    highlight def link planOpen Type
+    highlight def link planPost Special
     highlight def link planDrop Comment
-    highlight def link planDefn Identifier
+    highlight def link planGoal Constant
     " Mappings
     nmap <buffer> <silent> <NUL> :call <sid>cycle([' ', '*', '+', '-'])<CR>
     nmap <buffer> <silent> <CR>  :call <sid>planNext()<CR>
