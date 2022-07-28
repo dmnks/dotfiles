@@ -47,15 +47,9 @@ command! FZFTags
     \   'sink':    'tag',
     \   'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
-command! FZFBox
-    \ call fzf#run(fzf#wrap({
-    \   'dir':     trim(system('codebox pwd')),
-    \   'options': '-m --prompt "box> "',
-    \ }))
 nmap <leader><leader> :FZFBuffers<CR>
 nmap <leader>ff :FZF<CR>
 nmap <leader>fs :FZFTags<CR>
-nmap <leader>fb :FZFBox<CR>
 
 " #############################################################################
 " # Appearance
