@@ -54,6 +54,15 @@ plan() {
     grep '^  ' ~/.plan | tail -n +2 | sed 's/^  //g'
 }
 
+# Inspired by https://bargsten.org/bash/fzf-pass-tool/
+fpass() {
+    local pwdir=${PASSWORD_STORE_DIR-~/.password-store}
+    local match=$(find $pwdir -name "*.gpg" |
+                  perl -pE "s#^(?:.*)\\Q$pwdir\\E/(.*)\.gpg#\\1#" |
+                  fzf);
+    [ -n "$match" ] && pass -c $match
+}
+
 setup_ps1
 
 alias gdiff='git diff --no-index --'
