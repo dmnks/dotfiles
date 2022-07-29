@@ -161,6 +161,7 @@ function! s:planInit()
     " Mappings
     nmap <buffer> <silent> <NUL> :call <sid>cycle([' ', '*', '+', '-'])<CR>
     nmap <buffer> <silent> <CR>  :call <sid>planNext()<CR>
+    nmap <silent> q :q<CR>
 endfunction
 
 function! s:planNext()
