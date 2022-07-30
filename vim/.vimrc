@@ -142,6 +142,7 @@ endfunction
 
 function! s:planInit()
     " Appearance
+    set notermguicolors
     colorscheme default
     set background=dark
     set nocursorline
@@ -153,11 +154,13 @@ function! s:planInit()
     syntax match planPost "^+ .\+$"
     syntax match planDrop "^- .\+$"
     syntax match planGoal "^@ .\+$"
-    highlight def link planDate PreProc
-    highlight def link planOpen Type
-    highlight def link planPost Special
-    highlight def link planDrop Comment
-    highlight def link planGoal Constant
+    syntax match planNote "^# .\+$"
+    highlight def planDate ctermfg=13
+    highlight def planOpen ctermfg=10
+    highlight def planPost ctermfg=11
+    highlight def planDrop ctermfg=8
+    highlight def planGoal ctermfg=14
+    highlight def planNote ctermfg=8
     " Mappings
     nmap <buffer> <silent> <NUL> :call <sid>cycle([' ', '*', '+', '-'])<CR>
     nmap <buffer> <silent> <CR>  :call <sid>planNext()<CR>
