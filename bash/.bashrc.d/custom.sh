@@ -1,4 +1,5 @@
 source /usr/share/git-core/contrib/completion/git-prompt.sh
+source /usr/share/fzf/shell/key-bindings.bash
 
 bind '"\C-o":"mc -d\C-m"'
 
@@ -7,6 +8,7 @@ GIT_PS1_SHOWUPSTREAM="auto"
 GIT_PS1_SHOWSTASHSTATE=1
 
 export EDITOR=vim
+export FZF_DEFAULT_OPTS=--layout=reverse
 
 setup_ps1() {
     local c_red=$(tput setaf 9)

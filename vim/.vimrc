@@ -61,6 +61,7 @@ set background=dark
 hi ColorColumn guibg=#282828
 hi TabLineFill guibg=#282828
 hi VertSplit guifg=#1d2021
+hi StatusLineNC guifg=#1d2021
 set fillchars=vert:┃
 set number
 set title
