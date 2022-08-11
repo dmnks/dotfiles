@@ -42,3 +42,5 @@
     tool = vimdiff
 [pull]
 	ff = only
+[commit]
+	verbose = true
