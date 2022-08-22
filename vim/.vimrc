@@ -64,6 +64,7 @@ hi VertSplit guifg=#1d2021
 hi StatusLineNC guifg=#1d2021
 set fillchars=vert:┃
 set number
+set numberwidth=6
 set title
 set nowrap
 set guicursor=a:blinkon0
