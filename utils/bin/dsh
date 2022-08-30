@@ -3,6 +3,7 @@
 PROGRAM=$(basename $0)
 PROJECT=$(basename $PWD)
 IMAGE=$PROGRAM/$PROJECT
+[ -n "$DSH_IMAGE" ] && IMAGE=$DSH_IMAGE
 ARGS=--detach-keys="ctrl-@"
 CMD=$1; shift
 
