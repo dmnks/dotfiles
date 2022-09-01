@@ -1,4 +1,4 @@
-PACKAGES = bash vim git tmux utils foot
+PACKAGES = bash vim git tmux utils desktop
 VIMPACK = ~/.vim/pack/git/start
 
 .PHONY: all software install uninstall vim gnome
