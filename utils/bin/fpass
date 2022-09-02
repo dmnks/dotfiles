@@ -3,5 +3,5 @@
 pwdir=${PASSWORD_STORE_DIR-~/.password-store}
 match=$(find $pwdir -name "*.gpg" |
         perl -pE "s#^(?:.*)\\Q$pwdir\\E/(.*)\.gpg#\\1#" |
-        fzf --prompt "pass> " --layout=reverse);
+        fzf --layout=reverse);
 [ -n "$match" ] && pass -c $match

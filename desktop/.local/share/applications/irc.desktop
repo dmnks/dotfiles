@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=IRC
+GenericName=IRC Client
+Exec=env XCURSOR_THEME=Adwaita foot --title WeeChat -o main.initial-window-size-chars=120x40 -a IRC weechat
+Terminal=false
+Type=Application
+Keywords=irc;internet;
+Icon=org.gnome.Polari.svg
+Categories=IRCClient;
+X-Desktop-File-Install-Version=0.26

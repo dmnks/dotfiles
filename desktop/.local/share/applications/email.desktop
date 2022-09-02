@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Email
+GenericName=Email Client
+Exec=env XCURSOR_THEME=Adwaita EDITOR=vim foot --title Mutt -o main.initial-window-size-chars=120x40 -a email mutt
+Terminal=false
+Type=Application
+Keywords=Mail;E-mail;Mutt;
+Icon=org.gnome.Geary.svg
+Categories=Email;
+X-Desktop-File-Install-Version=0.26

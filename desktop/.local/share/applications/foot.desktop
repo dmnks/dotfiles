@@ -8,3 +8,8 @@ Keywords=shell;prompt;command;commandline;
 Name=Terminal
 GenericName=Terminal
 Comment=A wayland native terminal emulator
+Actions=new-zen-window;
+
+[Desktop Action new-zen-window]
+Name=New Zen Window
+Exec=env XCURSOR_THEME=Adwaita foot -o main.initial-window-size-chars=190x50 -o csd.size=0

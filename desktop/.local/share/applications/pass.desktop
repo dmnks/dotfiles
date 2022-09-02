@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Pass
+GenericName=Password Manager
+Exec=env XCURSOR_THEME=Adwaita foot --title Pass -a pass fpass
+Terminal=false
+Type=Application
+Keywords=password
+Icon=org.gnome.seahorse.Application.svg
+Categories=Security;
+X-Desktop-File-Install-Version=0.26
