@@ -144,10 +144,6 @@ endfunction
 
 function! s:planInit()
     " Appearance
-    set notermguicolors
-    colorscheme default
-    set background=dark
-    set nocursorline
     set nonumber
     set colorcolumn=0
     set laststatus=0
