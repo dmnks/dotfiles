@@ -12,4 +12,4 @@ Actions=new-zen-window;
 
 [Desktop Action new-zen-window]
 Name=New Zen Window
-Exec=env XCURSOR_THEME=Adwaita foot -o main.initial-window-size-chars=190x50 -o csd.size=0
+Exec=env XCURSOR_THEME=Adwaita foot -o main.initial-window-size-chars=177x50 -o csd.size=0
