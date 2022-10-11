@@ -38,6 +38,7 @@
     rc = rebase --continue
     ra = rebase --abort
     maint = git-maint
+    cherry-plan = git-cherry-plan
 [merge]
     tool = vimdiff
 [pull]

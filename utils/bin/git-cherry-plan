@@ -1,0 +1,115 @@
+#!/bin/bash
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BASE=$(git merge-base HEAD master)
+DIR=$HOME/.cherry-plan
+FILE=$DIR/$BRANCH.patch
+SKELETON="\
+# GIT CHERRY-PICK PLAN
+# 
+# Branch: $BRANCH
+# Budget: 50 commits
+# 
+# Legend:
+# @@ bookmark @@
+#   <commit> = candidate commit
+# + <commit> = use commit
+# - <commit> = not eligible commit
+# * <commit> = commit already on branch
+
+@@ branch point @@"
+
+ensure_exists() {
+    if [ ! -f $FILE ]; then
+        echo "No plan exists for this branch yet" >&2
+        exit 1
+    fi
+}
+
+ensure_not_exists() {
+    if [ -f $FILE ]; then
+        echo "This branch already has a plan" >&2
+        exit 1
+    fi
+}
+
+copied() {
+    local log=$(git log --format="%b" $BASE..)
+    echo "$log" | sed -n 's/^(cherry picked from commit \(.*\))/\1/p'
+    echo "$log" | sed -n 's/^Backported from commit \(.*\)/\1/p'
+}
+
+mark() {
+    sed -i "s/^\* /  /" $1
+    copied | while read line; do
+        sed -i "s/^.\{2\}\($line\)/\* \1/" $1
+    done
+}
+
+dump() {
+    git log --reverse --format="  %H %s" $1..master
+}
+
+budget() {
+    sed -n 's/^# Budget: \(.*\) commits$/\1/p' $1
+}
+
+gethash() {
+    sed 's/^.\{2\}//' | cut -d' ' -f1
+}
+
+CMD=$1
+shift
+if [ "$CMD" == "init" ]; then
+    ensure_not_exists
+    mkdir -p $DIR
+    if [ -z "$1" ]; then
+        echo "$SKELETON" > $FILE
+        dump $BASE >> $FILE
+        mark $FILE
+    else
+        cp $DIR/$1.patch $FILE
+        sed -i "s/^# Branch: .*$/# Branch: $BRANCH/" $FILE
+    fi
+elif [ "$CMD" == "pull" ]; then
+    ensure_exists
+    dump $(tail -1 $FILE | gethash) | tee -a $FILE
+    mark $FILE
+elif [ "$CMD" == "update" ]; then
+    ensure_exists
+    mark $FILE
+elif [ "$CMD" == "start" ]; then
+    ensure_exists
+    sed -i "0,/^@@ $1 @@$/ s/^  /\- /" $FILE
+elif [ "$CMD" == "edit" ]; then
+    ensure_exists
+    $EDITOR $FILE
+elif [ "$CMD" == "rm" ]; then
+    ensure_exists
+    rm -i $FILE
+elif [ "$CMD" == "dump" ]; then
+    ensure_exists
+    cat $FILE
+elif [ "$CMD" == "status" ]; then
+    ensure_exists
+    last=$(tail -1 $FILE | gethash)
+    count=$(git rev-list --count $last..master)
+    if [ "$count" == "0" ]; then
+        echo "Your plan is up to date with 'master'."
+    else
+        echo "Your plan is behind 'master' by $count commits."
+    fi
+    echo
+    echo "Candidate commits: $(grep '^  '  $FILE | wc -l)"
+    echo "   Picked commits: $(grep '^\+ ' $FILE | \
+                               grep -v '#\(test\|docs\)' | \
+                               wc -l)/$(budget $FILE)"
+elif [ "$CMD" == "apply" ]; then
+    ensure_exists
+    grep '^\+ ' $FILE | while read line; do
+        commit=$(echo "$line" | gethash)
+        echo "Applying commit $commit"
+        git cherry-pick -x $commit >/dev/null || exit 1
+    done
+    echo "Plan applied successfully!"
+fi
