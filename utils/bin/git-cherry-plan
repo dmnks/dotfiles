@@ -87,9 +87,15 @@ elif [ "$CMD" == "edit" ]; then
 elif [ "$CMD" == "rm" ]; then
     ensure_exists
     rm -i $FILE
+elif [ "$CMD" == "format" ]; then
+    ensure_exists
+    last=$(sed -n '/^@@ .* @@$/ p' $FILE | tail -1)
+    sed -n "0,/^@@ branch point @@$/ p" $FILE
+    echo "[...]"
+    sed -n "/^$last$/,$ p" $FILE
 elif [ "$CMD" == "dump" ]; then
     ensure_exists
-    cat $FILE
+    grep '^\+ ' $FILE | gethash
 elif [ "$CMD" == "status" ]; then
     ensure_exists
     last=$(tail -1 $FILE | gethash)
