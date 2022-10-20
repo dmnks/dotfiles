@@ -7,4 +7,5 @@ Key:
   mentioned but not completed on that day
 * completed on that day
 + completed on a later day
-- decided against
+- decided against on a later day
+@ alias (name: value)

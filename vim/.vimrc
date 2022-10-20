@@ -153,7 +153,7 @@ function! s:planInit()
     highlight def link planOpen Define
     highlight def link planPost Typedef
     highlight def link planDrop Comment
-    highlight def link planGoal Constant
+    highlight def link planGoal Identifier
     " Mappings
     nmap <buffer> <silent> <NUL> :call <sid>cycle([' ', '*', '+', '-'])<CR>
     nmap <buffer> <silent> <CR>  :call <sid>planNext()<CR>
