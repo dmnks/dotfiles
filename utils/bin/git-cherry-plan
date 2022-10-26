@@ -6,9 +6,9 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 HUNK="@@ start @@"
 BASE=$(git merge-base HEAD $UPSTREAM)
 DIR=$HOME/.$PROGRAM
-EXT=.patch
-FILE=$DIR/$BRANCH$EXT
-LEGEND="\
+EXT=patch
+FILE=$DIR/$BRANCH.$EXT
+README="\
 # Cherry-pick plan from $UPSTREAM onto $BRANCH
 #
 # These lines MUST NOT be re-ordered or removed.
@@ -16,10 +16,10 @@ LEGEND="\
 # Budget: 50 commits
 # Lines containing #test or #docs do not count against the budget.
 # 
-# Legend:
+# Key:
 #   <commit> = candidate commit
 # + <commit> = use commit
-# - <commit> = do not use commit
+# - <commit> = ineligible commit
 # * <commit> = commit already on branch
 "
 
@@ -30,19 +30,20 @@ Usage: git $PROGRAM COMMAND [ARG]
 Plan commits to be cherry-picked from master onto the current branch.
 
 Uses a patch-like text file listing all commits on master since the branching
-point, with a legend printed at the top.
+point, with a README printed at the top.
 
 Commands:
-    init [PLAN]         create new plan for current branch
-                        (copy from existing PLAN if supplied)
+    init [BRANCH]       create new plan for current branch
+                        (copy from existing BRANCH if supplied)
     edit                open plan in \$EDITOR
     rm                  remove plan for current branch
+    ls                  list all plans
     pull                append new commits from master
-    update              (re)mark already present commits
+    update              mark already present commits
     apply               apply plan to current branch
     start               mark commits preceding @@ start @@ with -
     format              print plan for e-mail review
-                        (strips commits preceding @@ start @@)
+                        (only commits following @@ start @@)
     dump                print commits marked with + (only hashes)
     status              show plan status"
     exit 1
@@ -75,7 +76,7 @@ mark() {
     done
 }
 
-dump() {
+log() {
     git log --reverse --format="  %H %s" $1..$UPSTREAM
 }
 
@@ -93,16 +94,16 @@ if [ "$CMD" == "init" ]; then
     ensure_not_exists
     mkdir -p $DIR
     if [ -z "$1" ]; then
-        echo "$LEGEND" > $FILE
-        dump $BASE >> $FILE
+        echo "$README" > $FILE
+        log $BASE >> $FILE
         mark $FILE
     else
-        cp $DIR/$1$EXT $FILE
+        cp $DIR/$1.$EXT $FILE
         sed -i "s/^\(# Cherry-pick plan .* onto\) .*$/\1 $BRANCH/" $FILE
     fi
 elif [ "$CMD" == "pull" ]; then
     ensure_exists
-    dump $(tail -1 $FILE | gethash) | tee -a $FILE
+    log $(tail -1 $FILE | gethash) | tee -a $FILE
     mark $FILE
 elif [ "$CMD" == "update" ]; then
     ensure_exists
@@ -116,6 +117,8 @@ elif [ "$CMD" == "edit" ]; then
 elif [ "$CMD" == "rm" ]; then
     ensure_exists
     rm -i $FILE
+elif [ "$CMD" == "ls" ]; then
+    ls -1 $DIR | sed "s/\.$EXT\$//"
 elif [ "$CMD" == "format" ]; then
     ensure_exists
     sed "/^[^#].*$/,$ d" $FILE
