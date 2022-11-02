@@ -1,13 +1,15 @@
 #!/bin/bash
 
 PROGRAM=cherry-plan
-UPSTREAM=master
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-HUNK="@@ start @@"
-BASE=$(git merge-base HEAD $UPSTREAM)
 DIR=$HOME/.$PROGRAM
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
 EXT=patch
 FILE=$DIR/$BRANCH.$EXT
+
+UPSTREAM=master
+BASE=$(git merge-base HEAD $UPSTREAM)
+HUNK="@@ start @@"
+
 README="\
 # Cherry-pick plan from $UPSTREAM onto $BRANCH
 #
