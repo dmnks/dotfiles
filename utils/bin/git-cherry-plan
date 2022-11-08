@@ -15,14 +15,20 @@ README="\
 #
 # These lines MUST NOT be re-ordered or removed.
 # 
-# Budget: 50 commits
-# Lines containing #test or #docs do not count against the budget.
-# 
 # Key:
-#   <commit> = candidate commit
 # + <commit> = use commit
-# - <commit> = ineligible commit
+# - <commit> = do not use commit
 # * <commit> = commit already on branch
+#   <commit> = candidate commit
+#
+# Priority:
+# 1) regression, crash and security fixes
+# 2) user visible breakage with no workarounds
+# 3) user visible breakage with major impact
+# 4) other major impact stuff (if budget allows)
+# 
+# Budget: 30 commits
+# Lines containing #test or #docs do not count against the budget.
 "
 
 usage() {
@@ -36,13 +42,13 @@ point, with a README printed at the top.
 
 Commands:
     init [BRANCH]       create new plan for current branch
-                        (copy from existing BRANCH if supplied)
+                        (or copy from existing BRANCH)
     edit                open plan in \$EDITOR
-    rm                  remove plan for current branch
+    rm                  remove plan
     ls                  list all plans
     pull                append new commits from master
     update              mark already present commits
-    apply               apply plan to current branch
+    apply               apply plan
     start               mark commits preceding @@ start @@ with -
     format              print plan for e-mail review
                         (only commits following @@ start @@)
@@ -106,7 +112,6 @@ if [ "$CMD" == "init" ]; then
 elif [ "$CMD" == "pull" ]; then
     ensure_exists
     log $(tail -1 $FILE | gethash) | tee -a $FILE
-    mark $FILE
 elif [ "$CMD" == "update" ]; then
     ensure_exists
     mark $FILE
