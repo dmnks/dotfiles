@@ -178,23 +178,6 @@ autocmd BufNewFile *.plan           0r ~/.vim/skeleton.plan | norm G
 autocmd FileType plan               call <sid>planInit()
 
 " #############################################################################
-" # Maintenance release mode
-" #############################################################################
-
-function! s:maintInit()
-    nmap <buffer> <silent> <NUL> :call <sid>cycle(['    ', 'drop', 'pick', 'open'])<CR>
-    nmap <buffer> <silent> <CR>  :call <sid>maintShow()<CR>
-    nmap <buffer> <silent> <C-s> :echom trim(system("git maint status"))<CR>
-endfunction
-
-function! s:maintShow()
-    let l:hash = split(getline('.')[5:], ' ')[0]
-    silent exec "!tig show " . l:hash | redraw!
-endfunction
-
-autocmd BufNewFile,BufRead *.maint  call <sid>maintInit()
-
-" #############################################################################
 " # Misc
 " #############################################################################
 
