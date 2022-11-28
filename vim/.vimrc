@@ -125,59 +125,6 @@ command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
 nnoremap * :let @/='\<'.expand('<cword>').'\>'<bar>set hlsearch<CR>
 
 " #############################################################################
-" # Common helpers
-" #############################################################################
-
-function! s:cycle(symbs)
-    let l:len = len(a:symbs[0])
-    let l:line = getline('.')
-    let l:idx = index(a:symbs, l:line[:l:len - 1])
-    echom l:line[:l:len]
-    let l:symb = a:symbs[(l:idx + 1) % len(a:symbs)]
-    call setline('.', l:symb . l:line[l:len:])
-endfunction
-
-" #############################################################################
-" # Simple .plan support
-" # More info: https://garbagecollected.org/2017/10/24/the-carmack-plan/
-" #############################################################################
-
-function! s:planInit()
-    " Appearance
-    syntax match planDate "^= .\+$"
-    syntax match planOpen "^  \S.\+$"
-    syntax match planPost "^+ .\+$"
-    syntax match planDrop "^- .\+$"
-    syntax match planGoal "^@ .\+$"
-    highlight def link planDate Constant
-    highlight def link planOpen Define
-    highlight def link planPost Typedef
-    highlight def link planDrop Comment
-    highlight def link planGoal Identifier
-    " Mappings
-    nmap <buffer> <silent> <NUL> :call <sid>cycle([' ', '*', '+', '-'])<CR>
-    nmap <buffer> <silent> <CR>  :call <sid>planNext()<CR>
-    nmap <silent> q :q<CR>
-endfunction
-
-function! s:planNext()
-    let l:format = '= %a %b %d, %Y ' . repeat('=', 20)
-    let l:line = getline(search('^= ', 'bn'))
-    let l:prev = strptime(l:format, l:line)
-    if l:prev == 0
-        return
-    endif
-    " +1 hour to cover for DST changes
-    let l:next = strftime(l:format, l:prev + 25*60*60)
-    call append(line('.'), ['', l:next, ''])
-    normal! 3j
-endfunction
-
-autocmd BufNewFile,BufRead *.plan   set filetype=plan
-autocmd BufNewFile *.plan           0r ~/.vim/skeleton.plan | norm G
-autocmd FileType plan               call <sid>planInit()
-
-" #############################################################################
 " # Misc
 " #############################################################################
 

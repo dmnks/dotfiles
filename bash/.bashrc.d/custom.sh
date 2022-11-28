@@ -52,10 +52,6 @@ mangrep() {
     man -K -w $1 | xargs basename -a -s .gz
 }
 
-plan() {
-    grep '^  ' ~/plan/daily.plan | tail -n +2 | sed 's/^  //g'
-}
-
 setup_ps1
 
 alias gdiff='git diff --no-index --'
