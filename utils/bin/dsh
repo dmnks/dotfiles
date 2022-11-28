@@ -22,7 +22,6 @@ if [ -z "$CMD" ]; then
 	    --hostname $PROJECT \
 	    --privileged \
 	    --volume=$PWD:/src \
-	    --volume=$PWD/.data:/data \
 	    --workdir /src \
 	    $ARGS $IMAGE
     fi
