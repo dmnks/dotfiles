@@ -1,17 +1,21 @@
 function! s:cycle(list)
     let l:len = len(a:list[0])
     let l:line = getline('.')
-    let l:i = index(a:list, l:line[1:l:len])
+    let l:i = index(a:list, l:line[:l:len - 1])
     let l:next = a:list[(l:i + 1) % len(a:list)]
-    call setline('.', '[' . l:next . l:line[1 + l:len:])
+    call setline('.', l:next . l:line[l:len:])
 endfunction
 
 function! s:init()
-    syntax match todoOpen "^\[ \] .\+$"
-    syntax match todoDone "^\[X\] .\+$"
+    syntax match todoOpen "^TODO.\+$"
+    syntax match todoProg "^PROG.\+$"
+    syntax match todoDone "^DONE.\+$"
+    syntax match todoWait "^WAIT.\+$"
     highlight def link todoOpen diffRemoved
+    highlight def link todoProg diffNewFile
     highlight def link todoDone diffAdded
-    nmap <buffer> <silent> <NUL> :call <sid>cycle([' ', 'X'])<CR>
+    highlight def link todoWait PreProc
+    nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "PROG", "DONE", "WAIT"])<CR>
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
