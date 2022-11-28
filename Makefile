@@ -8,6 +8,7 @@ all: software install vim gnome
 software:
 	sudo dnf install -y \
 		 ctags \
+		 dejavu-sans-mono-fonts \
 		 foot \
 		 fzf \
 		 git \
