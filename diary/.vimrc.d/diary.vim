@@ -8,16 +8,16 @@ endfunction
 
 function! s:init()
     syntax match todoOpen "^TODO.\+$"
-    syntax match todoProg "^PROG.\+$"
+    syntax match todoWork "^WORK.\+$"
     syntax match todoDone "^DONE.\+$"
-    syntax match todoWait "^WAIT.\+$"
-    highlight def link todoOpen diffRemoved
-    highlight def link todoProg diffNewFile
-    highlight def link todoDone diffAdded
-    highlight def link todoWait PreProc
+    syntax match todoDate "^DATE.\+$"
+    highlight def link todoOpen PreProc
+    highlight def link todoWork Type
+    highlight def link todoDone Normal
+    highlight def link todoDate Conditional
     setlocal formatoptions+=ro
     setlocal comments=n:TODO
-    nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "DONE", "PROG", "WAIT"])<CR>
+    nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "DONE", "WORK", "DATE"])<CR>
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
