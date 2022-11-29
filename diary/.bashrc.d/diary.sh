@@ -5,11 +5,11 @@ note() {
     file=$dir/$(date +'%Y-%m-%d' -d "$arg")
     mkdir -p $dir
     touch $file
-    echo $file
+    $EDITOR $file
 }
 
 gendiary() {
     for i in $(seq 0 $1); do
-        note "+$i days" >/dev/null
+        EDITOR=echo note "+$i days" >/dev/null
     done
 }

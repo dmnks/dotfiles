@@ -15,7 +15,9 @@ function! s:init()
     highlight def link todoProg diffNewFile
     highlight def link todoDone diffAdded
     highlight def link todoWait PreProc
-    nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "PROG", "DONE", "WAIT"])<CR>
+    setlocal formatoptions+=ro
+    setlocal comments=n:TODO
+    nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "DONE", "PROG", "WAIT"])<CR>
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
