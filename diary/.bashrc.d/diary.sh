@@ -1,11 +1,11 @@
 note() {
     local arg=$@
     [ -z "$arg" ] && arg="today"
-    dir=$HOME/diary/$(date +'%Y/Q%q/%m-%b/W%V' -d "$arg")
+    dir=$HOME/diary/$(date +'%Y/Q%q/W%V' -d "$arg")
     file=$dir/$(date +'%Y-%m-%d' -d "$arg")
     mkdir -p $dir
     touch $file
-    $EDITOR $file
+    (cd $HOME/diary; $EDITOR $file)
 }
 
 gendiary() {

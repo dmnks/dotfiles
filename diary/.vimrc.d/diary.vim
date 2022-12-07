@@ -7,13 +7,13 @@ function! s:cycle(list)
 endfunction
 
 function! s:init()
-    syntax match todoOpen "^\[ \].\+$"
-    syntax match todoDone "^\[X\].\+$"
-    highlight def link todoOpen PreProc
-    highlight def link todoDone Normal
+    syntax match todoOpen "^TODO.*$"
+    syntax match todoDone "^DONE.*$"
+    highlight def link todoOpen diffRemoved
+    highlight def link todoDone diffAdded
     setlocal formatoptions+=ro
-    setlocal comments=n:\[\ \]
-    nmap <buffer> <silent> <NUL> :call <sid>cycle(["[ ]", "[X]"])<CR>
+    setlocal comments=n:TODO
+    nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "DONE"])<CR>
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
