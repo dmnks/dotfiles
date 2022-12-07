@@ -14,7 +14,11 @@ function! s:init()
     setlocal formatoptions+=ro
     setlocal comments=n:TODO
     nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "DONE"])<CR>
+    nmap <buffer> <silent> <c-k> :exec 'edit `EDITOR=echo note ' . expand("%:t") . '-1day`'<CR>
+    nmap <buffer> <silent> <c-j> :exec 'edit `EDITOR=echo note ' . expand("%:t") . '+1day`'<CR>
+    nmap <buffer> <silent> <c-t> :exec 'edit `EDITOR=echo note`'<CR>
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
+autocmd BufWritePre */diary/*           call mkdir(expand("%:p:h"), "p")
 autocmd FileType diary                  call <sid>init()
