@@ -17,6 +17,7 @@ function! s:init()
     nmap <buffer> <silent> <c-k> :exec 'edit `EDITOR=echo note ' . expand("%:t") . '-1day`'<CR>
     nmap <buffer> <silent> <c-j> :exec 'edit `EDITOR=echo note ' . expand("%:t") . '+1day`'<CR>
     nmap <buffer> <silent> <c-t> :exec 'edit `EDITOR=echo note`'<CR>
+    nmap <buffer> <silent> gf    :exec 'edit `EDITOR=echo note ' . expand("<cfile>") . '`'<CR>
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
