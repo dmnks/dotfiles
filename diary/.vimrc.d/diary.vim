@@ -13,7 +13,7 @@ function! s:init()
     highlight def link todoDone diffAdded
     setlocal formatoptions+=ro
     setlocal comments=n:TODO
-    nmap <buffer> <silent> <CR> :call <sid>cycle(["TODO", "DONE"])<CR>
+    nmap <buffer> <silent> <NUL> :call <sid>cycle(["TODO", "DONE"])<CR>
     nmap <buffer> <silent> <c-k> :exec 'edit `EDITOR=echo note ' . expand("%:t") . '-1day`'<CR>
     nmap <buffer> <silent> <c-j> :exec 'edit `EDITOR=echo note ' . expand("%:t") . '+1day`'<CR>
     nmap <buffer> <silent> <c-t> :exec 'edit `EDITOR=echo note`'<CR>
