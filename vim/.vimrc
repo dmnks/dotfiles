@@ -120,7 +120,7 @@ let &t_TE = "\<Esc>[>4m"
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-autocmd BufRead,BufNewFile */rpm/*.[ch] set noexpandtab
+autocmd BufRead,BufNewFile */rpm/*.{c,h,at} set noexpandtab
 set textwidth=79
 
 " #############################################################################
