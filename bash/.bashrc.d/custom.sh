@@ -11,31 +11,18 @@ export EDITOR=vim
 export FZF_DEFAULT_OPTS=--layout=reverse
 
 setup_ps1() {
-    local c_red=$(tput setaf 9)
-    local c_green=$(tput setaf 10)
-    local c_yellow=$(tput setaf 11)
-    local c_blue=$(tput setaf 12)
-    local c_purple=$(tput setaf 13)
-    local c_cyan=$(tput setaf 14)
-    local c_off=$(tput sgr0)
-    c_dollar() {
-        [ $? -eq 0 ] && tput sgr0 || tput setaf 9
+    local red=$(tput setaf 9)
+    local green=$(tput setaf 10)
+    local yellow=$(tput setaf 11)
+    local blue=$(tput setaf 12)
+    local purple=$(tput setaf 13)
+    local cyan=$(tput setaf 14)
+    local off=$(tput sgr0)
+    dollar() {
+        [ $? -eq 0 ] || tput setaf 9
     }
-    os_release() {
-        grep "^$1=" /etc/os-release | cut -d'=' -f2 | tr -d \"
-    }
-    PS1="\[${c_green}\]"
-    if [ "$HOSTNAME" != "thinkpad" ]; then
-        PS1+="[$HOSTNAME]"
-        local os=$(os_release ID)
-        local version=$(os_release VERSION_ID)
-        [[ -n "$os" && -n "$version" ]] && PS1+="(${os}-${version})"
-    fi
-    PS1+="-> \[${c_cyan}\]\W"
-    PS1+="\[${c_purple}\]\$(__git_ps1 \"(%s)\")"
-    PS1+="\[\$(c_dollar)\]"
-    [ "$EUID" != 0 ] && PS1+="\$" || PS1+="#"
-    PS1+="\[${c_off}\] "
+    PS1="${green}[\u@\h \W]\$(__git_ps1 \"${purple}(%s)\")"
+    PS1+="\$(dollar)\$ ${off}"
     export PS1
 }
 
