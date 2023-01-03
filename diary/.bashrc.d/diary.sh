@@ -1,3 +1,3 @@
 note() {
-    vim "+Note $@"
+    vim "+Note $*"
 }
