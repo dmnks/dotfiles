@@ -1,3 +1,6 @@
+command! -nargs=? Note exec "edit `EDITOR=echo note " . <q-args> . "`"
+command! NoteReload call <sid>load()
+
 function! s:load()
     let s:entries = globpath("~/diary", "*/*/*/*", 0, 1)
 endfunction
@@ -30,12 +33,11 @@ function! s:init()
     highlight def link todoDone diffAdded
     setlocal formatoptions+=ro
     setlocal comments=n:TODO
-    command! -nargs=1 Note exec "edit `EDITOR=echo note " . <q-args> . "`"
-    command! NoteReload call <sid>load()
     nmap <buffer> <silent> <c-a> :call <sid>cycle(["TODO", "DONE"])<CR>
     nmap <buffer> <silent> <c-k> :call <sid>edit(-1)<cr>
     nmap <buffer> <silent> <c-j> :call <sid>edit(1)<cr>
     nmap <buffer> <silent> <c-t> :Note today<cr>
+    call <sid>load()
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
