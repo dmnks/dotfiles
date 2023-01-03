@@ -31,6 +31,9 @@ function! s:cycle(list)
     let l:len = len(a:list[0])
     let l:line = getline('.')
     let l:i = index(a:list, l:line[:l:len - 1])
+    if l:i < 0
+        return
+    endif
     let l:next = a:list[(l:i + 1) % len(a:list)]
     call setline('.', l:next . l:line[l:len:])
 endfunction
