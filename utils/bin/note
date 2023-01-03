@@ -1,8 +1,0 @@
-#!/bin/bash
-set -e
-base=$HOME/diary
-arg=$@
-[ -z "$arg" ] && arg="today"
-dir=$(date +'%Y/Q%q/W%V' -d "$arg")
-file=$(date +'%Y-%m-%d' -d "$arg")
-(cd $base; $EDITOR $base/$dir/$file)

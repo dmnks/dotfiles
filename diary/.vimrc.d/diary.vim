@@ -1,5 +1,27 @@
-command! -nargs=? Note exec "edit `EDITOR=echo note " . <q-args> . "`"
+command! -nargs=? Note call <sid>edit(<q-args>)
 command! NoteReload call <sid>load()
+
+function! s:edit(time)
+    let l:time = a:time
+    if empty(l:time)
+        let l:time = "today"
+    endif
+    exec "edit" "~/diary/" .
+    \   system("date +'%Y/Q%q/W%V/%Y-%m-%d' -d '" . a:time . "'")
+endfunction
+
+function! s:move(i)
+    let l:index = index(s:entries, expand("%:p"))
+    let l:next = l:index + a:i
+    if l:next > len(s:entries) - 1
+        echom "Already at newest entry"
+        return
+    elseif l:next < 0
+        echom "Already at oldest entry"
+        return
+    endif
+    exec "edit" s:entries[l:next]
+endfunction
 
 function! s:load()
     let s:entries = globpath("~/diary", "*/*/*/*", 0, 1)
@@ -13,19 +35,6 @@ function! s:cycle(list)
     call setline('.', l:next . l:line[l:len:])
 endfunction
 
-function! s:edit(i)
-    let l:index = index(s:entries, expand("%:p"))
-    let l:next = l:index + a:i
-    if l:next > len(s:entries) - 1
-        echom "Already at newest entry"
-        return
-    elseif l:next < 0
-        echom "Already at oldest entry"
-        return
-    endif
-    exec "edit ". s:entries[l:next]
-endfunction
-
 function! s:init()
     syntax match todoOpen "^TODO.*$"
     syntax match todoDone "^DONE.*$"
@@ -34,8 +43,8 @@ function! s:init()
     setlocal formatoptions+=ro
     setlocal comments=n:TODO
     nmap <buffer> <silent> <c-a> :call <sid>cycle(["TODO", "DONE"])<CR>
-    nmap <buffer> <silent> <c-k> :call <sid>edit(-1)<cr>
-    nmap <buffer> <silent> <c-j> :call <sid>edit(1)<cr>
+    nmap <buffer> <silent> <c-k> :call <sid>move(-1)<cr>
+    nmap <buffer> <silent> <c-j> :call <sid>move(1)<cr>
     nmap <buffer> <silent> <c-t> :Note today<cr>
     call <sid>load()
 endfunction
