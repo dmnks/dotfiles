@@ -11,18 +11,18 @@ export EDITOR=vim
 export FZF_DEFAULT_OPTS=--layout=reverse
 
 setup_ps1() {
-    local red=$(tput setaf 9)
-    local green=$(tput setaf 10)
-    local yellow=$(tput setaf 11)
-    local blue=$(tput setaf 12)
-    local purple=$(tput setaf 13)
-    local cyan=$(tput setaf 14)
-    local off=$(tput sgr0)
+    local red="\[$(tput setaf 9)\]"
+    local green="\[$(tput setaf 10)\]"
+    local yellow="\[$(tput setaf 11)\]"
+    local blue="\[$(tput setaf 12)\]"
+    local purple="\[$(tput setaf 13)\]"
+    local cyan="\[$(tput setaf 14)\]"
+    local reset="\[$(tput sgr0)\]"
     dollar() {
-        [ $? -eq 0 ] || tput setaf 9
+        [ $? -eq 0 ] || echo -e "\001$(tput setaf 9)\002"
     }
     PS1="${green}[\u@\h \W]\$(__git_ps1 \"${purple}(%s)\")"
-    PS1+="\$(dollar)\$ ${off}"
+    PS1+="\$(dollar)\$${reset} "
     export PS1
 }
 
