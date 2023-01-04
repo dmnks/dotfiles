@@ -40,8 +40,6 @@ vim:
 	    https://github.com/morhetz/gruvbox $(VIMPACK)/gruvbox
 	git clone \
 	    https://github.com/tpope/vim-commentary $(VIMPACK)/commentary
-	git clone \
-	    https://github.com/cyberkov/openhab-vim $(VIMPACK)/openhab
 
 gnome:
 	dconf load /org/gnome/ < gnome.conf
