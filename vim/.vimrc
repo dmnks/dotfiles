@@ -36,20 +36,25 @@ function! s:buflist()
     let named = filter(named, '!empty(v:val)')
     return named
 endfunction
-command! FZFBuffers
+command! GFiles
+    \ call fzf#run(fzf#wrap({
+    \   'source':  'git ls-files',
+    \   'options': '-m',
+    \ }))
+command! Buffers
     \ call fzf#run(fzf#wrap({
     \   'source':  reverse(<sid>buflist()),
     \   'options': '+m --prompt "buffer> "',
     \ }))
-command! FZFTags
+command! Tags
     \ if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \   'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
     \   'sink':    'tag',
     \   'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
-nmap <leader><leader> :FZFBuffers<CR>
-nmap <leader>ff :FZF<CR>
-nmap <leader>fs :FZFTags<CR>
+nmap <leader>ff :GFiles<CR>
+nmap <leader><leader> :Buffers<CR>
+nmap <leader>fs :Tags<CR>
 
 " #############################################################################
 " # Appearance
