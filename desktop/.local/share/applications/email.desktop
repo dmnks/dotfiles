@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Email
+Name=Mutt
 GenericName=Email Client
-Exec=env XCURSOR_THEME=Adwaita EDITOR=vim foot --title Mutt -o main.initial-window-size-chars=120x40 -a email mutt
+Exec=env EDITOR=vim foot --title Mutt -a mutt -o main.initial-window-size-chars=120x40 mutt
 Terminal=false
 Type=Application
 Keywords=Mail;E-mail;Mutt;

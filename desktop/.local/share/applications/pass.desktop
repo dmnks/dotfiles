@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Pass
 GenericName=Password Manager
-Exec=env XCURSOR_THEME=Adwaita foot --title Pass -a pass fpass
+Exec=foot --title Pass -a pass -o main.initial-window-size-chars=60x20 fpass
 Terminal=false
 Type=Application
 Keywords=password

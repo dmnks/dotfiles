@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=IRC
+Name=WeeChat
 GenericName=IRC Client
-Exec=env XCURSOR_THEME=Adwaita foot --title WeeChat -o main.initial-window-size-chars=120x40 -a IRC weechat
+Exec=foot --title WeeChat -a weechat -o main.initial-window-size-chars=120x40 weechat
 Terminal=false
 Type=Application
 Keywords=irc;internet;

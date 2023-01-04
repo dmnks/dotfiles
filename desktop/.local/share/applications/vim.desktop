@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=VIM
+Name=Vim
 GenericName=Text Editor
-Exec=env XCURSOR_THEME=Adwaita foot -c /home/mdomonko/.config/foot/vim.ini --title VIM -o main.initial-window-size-chars=177x50 -a vim vim
+Exec=foot -c /home/mdomonko/.config/foot/vim.ini --title Vim -a vim -o main.initial-window-size-chars=177x50 vim
 Terminal=false
 Type=Application
 Keywords=Text Editor;
