@@ -149,7 +149,7 @@ set dictionary=/usr/share/dict/words
 set keywordprg=:Man
 let g:ft_man_open_mode = 'vert'
 
-nmap <esc><esc> :nohl<CR>
+nmap <esc><esc> <esc>:nohl<CR><esc>
 nmap <leader>g :exec "G <cword>"<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
