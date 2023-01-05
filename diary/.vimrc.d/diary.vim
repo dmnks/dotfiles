@@ -48,7 +48,7 @@ function! s:init()
     nmap <buffer> <silent> <c-a> :call <sid>cycle(["TODO", "DONE"])<CR>
     nmap <buffer> <silent> <c-k> :call <sid>move(-1)<cr>
     nmap <buffer> <silent> <c-j> :call <sid>move(1)<cr>
-    nmap <buffer> <silent> <c-t> :Note today<cr>
+    nmap <buffer> <silent> <c-t> :Note<cr>
     call <sid>load()
 endfunction
 
