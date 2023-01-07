@@ -108,12 +108,20 @@ function! Tabline() abort
 endfunction
 set tabline=%!Tabline()
 
+" #############################################################################
+" # Terminal tweaks
+" #############################################################################
+
+" Use underline instead of undercurls for spelling
+" https://unix.stackexchange.com/a/583072
+let &t_Cs = "\<Esc>[4:3m"
+let &t_Ce = "\<Esc>[4:0m"
+
 " See :help xterm-true-color
 let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
 let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
 
 " Workaround for https://github.com/vim/vim/issues/9014
-" Also see:
 " https://codeberg.org/dnkl/foot/wiki#user-content-ctrl-key-breaks-input-in-vim
 let &t_TI = "\<Esc>[>4;2m"
 let &t_TE = "\<Esc>[>4m"

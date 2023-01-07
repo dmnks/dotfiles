@@ -17,7 +17,7 @@ if [ -z "$CMD" ]; then
 	podman attach $ARGS $PROJECT
     else
 	podman run \
-	    -it -e xterm-256color \
+	    -it \
 	    --name $PROJECT \
 	    --hostname $PROJECT \
 	    --privileged \
