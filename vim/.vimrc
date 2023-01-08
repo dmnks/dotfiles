@@ -112,10 +112,8 @@ set tabline=%!Tabline()
 " # Terminal tweaks
 " #############################################################################
 
-" Use underline instead of undercurls for spelling
-" https://unix.stackexchange.com/a/583072
-let &t_Cs = "\<Esc>[4:3m"
-let &t_Ce = "\<Esc>[4:0m"
+" Undercurl rendering is buggy in foot, use underline
+hi SpellBad cterm=underline
 
 " See :help xterm-true-color
 let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
