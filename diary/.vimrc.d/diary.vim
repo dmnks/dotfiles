@@ -41,11 +41,16 @@ endfunction
 function! s:init()
     syntax match todoOpen "^TODO.*$"
     syntax match todoDone "^DONE.*$"
-    highlight def link todoOpen diffRemoved
-    highlight def link todoDone diffAdded
+    syntax match todoDate "^DATE.*$"
+    syntax match todoNote "^NOTE.*$"
+    highlight def link todoOpen diffAdded
+    highlight def link todoDone Constant
+    highlight def link todoDate diffRemoved
+    highlight def link todoNote Identifier
     setlocal formatoptions+=ro
     setlocal comments=n:TODO
-    nmap <buffer> <silent> <c-a> :call <sid>cycle(["TODO", "DONE"])<CR>
+    nmap <buffer> <silent> <c-a>
+    \   :call <sid>cycle(["TODO", "DONE", "NOTE", "DATE"])<CR>
     nmap <buffer> <silent> <c-k> :call <sid>move(-1)<cr>
     nmap <buffer> <silent> <c-j> :call <sid>move(1)<cr>
     nmap <buffer> <silent> <c-t> :Note<cr>
