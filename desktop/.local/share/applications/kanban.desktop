@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Kanban
+GenericName=Task Manager
+Exec=foot -c /home/mdomonko/.config/foot/vim.ini --title Kanban -a kanban -o main.initial-window-size-chars=160x38 sh -c "sleep 0.1; cd /home/mdomonko/kanban; exec vim -O backlog progress done"
+Terminal=false
+Type=Application
+Keywords=Task;Productivity;Todo;
+Icon=org.gnome.Todo.svg
+Categories=TaskManager;
+X-Desktop-File-Install-Version=0.26
