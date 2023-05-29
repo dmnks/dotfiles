@@ -1,0 +1,9 @@
+#!/bin/bash
+NAME=$1
+SIZE=$2
+CONF=
+[ "$3" != "--" ] && CONF="-c $HOME/.config/foot/$3"
+shift 3
+exec foot --title $NAME -a $NAME $CONF \
+          -o main.initial-window-size-chars=$SIZE \
+          sh -c 'sleep 0.1; "$@"' "sh" "$@"

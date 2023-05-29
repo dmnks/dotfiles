@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Mutt
 GenericName=Email Client
-Exec=env EDITOR=vim foot --title Mutt -a mutt -o main.initial-window-size-chars=120x40 mutt
+Exec=foot-run Mutt 120x40 -- env EDITOR=vim mutt
 Terminal=false
 Type=Application
 Keywords=Mail;E-mail;Mutt;

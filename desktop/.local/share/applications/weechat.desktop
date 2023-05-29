@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=WeeChat
 GenericName=IRC Client
-Exec=foot --title WeeChat -a weechat -o main.initial-window-size-chars=120x40 weechat
+Exec=foot-run WeeChat 120x40 -- weechat
 Terminal=false
 Type=Application
 Keywords=irc;internet;
