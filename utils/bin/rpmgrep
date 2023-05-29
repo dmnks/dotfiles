@@ -1,0 +1,19 @@
+#!/bin/bash
+
+pattern=$1
+shift
+for file in "$@"; do
+    file=$(readlink -f $file)
+    dir=/tmp/pkgs/$(basename $file)
+    if [ ! -d $dir ]; then (
+        mkdir -p $dir
+        cd $dir
+        rpm2cpio $file | cpio -idmv 2>/dev/null
+        for tarball in *.tar.{gz,xz,bz2}; do
+            [ -f $tarball ] || break
+            tar xf $tarball
+            rm $tarball
+        done
+    ) fi
+    grep --color=always $pattern -IR $dir/* 2>/dev/null
+done

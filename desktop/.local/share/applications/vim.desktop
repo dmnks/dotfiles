@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Vim
 GenericName=Text Editor
-Exec=foot -c /home/mdomonko/.config/foot/vim.ini --title Vim -a vim -o main.initial-window-size-chars=177x50 vim
+Exec=foot-run Vim 177x50 vim.ini vim
 Terminal=false
 Type=Application
 Keywords=Text Editor;
