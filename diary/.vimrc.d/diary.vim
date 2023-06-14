@@ -1,3 +1,4 @@
+let s:path = "~/diary"
 command! -nargs=? Note call <sid>edit(<q-args>)
 command! NoteReload call <sid>load()
 
@@ -6,7 +7,7 @@ function! s:edit(time)
     if empty(l:time)
         let l:time = "today"
     endif
-    exec "edit" "~/diary/" .
+    exec "edit" s:path . "/" .
     \   system("date +'%Y/Q%q/W%V/%Y-%m-%d' -d '" . a:time . "'")
 endfunction
 
@@ -24,7 +25,7 @@ function! s:move(i)
 endfunction
 
 function! s:load()
-    let s:entries = globpath("~/diary", "*/*/*/*", 0, 1)
+    let s:entries = globpath(s:path, "*/*/*/*", 0, 1)
 endfunction
 
 function! s:cycle(list)
@@ -55,8 +56,10 @@ function! s:init()
     nmap <buffer> <silent> <c-j> :call <sid>move(1)<cr>
     nmap <buffer> <silent> <c-t> :Note<cr>
     call <sid>load()
+    exec "lcd" s:path
 endfunction
 
 autocmd BufNewFile,BufRead */diary/*    set filetype=diary
 autocmd BufWritePre */diary/*           call mkdir(expand("%:p:h"), "p")
+autocmd BufWritePost */diary/*          call <sid>load()
 autocmd FileType diary                  call <sid>init()
