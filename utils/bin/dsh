@@ -21,8 +21,8 @@ if [ -z "$CMD" ]; then
 	    --name $PROJECT \
 	    --hostname $PROJECT \
 	    --privileged \
-	    --volume=$PWD:/src \
-	    --workdir /src \
+	    --volume=$PWD:$PWD \
+	    --workdir $PWD \
 	    $ARGS $IMAGE
     fi
 elif [ "$CMD" == "exec" ]; then
