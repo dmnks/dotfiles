@@ -55,6 +55,7 @@ function! s:init()
     nmap <buffer> <silent> <c-k> :call <sid>move(-1)<cr>
     nmap <buffer> <silent> <c-j> :call <sid>move(1)<cr>
     nmap <buffer> <silent> <c-t> :Note<cr>
+    nmap <buffer> <silent> <c-m> :Note last Mon<cr>
     call <sid>load()
     exec "lcd" s:path
 endfunction
