@@ -1,0 +1,3 @@
+#!/bin/bash
+TITLE=$(zenity --entry --title "Set terminal title" --text "Enter title")
+exec foot --title $TITLE -o locked-title=yes

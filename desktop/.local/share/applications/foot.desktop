@@ -9,3 +9,8 @@ Name=Terminal
 GenericName=Terminal
 Comment=A wayland native terminal emulator
 StartupWMClass=foot
+Actions=new-named-window;
+
+[Desktop Action new-named-window]
+Name=New Named Window
+Exec=foot-title
