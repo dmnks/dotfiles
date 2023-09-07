@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Kanban
+Name=Plan
 GenericName=Task Manager
-Exec=foot-run Kanban 160x38 vim.ini sh -c "cd /home/mdomonko/kanban; exec vim -O backlog progress done"
+Exec=foot-run Plan 80x30 vim.ini sh -c "cd ~/plan && exec vim *.plan"
 Terminal=false
 Type=Application
 Keywords=Task;Productivity;Todo;
