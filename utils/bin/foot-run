@@ -5,6 +5,5 @@ CONF=
 [ "$3" != "--" ] && CONF="-c $HOME/.config/foot/$3"
 shift 3
 exec foot --title $NAME -a $NAME $CONF \
-          -o locked-title=yes \
           -o main.initial-window-size-chars=$SIZE \
           sh -c 'sleep 0.1; "$@"' "sh" "$@"

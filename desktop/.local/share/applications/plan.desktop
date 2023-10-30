@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Plan
 GenericName=Task Manager
-Exec=foot-run Plan 80x30 vim.ini sh -c "cd ~/plan && exec vim *.plan"
+Exec=foot-run Plan 50x30 -- sh -c "cd ~/plan && exec vim *.plan"
 Terminal=false
 Type=Application
 Keywords=Task;Productivity;Todo;

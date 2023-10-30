@@ -161,16 +161,26 @@ function! s:planCycle(list)
 endfunction
 
 function! s:planInit()
-    " Appearance
+    " Reset most settings
+    colorscheme default
+    set background=dark
+    set colorcolumn=
+    set nocursorline
+    set notermguicolors
+    set nonumber
+
+    " Syntax
     syntax match planDate "^= .\+$"
     syntax match planOpen "^  \S.\+$"
     syntax match planPost "^+ .\+$"
     syntax match planDrop "^- .\+$"
-    highlight def link planDate Constant
-    highlight def link planOpen Define
-    highlight def link planPost Typedef
-    highlight def link planDrop Comment
-    set nonumber
+    syntax match planNote "^# .\+$"
+    highlight planDate ctermfg=13
+    highlight planOpen ctermfg=10
+    highlight planPost ctermfg=11
+    highlight planDrop ctermfg=8
+    highlight planNote ctermfg=8
+
     " Mappings
     nmap <buffer> <silent> <C-SPACE>
     \   :call <sid>planCycle([' ', '*', '+', '-'])<CR>
@@ -191,9 +201,9 @@ function! s:planNext()
     normal! 3j
 endfunction
 
-autocmd BufNewFile,BufRead *.plan   set filetype=plan
-autocmd BufNewFile *.plan           0r ~/.vim/skeleton.plan | norm G
-autocmd FileType plan               call <sid>planInit()
+autocmd BufNewFile,BufRead */plan/*.plan    set filetype=plan
+autocmd BufNewFile */plan/*.plan            0r ~/.vim/skeleton.plan | norm G
+autocmd FileType plan                       call <sid>planInit()
 
 " #############################################################################
 " # Misc
