@@ -61,6 +61,8 @@ nmap <leader>fs :Tags<CR>
 " #############################################################################
 
 set termguicolors
+" Fix spell highlight, see https://github.com/morhetz/gruvbox/issues/175
+let g:gruvbox_guisp_fallback = "bg"
 colorscheme gruvbox
 set background=dark
 hi ColorColumn guibg=#282828
@@ -111,13 +113,6 @@ set tabline=%!Tabline()
 " #############################################################################
 " # Terminal tweaks
 " #############################################################################
-
-" Undercurl rendering is buggy in foot, use underline
-hi SpellBad cterm=underline
-
-" See :help xterm-true-color
-let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
-let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
 
 " Workaround for https://github.com/vim/vim/issues/9014
 " https://codeberg.org/dnkl/foot/wiki#user-content-ctrl-key-breaks-input-in-vim
@@ -215,7 +210,7 @@ set dictionary=/usr/share/dict/words
 set keywordprg=:Man
 let g:ft_man_open_mode = 'vert'
 
-nmap <esc><esc> <esc>:nohl<CR><esc>
+nnoremap <silent> <C-l> :nohl<CR><C-l>
 nmap <leader>g :exec "G <cword>"<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
