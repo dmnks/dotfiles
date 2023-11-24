@@ -1,14 +1,14 @@
-source /usr/share/git-core/contrib/completion/git-prompt.sh
-source /usr/share/fzf/shell/key-bindings.bash
+if [ ! -f /run/.toolboxenv ]; then
+    source /usr/share/git-core/contrib/completion/git-prompt.sh
+    source /usr/share/fzf/shell/key-bindings.bash
 
-bind '"\C-o":"mc -d\C-m"'
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWUPSTREAM="auto"
+    GIT_PS1_SHOWSTASHSTATE=1
 
-GIT_PS1_SHOWDIRTYSTATE=1
-GIT_PS1_SHOWUPSTREAM="auto"
-GIT_PS1_SHOWSTASHSTATE=1
-
-export EDITOR=vim
-export FZF_DEFAULT_OPTS=--layout=reverse
+    export EDITOR=vim
+    export FZF_DEFAULT_OPTS=--layout=reverse
+fi
 
 setup_ps1() {
     local red="\[$(tput setaf 9)\]"
@@ -18,29 +18,26 @@ setup_ps1() {
     local purple="\[$(tput setaf 13)\]"
     local cyan="\[$(tput setaf 14)\]"
     local reset="\[$(tput sgr0)\]"
+
+    local toolbox
+    local gitps
+
     dollar() {
         [ $? -eq 0 ] || echo -e "\001$(tput setaf 9)\002"
     }
-    PS1="${green}[\u@\h \W]\$(__git_ps1 \"${purple}(%s)\")"
+
+    if [ -f /run/.toolboxenv ]; then
+        toolbox="${purple}⬢${reset} "
+    else
+        gitps="\$(__git_ps1 \"${purple}%s \")"
+    fi
+
+    PS1="${toolbox}${green}\w ${gitps}"
     PS1+="\$(dollar)\$${reset} "
+
     export PS1
-}
-
-clean_containers() {
-    local bin=$1
-    local conts=$($bin ps -qa --filter=status=exited --no-trunc)
-    local images=$($bin images -q --filter=dangling=true --no-trunc \
-                 2>/dev/null)
-    [ -n "$conts" ] && $bin rm -f $conts
-    [ -n "$images" ] && $bin rmi -f $images || true
-}
-
-mangrep() {
-    man -K -w $1 | xargs basename -a -s .gz
 }
 
 setup_ps1
 
 alias gdiff='git diff --no-index --'
-alias docker-clean='clean_containers "sudo docker"'
-alias podman-clean='clean_containers podman'
