@@ -1,0 +1,4 @@
+#!/bin/bash
+git rev-parse --is-inside-work-tree || exit 0
+cd "$1"
+echo "󰘬 $(git rev-parse --abbrev-ref HEAD)"

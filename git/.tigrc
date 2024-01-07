@@ -12,8 +12,9 @@ bind diff V @sh -c "xdg-open https://github.com/rpm-software-management/rpm/comm
 bind diff C @sh -c "xdg-open $(git pr %(commit) | tail -n1)"
 
 # COLORS
-color title-focus           black       white       bold
-color cursor                white       blue
+color title-blur            default     color237
+color title-focus           default     color239    bold
+color cursor                default     color239    bold
 color "Refs: "              default     default
 color "Author: "            default     default
 color "AuthorDate: "        default     default
