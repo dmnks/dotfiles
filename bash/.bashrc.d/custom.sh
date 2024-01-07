@@ -8,6 +8,7 @@ if [ ! -f /run/.toolboxenv ]; then
 
     export EDITOR=vim
     export FZF_DEFAULT_OPTS=--layout=reverse
+    export FZF_TMUX_OPTS="-p"
 fi
 
 setup_ps1() {
