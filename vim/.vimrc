@@ -80,7 +80,22 @@ set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set scrolloff=0
-nmap <F5> :let &background = ( &background == "dark"? "light" : "dark" )<CR>
+
+function! s:toggle_bg()
+    let &background = ( &background == "dark"? "light" : "dark" )
+    if &background == "dark"
+        hi ColorColumn guibg=#282828
+        hi TabLineFill guibg=#282828
+        hi VertSplit guifg=#1d2021
+        hi StatusLineNC guifg=#1d2021
+    else
+        hi ColorColumn guibg=#fbf1c7
+        hi TabLineFill guibg=#fbf1c7
+        hi VertSplit guifg=#f9f5d7
+        hi StatusLineNC guifg=#f9f5d7
+    endif
+endfunction
+nmap <F5> :call <sid>toggle_bg()<CR>
 
 " Simplify tabline
 " Taken from: https://www.reddit.com/r/vim/comments/ghedcp/
