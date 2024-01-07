@@ -145,7 +145,7 @@ nmap <leader>g :exec "G <cword>"<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
-nmap <leader>c :!git ctags<CR><CR>
+nmap <leader>c :call system('git ctags')<CR>
 
 if has('nvim')
     autocmd BufReadPost *
