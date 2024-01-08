@@ -160,7 +160,11 @@ set keywordprg=:Man
 let g:ft_man_open_mode = 'vert'
 
 nnoremap <silent> <C-l> :nohl<CR><C-l>
-nmap <leader>g :exec "G <cword>"<CR>
+nmap <leader>gg :call system('tmux popup -E tig status +2')<CR>
+nmap <leader>gs :exec "G <cword>"<CR>
+nmap <leader>gb :call
+    \ system('tmux popup -E -w 80% -h 80% tig blame +'
+    \ . line('.') . ' ' . expand('%'))<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
