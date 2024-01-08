@@ -11,6 +11,8 @@ case $CMD in
             build)  echo " " ;;
             debug)  echo " " ;;
             bash)   echo " " ;;
+            slack)  echo "󰒱 " ;;
+            mutt)   echo "󰇰 " ;;
             *)      echo "" ;;
         esac
     ;;
