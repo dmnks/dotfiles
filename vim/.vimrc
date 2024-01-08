@@ -67,6 +67,7 @@ colorscheme gruvbox
 set background=dark
 hi ColorColumn guibg=#282828
 hi TabLineFill guibg=#282828
+hi TabLineSel guifg=#ebdbb2
 hi VertSplit guifg=#1d2021
 hi StatusLineNC guifg=#1d2021
 set fillchars=vert:┃
@@ -86,11 +87,13 @@ function! s:toggle_bg()
     if &background == "dark"
         hi ColorColumn guibg=#282828
         hi TabLineFill guibg=#282828
+        hi TabLineSel guifg=#ebdbb2
         hi VertSplit guifg=#1d2021
         hi StatusLineNC guifg=#1d2021
     else
         hi ColorColumn guibg=#fbf1c7
         hi TabLineFill guibg=#fbf1c7
+        hi TabLineSel guifg=#3c3836
         hi VertSplit guifg=#f9f5d7
         hi StatusLineNC guifg=#f9f5d7
     endif
@@ -140,6 +143,7 @@ set textwidth=79
 
 set ignorecase
 set smartcase
+set noincsearch
 set grepprg=git\ grep\ -n\ $*
 command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
     \ | copen | redraw!
