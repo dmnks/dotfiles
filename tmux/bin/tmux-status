@@ -23,9 +23,6 @@ case $CMD in
     ;;
     toolbox)
         name=$(echo "$1" | sed 's/\//-/')
-        id=$(podman ps -q --filter name=$name --filter status=running)
-        [ "$id" == "" ] && exit 0
-        podman exec $name \
-            sh -c 'source /etc/os-release; echo "󰆧 ${ID}-${VERSION_ID}"'
+        podman container exists "$name" && echo '󰆧'
     ;;
 esac
