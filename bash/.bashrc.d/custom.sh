@@ -26,7 +26,7 @@ setup_ps1() {
     }
 
     if [ -f /run/.toolboxenv ]; then
-        toolbox="${purple}⬢${reset} "
+        toolbox="${purple}󰆧${reset} "
     else
         gitps="\$(__git_ps1 \"${purple}%s \")"
     fi
