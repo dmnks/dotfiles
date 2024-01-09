@@ -11,14 +11,28 @@ else
 fi
 
 workspace() {
+    local size
     [ $# == 0 ] && set -- $(dirname $PWD | xargs basename)/$(basename $PWD)
-    tmux has-session -t "$1" 2>/dev/null && return 0
-    tmux new-session -ds "$1" -n "code"
-    tmux send-keys -t "$1" "vim" C-m
-    tmux new-window -t "$1" -n "git"
-    tmux send-keys -t "$1" "tig status" C-m
-    tmux new-window -t "$1" -n "build"
-    tmux new-window -t "$1" -n "debug"
-    tmux select-window -t ${1}:+1
-    tmux attach -t "$1"
+    if [ -z "$TMUX" ]; then
+        size=12
+    else
+        size=11
+    fi
+
+    if ! tmux has-session -t "$1" 2>/dev/null; then
+        tmux new-session -ds "$1" -n "code" \
+                         -x "$(tput cols)" -y "$(tput lines)" "vim"
+        tmux new-window -t "$1" -n "git" "tig status"
+        tmux split-window -t "$1" -l$size -d
+        tmux new-window -t "$1" -n "build"
+        tmux new-window -t "$1" -n "debug"
+        tmux split-window -t "$1" -l$size -d
+        tmux select-window -t ${1}:+1
+    fi
+
+    if [ -z "$TMUX" ]; then
+        tmux attach -t "$1"
+    else
+        tmux switch-client -t "$1"
+    fi
 }
