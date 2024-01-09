@@ -13,6 +13,7 @@ case $CMD in
             bash)   echo " " ;;
             slack)  echo "󰒱 " ;;
             mutt)   echo "󰇰 " ;;
+            todo)   echo " " ;;
             *)      echo "" ;;
         esac
     ;;
