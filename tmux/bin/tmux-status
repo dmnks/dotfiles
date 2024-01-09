@@ -24,6 +24,14 @@ case $CMD in
     ;;
     toolbox)
         name=$(echo "$1" | sed 's/\//-/')
-        podman container exists "$name" && echo '󰆧  '
+        podman container exists $name || exit 0
+        if [ "$2" == "toolbox" ]; then
+            color='#d3869b'
+        else
+            color='#928374'
+        fi
+        pfx=".Config.Labels"
+        key="#[fg=${color}]󰆧 {{${pfx}.name}}-{{${pfx}.version}}#[default]  "
+        podman inspect --format "$key" "$name"
     ;;
 esac
