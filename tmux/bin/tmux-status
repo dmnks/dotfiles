@@ -18,8 +18,8 @@ case $CMD in
         esac
     ;;
     branch)
-        git rev-parse --is-inside-work-tree || exit 0
         cd "$1"
+        git rev-parse --is-inside-work-tree || exit 0
         echo "󰘬 $(git rev-parse --abbrev-ref HEAD)  "
     ;;
     toolbox)
