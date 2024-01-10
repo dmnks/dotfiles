@@ -34,4 +34,16 @@ case $CMD in
         key="#[fg=${color}]󰆧 {{${pfx}.name}}-{{${pfx}.version}}#[default]  "
         podman inspect --format "$key" "$name"
     ;;
+    test)
+        name=".testsuite.log"
+        cd "$1"
+        [ -e "$name" ] || exit 0
+        if grep -qe '\(was\|were\) successful\.' "$name"; then
+            echo "#[fg=#98971a]#[default]  "
+        elif grep -q 'failed' "$name"; then
+            echo "#[fg=#cc241d]#[default]  "
+        else
+            echo "#[fg=#d79921]#[default]  "
+        fi
+    ;;
 esac
