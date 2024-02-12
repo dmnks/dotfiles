@@ -51,7 +51,7 @@ case $CMD in
             bash)   echo " " ;;
             slack)  echo "󰒱 " ;;
             mutt)   echo "󰇰 " ;;
-            todo)   echo " " ;;
+            plan)   echo " " ;;
             *)      echo "" ;;
         esac
     ;;
