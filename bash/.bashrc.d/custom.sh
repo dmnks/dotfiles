@@ -7,6 +7,9 @@ if [ ! -f /run/.toolboxenv ]; then
     GIT_PS1_SHOWSTASHSTATE=1
 
     export EDITOR=vim
+
+    alias gdiff='git diff --no-index --'
+    alias ls='lsd'
 fi
 
 setup_ps1() {
@@ -31,12 +34,10 @@ setup_ps1() {
         gitps="\$(__git_ps1 \"${purple}%s \")"
     fi
 
-    PS1="${toolbox}${green}\w ${gitps}"
+    PS1="${toolbox}${green}󰁕 \W ${gitps}"
     PS1+="\$(dollar)\$${reset} "
 
     export PS1
 }
 
 setup_ps1
-
-alias gdiff='git diff --no-index --'
