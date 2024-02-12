@@ -68,9 +68,9 @@ set background=dark
 hi ColorColumn guibg=#282828
 hi TabLineFill guibg=#282828
 hi TabLineSel guifg=#ebdbb2
-hi VertSplit guifg=#1d2021
-hi StatusLineNC guifg=#1d2021
-set fillchars=vert:┃
+hi VertSplit guifg=#3c3836
+hi StatusLineNC guifg=#3c3836
+set fillchars=vert:│
 set number
 set numberwidth=6
 set title
@@ -88,8 +88,8 @@ function! s:toggle_bg()
         hi ColorColumn guibg=#282828
         hi TabLineFill guibg=#282828
         hi TabLineSel guifg=#ebdbb2
-        hi VertSplit guifg=#1d2021
-        hi StatusLineNC guifg=#1d2021
+        hi VertSplit guifg=#3c3836
+        hi StatusLineNC guifg=#3c3836
     else
         hi ColorColumn guibg=#fbf1c7
         hi TabLineFill guibg=#fbf1c7
@@ -160,8 +160,7 @@ set keywordprg=:Man
 let g:ft_man_open_mode = 'vert'
 
 nnoremap <silent> <C-l> :nohl<CR><C-l>
-nmap <leader>gg :call system('tmux popup -E tig status +2')<CR>
-nmap <leader>gs :exec "G <cword>"<CR>
+nmap <leader>gg :exec "G <cword>"<CR>
 nmap <leader>gb :call
     \ system('tmux popup -E -w 80% -h 80% tig blame +'
     \ . line('.') . ' ' . expand('%'))<CR>
