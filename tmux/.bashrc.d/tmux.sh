@@ -27,7 +27,6 @@ workspace() {
         tmux new-window -t "$1" -n "build"
         tmux new-window -t "$1" -n "debug"
         tmux split-window -t "$1" -l$size -d
-        tmux new-window -t "$1" -n "todo" "vim .TODO"
         tmux select-window -t ${1}:+1
     fi
 
