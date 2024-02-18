@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Exec=foot
+Icon=org.gnome.Terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;
+Name=Terminal
+GenericName=Terminal
+Comment=A wayland native terminal emulator
+StartupWMClass=foot
+Actions=new-named-window;
+
+[Desktop Action new-named-window]
+Name=New Named Window
+Exec=foot-title

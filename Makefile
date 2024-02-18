@@ -13,20 +13,15 @@ software:
 		 fzf \
 		 git \
 		 gnome-tweaks \
-		 isync \
 		 jetbrains-mono-nl-fonts \
 		 lsd \
-		 mkosi \
-		 msmtp \
-		 mutt \
 		 pass \
 		 pavucontrol \
 		 podman \
 		 stow \
 		 tig \
 		 toolbox \
-		 vim \
-		 weechat
+		 vim
 
 install:
 	stow -Rv --no-folding $(PACKAGES)
