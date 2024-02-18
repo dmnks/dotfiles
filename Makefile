@@ -1,4 +1,4 @@
-PACKAGES = bash vim git utils desktop
+PACKAGES = bash desktop git rpm tmux utils vim
 VIMPACK = ~/.vim/pack/git/start
 
 .PHONY: all software install uninstall vim gnome
@@ -18,7 +18,6 @@ software:
 		 libguestfs-tools-c \
 		 libvirt-daemon-config-network \
 		 lsd \
-		 mc \
 		 mkosi \
 		 mock \
 		 mutt \
