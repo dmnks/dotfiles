@@ -38,14 +38,19 @@ function! s:planInit()
 endfunction
 
 function! s:planNext()
-    let l:format = '= %b %d %Y ' . repeat('=', 35)
+    let l:format = '= %a %b %d %Y ' . repeat('=', 35)
     let l:line = getline(search('^= ', 'bn'))
     let l:prev = strptime(l:format, l:line)
     if l:prev == 0
         return
     endif
     " +1 hour to cover for DST changes
-    let l:next = strftime(l:format, l:prev + 25*60*60)
+    let l:delta = 25*60*60
+    " Skip weekends
+    if split(l:line)[1] == 'Fri'
+        let l:delta = l:delta * 3
+    endif
+    let l:next = strftime(l:format, l:prev + l:delta)
     call append(line('.'), ['', l:next, ''])
     normal! 3j
 endfunction
