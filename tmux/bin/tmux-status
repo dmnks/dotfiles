@@ -52,6 +52,7 @@ case $CMD in
             slack)  echo "󰒱 " ;;
             mutt)   echo "󰇰 " ;;
             plan)   echo " " ;;
+            man)    echo " " ;;
             *)      echo "" ;;
         esac
     ;;
