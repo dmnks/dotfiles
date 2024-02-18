@@ -15,11 +15,9 @@ software:
 		 gnome-tweaks \
 		 isync \
 		 jetbrains-mono-nl-fonts \
-		 libguestfs-tools-c \
-		 libvirt-daemon-config-network \
 		 lsd \
 		 mkosi \
-		 mock \
+		 msmtp \
 		 mutt \
 		 pass \
 		 pavucontrol \
@@ -28,8 +26,6 @@ software:
 		 tig \
 		 toolbox \
 		 vim \
-		 virt-install \
-		 virt-manager \
 		 weechat
 
 install:
