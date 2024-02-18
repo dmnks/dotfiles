@@ -12,16 +12,22 @@ software:
 		 foot \
 		 fzf \
 		 git \
+		 gnome-tweaks \
 		 isync \
 		 jetbrains-mono-nl-fonts \
 		 libguestfs-tools-c \
 		 libvirt-daemon-config-network \
+		 lsd \
 		 mc \
+		 mkosi \
+		 mock \
 		 mutt \
 		 pass \
+		 pavucontrol \
 		 podman \
 		 stow \
 		 tig \
+		 toolbox \
 		 vim \
 		 virt-install \
 		 virt-manager \
