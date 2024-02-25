@@ -11,7 +11,9 @@ software:
 		 dejavu-sans-mono-fonts \
 		 foot \
 		 fzf \
+		 gh \
 		 git \
+		 gnome-extensions-app \
 		 gnome-tweaks \
 		 jetbrains-mono-nl-fonts \
 		 lsd \
