@@ -10,6 +10,7 @@ if [ ! -f /run/.toolboxenv ]; then
 
     alias gdiff='git diff --no-index --'
     alias ls='lsd'
+    alias tree='ls --tree'
 fi
 
 setup_ps1() {
