@@ -2,6 +2,13 @@ if [ ! -f /run/.toolboxenv ]; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
     source /usr/share/fzf/shell/key-bindings.bash
 
+    FZF_DEFAULT_OPTS='
+        --layout=reverse
+        --color="pointer:#cc241d,prompt:#cc241d,marker:#cc241d,spinner:#cc241d"
+        --color="hl:#928374,fg+:#ebdbb2,bg+:#3c3836,hl+:#cc241d,header:#928374"
+        --color="border:#928374"
+    '
+
     GIT_PS1_SHOWDIRTYSTATE=1
     GIT_PS1_SHOWUPSTREAM="auto"
     GIT_PS1_SHOWSTASHSTATE=1

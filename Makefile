@@ -1,4 +1,4 @@
-PACKAGES = bash desktop git podman rpm tmux utils vim
+PACKAGES = bash desktop git podman rpm utils vim
 VIMPACK = ~/.vim/pack/git/start
 
 .PHONY: all software install uninstall vim gnome
@@ -27,6 +27,7 @@ software:
 
 install:
 	stow -Rv --no-folding $(PACKAGES)
+	update-desktop-database ~/.local/share/applications/
 
 uninstall:
 	stow -Dv $(PACKAGES)

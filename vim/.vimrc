@@ -39,7 +39,13 @@ endfunction
 command! GFiles
     \ call fzf#run(fzf#wrap({
     \   'source':  'git ls-files',
-    \   'options': '-m',
+    \   'options': '-m --prompt "git-file> "',
+    \ }))
+command! Worktrees
+    \ call fzf#run(fzf#wrap({
+    \   'source':  'find ~/code -mindepth 2 -maxdepth 2 -type d',
+    \   'sink':    'lcd',
+    \   'options': '-m --prompt "worktree> "',
     \ }))
 command! Buffers
     \ call fzf#run(fzf#wrap({
@@ -53,6 +59,7 @@ command! Tags
     \   'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
 nmap <leader>ff :GFiles<CR>
+nmap <leader>fw :Worktrees<CR>
 nmap <leader><leader> :Buffers<CR>
 nmap <leader>fs :Tags<CR>
 
@@ -129,6 +136,15 @@ endfunction
 set tabline=%!Tabline()
 
 " #############################################################################
+" # Terminal tweaks
+" #############################################################################
+
+" Workaround for https://github.com/vim/vim/issues/9014
+" https://codeberg.org/dnkl/foot/wiki#user-content-ctrl-key-breaks-input-in-vim
+let &t_TI = "\<Esc>[>4;2m"
+let &t_TE = "\<Esc>[>4m"
+
+" #############################################################################
 " # Editing
 " #############################################################################
 
@@ -162,7 +178,7 @@ let g:ft_man_open_mode = 'vert'
 nnoremap <silent> <C-l> :nohl<CR><C-l>
 nmap <leader>gg :exec "G <cword>"<CR>
 nmap <leader>gb :call
-    \ system('tmux popup -E -w 80% -h 80% tig blame +'
+    \ system('foot --title "Git Blame" tig blame +'
     \ . line('.') . ' ' . expand('%'))<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>

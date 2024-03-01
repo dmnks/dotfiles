@@ -31,7 +31,7 @@ function! s:planInit()
     highlight planNote ctermfg=8
 
     " Mappings
-    nmap <buffer> <silent> <NUL>
+    nmap <buffer> <silent> <c-space>
     \   :call <sid>planCycle([' ', '*', '+', '-'])<CR>
     nmap <buffer> <silent> <CR>         :call <sid>planNext()<CR>
     nmap <silent> q :q<CR>
