@@ -2,12 +2,6 @@ if [ -f /run/.toolboxenv ]; then
     alias tmux="tmux -L $(sh -c 'source /run/.containerenv; echo $name')"
 else
     alias tmux="systemd-run --quiet --scope --user tmux"
-    export FZF_DEFAULT_OPTS='
-        --layout=reverse
-        --color="pointer:#cc241d,prompt:#cc241d,marker:#cc241d,spinner:#cc241d"
-        --color="hl:#928374,fg+:#ebdbb2,bg+:#3c3836,hl+:#cc241d,header:#928374"
-        --color="border:#928374"
-    '
 fi
 
 workspace() {
