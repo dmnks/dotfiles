@@ -1,0 +1,153 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+CMD=$1; shift
+PROJECT=$(dirname $PWD | xargs basename)
+WORKTREE=$PROJECT/$(basename $PWD)
+
+cmd_usage() {
+    echo "\
+Usage: $PROGRAM COMMAND [ARGS]
+
+A simple tmux(1)-based "IDE" with git-worktree(1) and toolbox(1) integration.
+
+Commands:
+    open [-w]           open project in current directory
+                        (-w shows tmux menu to select git worktree)
+    status [icon|line]  generate status bar (to use from ~/.tmux.conf)
+    enter               enter toolbx container for this project
+"
+    exit 1
+}
+
+cmd_open() {
+    local cmd=$1
+    local size
+
+    if [ "$cmd" == "-w" ]; then
+        local topdir=$(dirname $PWD)
+        local list=$(git worktree list | sed 's/^.\+\///')
+        local this=$(tmux display-message -p '#S' | cut -d/ -f2)
+        local select=$(( $(echo "$list" | sed -n "/$this/=") - 1 ))
+        local i=1
+
+        echo "$list" | while read line; do
+            name=$(echo "$line" | cut -d' ' -f1)
+            if tmux list-sessions -F '#S' | grep -q $name; then
+                prefix="*"
+            else
+                prefix=" "
+            fi
+            echo "'$prefix $line' $i \
+                  \"run-shell 'cd $topdir/$name && tide open'\""
+            i=$(( i + 1 ))
+        done | xargs tmux display-menu -x0 -yS -C$select -T "Worktrees"
+
+        return
+    fi
+
+    [ $# == 0 ] && set -- $WORKTREE
+
+    if [ -z "$TMUX" ]; then
+        size=12
+    else
+        size=11
+    fi
+
+    if ! tmux has-session -t "$1" 2>/dev/null; then
+        tmux new-session -ds "$1" -n "code" \
+                         -x "$(tput cols)" -y "$(tput lines)" "vim"
+        tmux new-window -t "$1" -n "git" "tig status"
+        tmux split-window -t "$1" -l$size -d
+        tmux new-window -t "$1" -n "build"
+        tmux new-window -t "$1" -n "debug"
+        tmux split-window -t "$1" -l$size -d
+        tmux select-window -t ${1}:+1
+    fi
+
+    if [ -z "$TMUX" ]; then
+        tmux attach -t "$1"
+    else
+        tmux switch-client -t "$1"
+    fi
+}
+
+cmd_status() {
+    local cmd="$1"
+    local session_name="$2"
+    local session_path="$3"
+    local pane_command="$4"
+
+    print_branch() {
+        cd "$session_path"
+        git rev-parse --is-inside-work-tree >/dev/null || return 0
+        printf "#[fg=#83a598]󰘬 $(git rev-parse --abbrev-ref HEAD)#[default]  "
+    }
+
+    print_toolbox() {
+        local name=$(echo "$session_name" | sed 's/\//-/')
+        local color
+        podman container exists "$name" || return 0
+        if [ "$pane_command" == "toolbox" ]; then
+            color='#d3869b'
+        else
+            color='#928374'
+        fi
+        printf "#[fg=${color}]󰆧 toolbx#[default]  "
+    }
+
+    print_test() {
+        local name=".testsuite.log"
+        cd "$session_path"
+        [ -e "$name" ] || return 0
+        if grep -qe '\(was\|were\) successful\.' \
+                -qe 'behaved as expected\.' "$name"; then
+            printf "#[fg=#98971a]#[default]  "
+        elif grep -q 'failed' "$name"; then
+            printf "#[fg=#cc241d]#[default]  "
+        elif ! grep -q 'bailing out' "$name"; then
+            printf "#[fg=#d79921]#[default]  "
+        fi
+    }
+
+    case $cmd in
+        icon)
+            shift
+            case "$1" in
+                code)   echo " " ;;
+                git)    echo "󰘬 " ;;
+                build)  echo " " ;;
+                debug)  echo " " ;;
+                bash)   echo " " ;;
+                slack)  echo "󰒱 " ;;
+                mutt)   echo "󰇰 " ;;
+                plan)   echo " " ;;
+                man)    echo " " ;;
+                *)      echo "" ;;
+            esac
+        ;;
+        line)
+            print_test
+            print_branch
+            print_toolbox
+        ;;
+    esac
+}
+
+cmd_enter() {
+    local image=${PROJECT}-toolbox
+    local name=$PROJECT-$(basename $PWD)
+    if ! podman image exists $image; then
+        echo "Error: No image $image" >&2
+        return 1
+    fi
+    podman container exists $name || toolbox create -i $image $name
+    exec toolbox enter $name
+}
+
+case $CMD in
+    open)               cmd_open "$@" ;;
+    status)             cmd_status "$@" ;;
+    enter)              cmd_enter "$@" ;;
+    *)                  cmd_usage ;;
+esac
