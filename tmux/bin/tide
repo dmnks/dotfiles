@@ -25,6 +25,10 @@ cmd_open() {
     local size
 
     if [ "$cmd" == "-w" ]; then
+        if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            tmux display-message "Not a git repo"
+            return 0
+        fi
         local topdir=$(dirname $PWD)
         local list=$(git worktree list | sed 's/^.\+\///')
         local this=$(tmux display-message -p '#S' | cut -d/ -f2)
