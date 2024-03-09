@@ -33,11 +33,12 @@ cmd_open() {
         local list=$(git worktree list | sed 's/^.\+\///')
         local this=$(tmux display-message -p '#S' | cut -d/ -f2)
         local select=$(( $(echo "$list" | sed -n "/$this/=") - 1 ))
+        local sessions=$(tmux list-sessions -F '#S')
         local i=1
 
         echo "$list" | while read line; do
             name=$(echo "$line" | cut -d' ' -f1)
-            if tmux list-sessions -F '#S' | grep -q $name; then
+            if echo "$sessions" | grep -q $name; then
                 prefix="*"
             else
                 prefix=" "
@@ -45,7 +46,7 @@ cmd_open() {
             echo "'$prefix $line' $i \
                   \"run-shell 'cd $topdir/$name && tide open'\""
             i=$(( i + 1 ))
-        done | xargs tmux display-menu -x0 -yS -C$select -T "Worktrees"
+        done | xargs tmux display-menu -x0 -y0 -C$select -T "Worktree"
 
         return
     fi
