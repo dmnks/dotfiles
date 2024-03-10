@@ -2,8 +2,8 @@
 
 PROGRAM=$(basename $0)
 CMD=$1; shift
+ROOTDIR=$HOME/code
 PROJECT=$(dirname $PWD | xargs basename)
-WORKTREE=$PROJECT/$(basename $PWD)
 
 cmd_usage() {
     echo "\
@@ -20,38 +20,38 @@ Commands:
     exit 1
 }
 
+generate_menu() {
+    local name
+    local prefix
+    local sessions=$(tmux list-sessions -F '#S')
+    local i=1
+
+    find "$ROOTDIR" -mindepth 2 -maxdepth 2 -type d | \
+    while read path; do
+        git -C "$path" rev-parse --is-inside-work-tree &>/dev/null || continue
+        name=$(echo "$path" | sed "s,$ROOTDIR/,,")
+        prefix=' '
+        echo "$sessions" | grep -q $name && prefix='*'
+        printf "'%s %-15s [%s]' $i '%s'\n" "$prefix" "$name" \
+            "$(git -C $path rev-parse --abbrev-ref HEAD)" \
+            "run-shell \"cd $path && tide open\""
+        i=$(( i + 1 ))
+    done
+}
+
 cmd_open() {
     local cmd=$1
     local size
 
     if [ "$cmd" == "-w" ]; then
-        if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-            tmux display-message "Not a git repo"
-            return 0
-        fi
-        local topdir=$(dirname $PWD)
-        local list=$(git worktree list | sed 's/^.\+\///')
-        local this=$(tmux display-message -p '#S' | cut -d/ -f2)
-        local select=$(( $(echo "$list" | sed -n "/$this/=") - 1 ))
-        local sessions=$(tmux list-sessions -F '#S')
-        local i=1
-
-        echo "$list" | while read line; do
-            name=$(echo "$line" | cut -d' ' -f1)
-            if echo "$sessions" | grep -q $name; then
-                prefix="*"
-            else
-                prefix=" "
-            fi
-            echo "'$prefix $line' $i \
-                  \"run-shell 'cd $topdir/$name && tide open'\""
-            i=$(( i + 1 ))
-        done | xargs tmux display-menu -x0 -y0 -C$select -T "Worktree"
-
+        local menu=$(generate_menu)
+        local this=$(tmux display-message -p '#S')
+        local cur=$(( $(echo "$menu" | grep -Fn "$this" | cut -d: -f1) - 1 ))
+        echo "$menu" | xargs tmux display-menu -xS -yS -C$cur -T "Open Project"
         return
     fi
 
-    [ $# == 0 ] && set -- $WORKTREE
+    [ $# == 0 ] && set -- $PROJECT/$(basename $PWD)
 
     if [ -z "$TMUX" ]; then
         size=12
