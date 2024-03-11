@@ -9,11 +9,11 @@ cmd_usage() {
     echo "\
 Usage: $PROGRAM COMMAND [ARGS]
 
-A simple tmux(1)-based "IDE" with git-worktree(1) and toolbox(1) integration.
+A simple tmux(1)-based "IDE" with git(1) and toolbox(1) integration.
 
 Commands:
-    open [-w]           open project in current directory
-                        (-w shows tmux menu to select git worktree)
+    open [-s]           open project in current directory
+                        (-s to select one from menu)
     status [icon|line]  generate status bar (to use from ~/.tmux.conf)
     enter               enter toolbx container for this project
 "
@@ -43,7 +43,7 @@ cmd_open() {
     local cmd=$1
     local size
 
-    if [ "$cmd" == "-w" ]; then
+    if [ "$cmd" == "-s" ]; then
         local menu=$(generate_menu)
         local this=$(tmux display-message -p '#S')
         local cur=$(( $(echo "$menu" | grep -Fn "$this" | cut -d: -f1) - 1 ))
