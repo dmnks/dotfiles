@@ -32,7 +32,7 @@ generate_menu() {
         name=$(echo "$path" | sed "s,$ROOTDIR/,,")
         prefix=' '
         echo "$sessions" | grep -q $name && prefix='*'
-        printf "'%s %-15s [%s]' $i '%s'\n" "$prefix" "$name" \
+        printf "'%s %-20s [%s]' $i '%s'\n" "$prefix" "$name" \
             "$(git -C $path rev-parse --abbrev-ref HEAD)" \
             "run-shell \"cd $path && tide open\""
         i=$(( i + 1 ))
