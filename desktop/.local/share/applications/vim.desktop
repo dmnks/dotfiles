@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Vim
 GenericName=Text Editor
-Exec=foot -W 177x50 vim
+Exec=foot-vim
 Terminal=false
 Type=Application
 Keywords=Text Editor;
