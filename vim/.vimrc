@@ -178,7 +178,7 @@ let g:ft_man_open_mode = 'vert'
 nnoremap <silent> <C-l> :nohl<CR><C-l>
 nmap <leader>gg :exec "G <cword>"<CR>
 nmap <leader>gb :call
-    \ system('foot --title "Git blame" tig blame +'
+    \ system('foot --title "Git Blame" tig blame +'
     \ . line('.') . ' ' . expand('%'))<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
