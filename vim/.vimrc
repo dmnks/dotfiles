@@ -41,6 +41,12 @@ command! GFiles
     \   'source':  'git ls-files',
     \   'options': '-m --prompt "git-file> "',
     \ }))
+command! Worktrees
+    \ call fzf#run(fzf#wrap({
+    \   'source':  'find ~/code -mindepth 2 -maxdepth 2 -type d',
+    \   'sink':    'lcd',
+    \   'options': '-m --prompt "worktree> "',
+    \ }))
 command! Buffers
     \ call fzf#run(fzf#wrap({
     \   'source':  reverse(<sid>buflist()),
@@ -53,6 +59,7 @@ command! Tags
     \   'options': '+m --prompt "tag> "',
     \ })) | else | echoerr 'No tags found' | endif
 nmap <leader>ff :GFiles<CR>
+nmap <leader>fw :Worktrees<CR>
 nmap <leader><leader> :Buffers<CR>
 nmap <leader>fs :Tags<CR>
 
