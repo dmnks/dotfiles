@@ -27,6 +27,7 @@ software:
 
 install:
 	stow -Rv --no-folding $(PACKAGES)
+	update-desktop-database ~/.local/share/applications/
 
 uninstall:
 	stow -Dv $(PACKAGES)
