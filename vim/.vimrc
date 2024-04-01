@@ -162,7 +162,10 @@ let g:ft_man_open_mode = 'vert'
 nnoremap <silent> <C-l> :nohl<CR><C-l>
 nmap <leader>gg :exec "G <cword>"<CR>
 nmap <leader>gb :call
-    \ system('tmux popup -E -w 80% -h 80% tig blame +'
+    \ system('tmux popup -T "git blame" -E -w 80% -h 80% tig blame +'
+    \ . line('.') . ' ' . expand('%'))<CR>
+nmap <leader>gB :call
+    \ system('tmux new-window -n blame tig blame +'
     \ . line('.') . ' ' . expand('%'))<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
