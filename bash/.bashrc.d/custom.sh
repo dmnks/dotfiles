@@ -1,21 +1,24 @@
-if [ ! -f /run/.toolboxenv ]; then
-    source /usr/share/git-core/contrib/completion/git-prompt.sh
-    source /usr/share/fzf/shell/key-bindings.bash
+export EDITOR=vim
 
-    FZF_DEFAULT_OPTS='
+if which git &>/dev/null; then
+    source /usr/share/git-core/contrib/completion/git-prompt.sh
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWUPSTREAM="auto"
+    GIT_PS1_SHOWSTASHSTATE=1
+    alias gdiff='git diff --no-index --'
+fi
+
+if which fzf &>/dev/null; then
+    source /usr/share/fzf/shell/key-bindings.bash
+    export FZF_DEFAULT_OPTS='
         --layout=reverse
         --color="pointer:#cc241d,prompt:#cc241d,marker:#cc241d,spinner:#cc241d"
         --color="hl:#928374,fg+:#ebdbb2,bg+:#3c3836,hl+:#cc241d,header:#928374"
         --color="border:#928374"
     '
+fi
 
-    GIT_PS1_SHOWDIRTYSTATE=1
-    GIT_PS1_SHOWUPSTREAM="auto"
-    GIT_PS1_SHOWSTASHSTATE=1
-
-    export EDITOR=vim
-
-    alias gdiff='git diff --no-index --'
+if which lsd &>/dev/null; then
     alias ls='lsd'
     alias tree='ls --tree'
 fi
@@ -30,17 +33,13 @@ setup_ps1() {
     local reset="\[$(tput sgr0)\]"
 
     local toolbox
-    local gitps
+    local gitps="\$(__git_ps1 \"${purple}%s \")"
 
     dollar() {
         [ $? -eq 0 ] || echo -e "\001$(tput setaf 9)\002"
     }
 
-    if [ -f /run/.toolboxenv ]; then
-        toolbox="${purple}󰆧${reset} "
-    else
-        gitps="\$(__git_ps1 \"${purple}%s \")"
-    fi
+    [ -f /run/.toolboxenv ] && toolbox="${purple}󰆧${reset} "
 
     PS1="${toolbox}${green}󰁕 \W ${gitps}"
     PS1+="\$(dollar)\$${reset} "
