@@ -1,5 +1,6 @@
 export EDITOR=nvim
 alias vim=nvim
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 
 export THEME_COLOR_ACTIVE_FG='#fbf1c7'
 export THEME_COLOR_ACTIVE_BG='#3c3836'
