@@ -7,9 +7,9 @@ bind generic S :source ~/.tigrc
 bind main E !git rebase -i %(commit)^
 bind status A !?git commit --amend
 bind main g move-first-line
-bind generic H @sh -c "echo -n %(commit) | xclip -selection c"
+bind generic H @sh -c "echo -n %(commit) | wl-copy"
 bind diff V @sh -c "xdg-open https://github.com/rpm-software-management/rpm/commit/%(commit)"
-bind diff C @sh -c "xdg-open $(git pr %(commit) | tail -n1)"
+bind diff C @sh -c "xdg-open $(git changeset %(commit) | tail -n1)"
 
 # COLORS
 color title-blur            default     color237

@@ -184,6 +184,8 @@ nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
 nmap <leader>c :call system('git ctags')<CR>
+nmap <C-j> ddp
+nmap <C-k> ddkP
 
 if has('nvim')
     autocmd BufReadPost *
