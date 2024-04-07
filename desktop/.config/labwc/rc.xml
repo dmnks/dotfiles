@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<labwc_config>
+    <theme>
+        <name>gruvbox-material-dark-blocks</name>
+        <cornerRadius>0</cornerRadius>
+        <keepBorder>yes</keepBorder>
+        <font place="ActiveWindow">
+            <name>JetBrains Mono</name>
+            <size>10</size>
+            <slant>normal</slant>
+            <weight>normal</weight>
+        </font>
+        <font place="InactiveWindow">
+            <name>JetBrains Mono</name>
+            <size>10</size>
+            <slant>normal</slant>
+            <weight>normal</weight>
+        </font>
+        <font place="MenuItem">
+            <name>JetBrains Mono</name>
+            <size>10</size>
+            <slant>normal</slant>
+            <weight>normal</weight>
+        </font>
+        <font place="OnScreenDisplay">
+            <name>JetBrains Mono</name>
+            <size>10</size>
+            <slant>normal</slant>
+            <weight>normal</weight>
+        </font>
+    </theme>
+
+    <libinput>
+        <device category="default">
+            <pointerSpeed>0.7</pointerSpeed>
+        </device>
+        <device category="touchpad">
+            <naturalScroll>yes</naturalScroll>
+        </device>
+    </libinput>
+
+    <keyboard>
+        <repeatDelay>300</repeatDelay>
+        <repeatRate>30</repeatRate>
+
+        <keybind key="A-Tab">
+            <action name="NextWindow" />
+        </keybind>
+        <keybind key="A-Return">
+            <action name="Execute" command="foot" />
+        </keybind>
+        <keybind key="A-F3">
+            <action name="Execute" command="bemenu-run" />
+        </keybind>
+        <keybind key="A-F4">
+            <action name="Close" />
+        </keybind>
+        <keybind key="W-a">
+            <action name="ToggleMaximize" />
+        </keybind>
+        <keybind key="A-Left">
+            <action name="MoveToEdge" direction="left" />
+        </keybind>
+        <keybind key="A-Right">
+            <action name="MoveToEdge" direction="right" />
+        </keybind>
+        <keybind key="A-Up">
+            <action name="MoveToEdge" direction="up" />
+        </keybind>
+        <keybind key="A-Down">
+            <action name="MoveToEdge" direction="down" />
+        </keybind>
+        <keybind key="W-Left">
+            <action name="SnapToEdge" direction="left" />
+        </keybind>
+        <keybind key="W-Right">
+            <action name="SnapToEdge" direction="right" />
+        </keybind>
+        <keybind key="W-Up">
+            <action name="SnapToEdge" direction="up" />
+        </keybind>
+        <keybind key="W-Down">
+            <action name="SnapToEdge" direction="down" />
+        </keybind>
+        <keybind key="A-Space">
+            <action name="ShowMenu" menu="client-menu" />
+        </keybind>
+        <keybind key="XF86_AudioLowerVolume">
+            <action name="Execute" command="amixer sset Master 5%-" />
+        </keybind>
+        <keybind key="XF86_AudioRaiseVolume">
+            <action name="Execute" command="amixer sset Master 5%+" />
+        </keybind>
+        <keybind key="XF86_AudioMute">
+            <action name="Execute" command="amixer sset Master toggle" />
+        </keybind>
+        <keybind key="XF86_MonBrightnessUp">
+            <action name="Execute" command="brightnessctl set +10%" />
+        </keybind>
+        <keybind key="XF86_MonBrightnessDown">
+            <action name="Execute" command="brightnessctl set 10%-" />
+        </keybind>
+
+        <!-- Custom binds -->
+        <keybind key="XF86_AudioPlay">
+            <action name="Execute" command="playerctl play-pause" />
+        </keybind>
+        <keybind key="XF86_AudioNext">
+            <action name="Execute" command="playerctl next" />
+        </keybind>
+        <keybind key="XF86_AudioPrev">
+            <action name="Execute" command="playerctl previous" />
+        </keybind>
+        <keybind key="W-l">
+            <action name="Execute" command="swaylock -c 000000" />
+        </keybind>
+        <keybind key="W-F9">
+            <action name="Execute" command="sh -c 'sleep 0.5; systemctl suspend'" />
+        </keybind>
+    </keyboard>
+</labwc_config>
