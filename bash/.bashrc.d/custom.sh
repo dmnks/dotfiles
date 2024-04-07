@@ -1,5 +1,6 @@
 export EDITOR=nvim
 alias vim=nvim
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 
 source ~/.theme/bashrc
 
