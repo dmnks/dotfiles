@@ -1,4 +1,5 @@
 export EDITOR=vim
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
