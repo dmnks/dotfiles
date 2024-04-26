@@ -20,22 +20,19 @@ Commands:
     exit 1
 }
 
-generate_menu() {
+session_list() {
     local name
-    local prefix
+    local suffix
     local sessions=$(tmux list-sessions -F '#S')
-    local i=1
 
-    find "$ROOTDIR" -mindepth 2 -maxdepth 2 -type d | \
+    find "$ROOTDIR" -mindepth 2 -maxdepth 2 -type d | sort | \
     while read path; do
         git -C "$path" rev-parse --is-inside-work-tree &>/dev/null || continue
         name=$(echo "$path" | sed "s,$ROOTDIR/,,")
-        prefix=' '
-        echo "$sessions" | grep -q $name && prefix='*'
-        printf "'%s %-20s [%s]' $i '%s'\n" "$prefix" "$name" \
-            "$(git -C $path rev-parse --abbrev-ref HEAD)" \
-            "run-shell \"cd $path && tide open\""
-        i=$(( i + 1 ))
+        suffix='󰛄 create'
+        echo "$sessions" | grep -q $name && suffix=' switch'
+        printf "%-30s 󰘬 %-30s %s\n" \
+            "$name" "$(git -C $path rev-parse --abbrev-ref HEAD)" "$suffix"
     done
 }
 
@@ -44,10 +41,11 @@ cmd_open() {
     local size
 
     if [ "$cmd" == "-s" ]; then
-        local menu=$(generate_menu)
-        local this=$(tmux display-message -p '#S')
-        local cur=$(( $(echo "$menu" | grep -Fn "$this" | cut -d: -f1) - 1 ))
-        echo "$menu" | xargs tmux display-menu -xS -yS -C$cur -T "Open Worktree"
+        path=$(session_list | fzf --prompt "worktree> " --padding 0,1 | \
+               cut -d' ' -f1)
+        [ -z "$path" ] && return
+        cd $ROOTDIR/$path
+        tide open
         return
     fi
 
@@ -128,6 +126,7 @@ cmd_status() {
                 mutt)   echo "󰇰 " ;;
                 plan)   echo " " ;;
                 man)    echo " " ;;
+                blame)  echo " " ;;
                 *)      echo "" ;;
             esac
         ;;
