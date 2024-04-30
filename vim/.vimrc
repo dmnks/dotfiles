@@ -36,6 +36,10 @@ function! s:buflist()
     let named = filter(named, '!empty(v:val)')
     return named
 endfunction
+function! s:worktree(path)
+    exec "lcd $HOME/code/" . a:path
+    GFiles
+endfunction
 command! GFiles
     \ call fzf#run(fzf#wrap({
     \   'source':  'git ls-files',
@@ -43,9 +47,10 @@ command! GFiles
     \ }))
 command! Worktrees
     \ call fzf#run(fzf#wrap({
-    \   'source':  'find ~/code -mindepth 2 -maxdepth 2 -type d',
-    \   'sink':    'lcd',
-    \   'options': '-m --prompt "worktree> "',
+    \   'source':  'find $HOME/code -mindepth 2 -maxdepth 2 -type d | ' .
+    \              'sed "s,$HOME/code/,," | sort',
+    \   'sink':    function('<sid>worktree'),
+    \   'options': '--prompt "worktree> "',
     \ }))
 command! Buffers
     \ call fzf#run(fzf#wrap({
@@ -88,6 +93,11 @@ set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
 set scrolloff=0
+
+function! GetWorktree()
+    return join(split(getcwd(), '/')[-2:], '/') . " - VIM"
+endfunction
+set titlestring=%{GetWorktree()}
 
 function! s:toggle_bg()
     let &background = ( &background == "dark"? "light" : "dark" )
@@ -179,11 +189,12 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>
 nmap <leader>gg :exec "G <cword>"<CR>
 nmap <leader>gb :call
     \ system('foot --title "Git Blame" tig blame +'
-    \ . line('.') . ' ' . expand('%'))<CR>
+    \ . line('.') . ' ' . expand('%') . ' &')<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
 nmap <leader>c :call system('git ctags')<CR>
+nmap <leader>t :call system('foot &')<CR>
 nmap <C-j> ddp
 nmap <C-k> ddkP
 

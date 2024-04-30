@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Pass
+GenericName=Password Manager
+Exec=foot --title Pass -a Pass -o main.initial-window-size-chars=60x20 sh -i fpass
+Terminal=false
+Type=Application
+Keywords=password
+Icon=org.gnome.seahorse.Application.svg
+Categories=Security;
+X-Desktop-File-Install-Version=0.26

@@ -1,2 +1,2 @@
 #!/bin/bash
-exec foot -a Vim -W 177x50 sh -c 'sleep 0.1; exec vim "$@"' "$0" "$@"
+exec foot -a Vim -W 177x50 sh -c 'sleep 0.1; exec vim -c "Worktree" "$@"' "$0" "$@"

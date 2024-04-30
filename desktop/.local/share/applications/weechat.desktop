@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=WeeChat
+GenericName=IRC Client
+Exec=foot --title WeeChat -a WeeChat -o main.initial-window-size-chars=120x40 weechat
+Terminal=false
+Type=Application
+Keywords=irc;internet;
+Icon=org.gnome.Polari.svg
+Categories=IRCClient;
+X-Desktop-File-Install-Version=0.26
