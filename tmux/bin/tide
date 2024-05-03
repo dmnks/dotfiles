@@ -37,12 +37,30 @@ session_list() {
 
 cmd_open() {
     local cmd=$1
+    local project
+    local nlines
     local size
 
     if [ "$cmd" == "-s" ]; then
-        path=$(session_list | fzf --prompt "worktree> " --padding 0,1 | \
+        path=$(session_list | \
+               fzf --prompt "worktree> " --padding 0,1 --print-query | \
                cut -d' ' -f1)
         [ -z "$path" ] && return
+        if [ $(echo "$path" | wc -l) == 2 ]; then
+            # Existing worktree
+            path=$(echo "$path" | tail -n1)
+        else
+            # URL to clone
+            project="$(basename $path)"
+            cd $ROOTDIR
+            mkdir -p $project
+            cd $project
+            if ! git clone "$path" main; then
+                read
+                return
+            fi
+            path=$project/main
+        fi
         cd $ROOTDIR/$path
         tide open
         return
