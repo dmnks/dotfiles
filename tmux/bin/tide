@@ -15,7 +15,6 @@ Commands:
     open [-s]           open project in current directory
                         (-s to select git worktree from menu)
     status [icon|line]  generate status bar (to use from ~/.tmux.conf)
-    enter               enter toolbx container for this project
 "
     exit 1
 }
@@ -119,20 +118,8 @@ cmd_status() {
     esac
 }
 
-cmd_enter() {
-    local image=${PROJECT}-toolbox
-    local name=$PROJECT-$(basename $PWD)
-    if ! podman image exists $image; then
-        echo "Error: No image $image" >&2
-        return 1
-    fi
-    podman container exists $name || toolbox create -i $image $name
-    exec toolbox enter $name
-}
-
 case $CMD in
     open)               cmd_open "$@" ;;
     status)             cmd_status "$@" ;;
-    enter)              cmd_enter "$@" ;;
     *)                  cmd_usage ;;
 esac
