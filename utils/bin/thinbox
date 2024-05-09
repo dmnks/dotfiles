@@ -47,7 +47,7 @@ ssh_in() {
 }
 
 domain_defined() {
-    virsh list --name --all | egrep -q '^'$1'$'
+    virsh list --name --all | grep -q '^'$1'$'
 }
 
 ensure_domain_defined() {
@@ -94,8 +94,8 @@ elif [ "$cmd" == "spawn" ]; then
              >/dev/null
 
     echo "Configuring image"
-    virt-sysprep -a $image --hostname $name --ssh-inject root \
-                 --selinux-relabel >/dev/null
+    virt-sysprep -a $image --hostname $name --uninstall cloud-init \
+                 --ssh-inject root --selinux-relabel >/dev/null
 
     echo "Booting up new VM"
     virt-install --network=bridge:virbr0 --name $name --memory $THIN_MEMORY \
