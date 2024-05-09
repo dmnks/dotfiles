@@ -28,8 +28,8 @@ session_list() {
     while read path; do
         git -C "$path" rev-parse --is-inside-work-tree &>/dev/null || continue
         name=$(echo "$path" | sed "s,$ROOTDIR/,,")
-        suffix='󰛄 create'
-        echo "$sessions" | grep -q $name && suffix=' switch'
+        suffix=' open'
+        echo "$sessions" | grep -q $name && suffix=' goto'
         printf "%-30s 󰘬 %-30s %s\n" \
             "$name" "$(git -C $path rev-parse --abbrev-ref HEAD)" "$suffix"
     done
