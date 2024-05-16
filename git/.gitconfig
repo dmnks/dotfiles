@@ -37,6 +37,7 @@
         --python-kinds=-i
     rc = rebase --continue
     ra = rebase --abort
+    cc = cherry-pick --continue
 [merge]
     tool = vimdiff
 [pull]
