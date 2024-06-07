@@ -3,7 +3,6 @@
 PROGRAM=$(basename $0)
 CMD=$1; shift
 ROOTDIR=$HOME/code
-PROJECT=$(dirname $PWD | xargs basename)
 
 cmd_usage() {
     echo "\
@@ -12,68 +11,97 @@ Usage: $PROGRAM COMMAND [ARGS]
 A simple tmux(1)-based "IDE" with git-worktree(1) and toolbox(1) integration.
 
 Commands:
-    open [-s]           open project in current directory
-                        (-s to select git worktree from menu)
+    open                select worktree from menu
     status [icon|line]  generate status bar (to use from ~/.tmux.conf)
 "
     exit 1
 }
 
+worktree_list() {
+    local dir
+    find "$ROOTDIR" -name ".git" -type d -exec dirname {} \; | \
+    while read repo; do
+        dir=$(dirname "$repo")
+        git -C "$repo" worktree list --porcelain | grep ^worktree
+        git -C "$repo" branch --format="branch $dir/%(refname:short)"
+    done
+}
+
 session_list() {
+    local type
     local name
-    local suffix
+    local forg
+    local icon
+    local todo
     local sessions=$(tmux list-sessions -F '#S')
 
-    find "$ROOTDIR" -mindepth 2 -maxdepth 2 -type d | sort | \
+    worktree_list | sort -k2 -u | \
     while read path; do
-        git -C "$path" rev-parse --is-inside-work-tree &>/dev/null || continue
-        name=$(echo "$path" | sed "s,$ROOTDIR/,,")
-        suffix=' open'
-        echo "$sessions" | grep -q $name && suffix=' goto'
-        printf "%-30s 󰘬 %-30s %s\n" \
-            "$name" "$(git -C $path rev-parse --abbrev-ref HEAD)" "$suffix"
+        type=$(echo "$path" | cut -d' ' -f1)
+        name=$(echo "$path" | cut -d' ' -f2)
+        name=$(echo "$name" | sed "s,$ROOTDIR/,,")
+        forg=$(echo "$name" | cut -d/ -f1)
+        name=$(echo "$name" | cut -d/ -f2-)
+        snam=$(echo "$name" | sed 's/\./-/g')
+        case "$forg" in
+            github) icon="" ;;
+            gitlab) icon="" ;;
+            fedora) icon="" ;;
+            centos) icon="" ;;
+            redhat) icon="" ;;
+            *)      icon=" " ;;
+        esac
+        forg="$icon $forg"
+        if echo "$sessions" | grep -q "$snam"; then
+            todo=' open'
+        elif [ "$type" == "branch" ]; then
+            todo=' add'
+        else
+            todo=' load'
+        fi
+        printf "%-50s %-12s %s\n" "$name" "$forg" "$todo"
     done
 }
 
 cmd_open() {
-    local cmd=$1
-    local size
+    local line=$(session_list | fzf --prompt "worktree> " --padding 0,1)
+    [ -z "$line" ] && return
 
-    if [ "$cmd" == "-s" ]; then
-        path=$(session_list | fzf --prompt "worktree> " --padding 0,1 | \
-               cut -d' ' -f1)
-        [ -z "$path" ] && return
-        cd $ROOTDIR/$path
-        tide open
-        return
+    local path=$(echo "$line" | awk '{ print $1 }' | sed "s,$ROOTDIR/,,")
+    local frge=$(echo "$line" | awk '{ print $3 }')
+    local repo=$(echo "$path" | cut -d/ -f1)
+    local tree=$(echo "$path" | cut -d/ -f2)
+    local name=$(echo "$repo/$tree" | sed 's/\./-/g')
+
+    cd $ROOTDIR/$frge/$repo
+    if [ ! -d "$tree" ]; then
+        if ! git -C "$(ls -1 | head -1)" worktree add ../$tree; then
+            echo
+            echo -n "Press ENTER to close"
+            read
+            return
+        fi
     fi
+    cd $tree
 
-    [ $# == 0 ] && set -- $PROJECT/$(basename $PWD)
-
-    if [ -z "$TMUX" ]; then
-        size=12
-    else
-        size=11
-    fi
-
-    if ! tmux has-session -t "$1" 2>/dev/null; then
-        tmux new-session -ds "$1" -n "code" \
+    if ! tmux has-session -t "$name" 2>/dev/null; then
+        tmux new-session -ds "$name" -n "code" \
                          -x "$(tput cols)" -y "$(tput lines)" \
                          "sleep 0.1; vim -c GFiles"
-        tmux new-window -t "$1" -n "git" "tig"
-        tmux split-window -t "$1" -l$size -d
-        tmux new-window -t "$1" -n "build"
-        tmux new-window -t "$1" -n "debug"
-        tmux split-window -t "$1" -l$size -d
-        tmux new-window -t "$1" -n "man"
-        tmux split-window -t "$1" -h -d
-        tmux select-window -t ${1}:+1
+        tmux new-window -t "$name" -n "git" "tig"
+        tmux split-window -t "$name" -l12 -d
+        tmux new-window -t "$name" -n "build"
+        tmux new-window -t "$name" -n "debug"
+        tmux split-window -t "$name" -l12 -d
+        tmux new-window -t "$name" -n "man"
+        tmux split-window -t "$name" -h -d
+        tmux select-window -t ${name}:+1
     fi
 
     if [ -z "$TMUX" ]; then
-        tmux attach -t "$1"
+        tmux attach -t "$name"
     else
-        tmux switch-client -t "$1"
+        tmux switch-client -t "$name"
     fi
 }
 
