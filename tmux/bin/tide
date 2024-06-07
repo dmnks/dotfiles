@@ -40,25 +40,10 @@ cmd_open() {
     local size
 
     if [ "$cmd" == "-s" ]; then
-        path=$(session_list | \
-               fzf --prompt "worktree> " --padding 0,1 --print-query | \
+        path=$(session_list | fzf --prompt "worktree> " --padding 0,1 | \
                cut -d' ' -f1)
         [ -z "$path" ] && return
-        cd $ROOTDIR
-        path=$(echo "$path" | tail -n1)
-        case "$path" in
-            /f/*)
-                repo="$(basename $path)"
-                mkdir -p fedora
-                cd fedora
-                if ! fedpkg clone $repo; then
-                    read
-                    return
-                fi
-                cd $repo
-            ;;
-            *)  cd $path ;;
-        esac
+        cd $ROOTDIR/$path
         tide open
         return
     fi
