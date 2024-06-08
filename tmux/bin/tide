@@ -43,15 +43,7 @@ session_list() {
         forg=$(echo "$name" | cut -d/ -f1)
         name=$(echo "$name" | cut -d/ -f2-)
         snam=$(echo "$name" | sed 's/\./-/g')
-        case "$forg" in
-            github) icon="" ;;
-            gitlab) icon="" ;;
-            fedora) icon="" ;;
-            centos) icon="" ;;
-            redhat) icon="" ;;
-            *)      icon=" " ;;
-        esac
-        forg="$icon $forg"
+        forg="$(forge $forg)"
         if echo "$sessions" | grep -q "$snam"; then
             todo=' open'
         elif [ "$type" == "branch" ]; then
@@ -63,17 +55,30 @@ session_list() {
     done
 }
 
+forge()
+{
+    case "$1" in
+        github) printf "" ;;
+        gitlab) printf "" ;;
+        fedora) printf "" ;;
+        centos) printf "" ;;
+        redhat) printf "" ;;
+        *)      printf " " ;;
+    esac
+    echo " $1"
+}
+
 cmd_open() {
     local line=$(session_list | fzf --prompt "worktree> " --padding 0,1)
     [ -z "$line" ] && return
 
     local path=$(echo "$line" | awk '{ print $1 }' | sed "s,$ROOTDIR/,,")
-    local frge=$(echo "$line" | awk '{ print $3 }')
+    local forg=$(echo "$line" | awk '{ print $3 }')
     local repo=$(echo "$path" | cut -d/ -f1)
     local tree=$(echo "$path" | cut -d/ -f2)
     local name=$(echo "$repo/$tree" | sed 's/\./-/g')
 
-    cd $ROOTDIR/$frge/$repo
+    cd $ROOTDIR/$forg/$repo
     if [ ! -d "$tree" ]; then
         if ! git -C "$(ls -1 | head -1)" worktree add ../$tree; then
             echo
@@ -117,6 +122,11 @@ cmd_status() {
         printf "#[fg=#83a598]󰘬 $(git rev-parse --abbrev-ref HEAD)#[default]  "
     }
 
+    print_forge() {
+        local name=$(echo "$session_path" | sed "s,$ROOTDIR/,," | cut -d/ -f1)
+        printf "$(forge $name)  "
+    }
+
     print_toolbox() {
         [ "$pane_command" == "toolbox" ] || return 0
         printf "#[fg=#d3869b]󰆧#[default]  "
@@ -142,6 +152,7 @@ cmd_status() {
         line)
             print_toolbox
             print_branch
+            print_forge
         ;;
     esac
 }
