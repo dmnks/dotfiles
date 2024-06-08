@@ -115,7 +115,7 @@ cmd_open() {
 
     local name=$(echo "$repo/$tree" | sed 's/\./-/g')
 
-    if ! tmux has-session -t "$name" 2>/dev/null; then
+    if ! tmux has-session -t="$name" 2>/dev/null; then
         tmux new-session -ds "$name" -n "code" \
                          -x "$(tput cols)" -y "$(tput lines)" \
                          "sleep 0.1; vim -c GFiles"
