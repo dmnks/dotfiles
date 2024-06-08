@@ -39,7 +39,7 @@ reset_color() {
     printf "\x1b[0m"
 }
 
-session_list() {
+select_list() {
     local type
     local name
     local forg
@@ -88,7 +88,7 @@ forge()
 }
 
 cmd_open() {
-    local line=$(session_list | fzf --ansi --prompt "worktree> " --padding 0,1)
+    local line=$(select_list | fzf --ansi --prompt "worktree> " --padding 0,1)
     [ -z "$line" ] && return
 
     local path=$(echo "$line" | awk '{ print $1 }' | sed "s,$ROOTDIR/,,")
