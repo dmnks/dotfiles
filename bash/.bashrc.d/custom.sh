@@ -14,7 +14,10 @@ if which fzf &>/dev/null; then
         --layout=reverse
         --color="pointer:#fb4934,prompt:#fb4934,marker:#fb4934,spinner:#fb4934"
         --color="hl:#928374,fg+:#ebdbb2,bg+:#3c3836,hl+:#fb4934,header:#928374"
-        --color="border:#928374"
+        --color="border:#928374,gutter:-1,scrollbar:#504945,info:#7c6f64"
+        --info=inline-right
+        --scrollbar=█
+        --pointer=󰁕
     '
 fi
 
