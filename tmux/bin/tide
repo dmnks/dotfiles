@@ -64,7 +64,7 @@ session_list() {
             color='#7c6f64'
         elif [ "$type" == "custom" ]; then
             todo=' add   '
-            color='#458588'
+            color='#665c54'
         else
             todo=' open  '
             color=
