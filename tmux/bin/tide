@@ -27,6 +27,16 @@ worktree_list() {
     done
 }
 
+set_color() {
+    [ $# == 0 ] && return
+    local rgb=$(printf "%d;%d;%d\n" 0x${1:0:2} 0x${1:2:2} 0x${1:4:2})
+    printf "\x1b[38;2;${rgb}m"
+}
+
+reset_color() {
+    printf "\x1b[0m"
+}
+
 session_list() {
     local type
     local name
@@ -44,14 +54,18 @@ session_list() {
         name=$(echo "$name" | cut -d/ -f2-)
         snam=$(echo "$name" | sed 's/\./-/g')
         forg="$(forge $forg)"
-        if echo "$sessions" | grep -q "$snam"; then
-            todo=' open'
+        if echo "$sessions" | grep -q "^$snam"; then
+            todo=' switch'
+            color='fabd2f'
         elif [ "$type" == "branch" ]; then
-            todo=' add'
+            todo=' add   '
+            color='7c6f64'
         else
-            todo=' load'
+            todo=' open  '
+            color=
         fi
-        printf "%-50s %-12s %s\n" "$name" "$forg" "$todo"
+        printf "$(set_color $color)%-50s %-12s %s$(reset_color)\n" \
+               "$name" "$forg" "$todo"
     done
 }
 
@@ -69,7 +83,7 @@ forge()
 }
 
 cmd_open() {
-    local line=$(session_list | fzf --prompt "worktree> " --padding 0,1)
+    local line=$(session_list | fzf --ansi --prompt "worktree> " --padding 0,1)
     [ -z "$line" ] && return
 
     local path=$(echo "$line" | awk '{ print $1 }' | sed "s,$ROOTDIR/,,")
