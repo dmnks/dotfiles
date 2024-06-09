@@ -19,6 +19,8 @@ if which fzf &>/dev/null; then
         --scrollbar=█
         --pointer=󰁕
         --header=''
+        --border=none
+        --padding=1,2
     '
 fi
 

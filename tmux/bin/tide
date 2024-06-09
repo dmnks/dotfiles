@@ -47,6 +47,7 @@ select_list() {
     local icon
     local todo
     local sessions=$(tmux list-sessions -F '#S')
+    local cols=$(( $(tput cols) - 26 ))
 
     worktree_list | \
     while read path; do
@@ -70,7 +71,7 @@ select_list() {
             todo=' open  '
             color=
         fi
-        printf "$(set_color $color)%-50s %-12s %s$(reset_color)\n" \
+        printf "$(set_color $color)%-${cols}s %-11s %s$(reset_color)\n" \
                "$name" "$forg" "$todo"
     done
 }
@@ -89,7 +90,7 @@ forge()
 }
 
 cmd_open() {
-    local line=$(select_list | fzf --ansi --prompt "worktree: " --padding 0,1)
+    local line=$(select_list | fzf --ansi --prompt "Worktree: ")
     [ -z "$line" ] && return
 
     local path=$(echo "$line" | awk '{ print $1 }' | sed "s,$ROOTDIR/,,")
