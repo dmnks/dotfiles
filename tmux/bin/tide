@@ -51,20 +51,22 @@ select_list() {
 
     worktree_list | \
     while read path; do
-        type=$(echo "$path" | cut -d' ' -f1)
-        name=$(echo "$path" | cut -d' ' -f2)
-        name=$(echo "$name" | sed "s,$ROOTDIR/,,")
-        forg=$(echo "$name" | cut -d/ -f1)
-        name=$(echo "$name" | cut -d/ -f2-)
-        snam=$(echo "$name" | sed 's/\./-/g')
+        what=$(echo "$path" | cut -d' ' -f1)
+        path=$(echo "$path" | cut -d' ' -f2 | sed "s,$ROOTDIR/,,")
+
+        full=$(echo "$path" | cut -d/ -f1- | sed 's/\./-/g')
+        name=$(echo "$path" | cut -d/ -f2-)
+
+        forg=$(echo "$path" | cut -d/ -f1)
         forg="$(forge $forg)"
-        if echo "$sessions" | grep -q "^${snam}\$"; then
+
+        if echo "$sessions" | grep -q "^${full}\$"; then
             todo=' switch'
             color='#fabd2f'
-        elif [ "$type" == "branch" ]; then
+        elif [ "$what" == "branch" ]; then
             todo=' add   '
             color='#7c6f64'
-        elif [ "$type" == "custom" ]; then
+        elif [ "$what" == "custom" ]; then
             todo=' add   '
             color='#665c54'
         else
@@ -114,7 +116,7 @@ cmd_open() {
     fi
     cd $tree
 
-    local name=$(echo "$repo/$tree" | sed 's/\./-/g')
+    local name=$(echo "$forg/$repo/$tree" | sed 's/\./-/g')
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
         tmux new-session -ds "$name" -n "code" \
