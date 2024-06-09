@@ -18,6 +18,7 @@ if which fzf &>/dev/null; then
         --info=inline-right
         --scrollbar=█
         --pointer=󰁕
+        --header=''
     '
 fi
 
