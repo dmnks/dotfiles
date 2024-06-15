@@ -19,13 +19,13 @@ Commands:
 
 worktree_list() {
     local dir
-    find "$ROOTDIR" -name ".git" -type d -exec dirname {} \; | \
+    find "$ROOTDIR" -maxdepth 4 -name ".git" -type d -printf '%h\n' | \
     while read repo; do
         dir=$(dirname "$repo")
         git -C "$repo" worktree list --porcelain | grep ^worktree
+        echo "custom $dir/<name>"
         git -C "$repo" branch | grep -v '^[+\*]' | cut -c3- | \
             sed "s|^|branch $dir/|"
-        echo "custom $dir/<name>"
     done
 }
 
@@ -68,7 +68,7 @@ select_list() {
             color='#7c6f64'
         elif [ "$what" == "custom" ]; then
             todo=' add   '
-            color='#665c54'
+            color='#928374'
         else
             todo=' open  '
             color=
@@ -92,7 +92,7 @@ forge()
 }
 
 cmd_open() {
-    local line=$(select_list | fzf --ansi --prompt "Worktree: ")
+    local line=$(select_list | fzf +s --ansi --prompt "Worktree: ")
     [ -z "$line" ] && return
 
     local path=$(echo "$line" | awk '{ print $1 }' | sed "s,$ROOTDIR/,,")
