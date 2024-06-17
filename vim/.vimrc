@@ -63,6 +63,7 @@ set cursorline
 set colorcolumn=80
 autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=73
 autocmd FileType gitcommit setlocal spell
+autocmd BufRead,BufNewfile */.tmux.conf setlocal formatoptions-=t
 set scrolloff=0
 
 function! s:toggle_bg()
