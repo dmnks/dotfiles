@@ -12,8 +12,8 @@ if which fzf &>/dev/null; then
     source /usr/share/fzf/shell/key-bindings.bash
     export FZF_DEFAULT_OPTS='
         --layout=reverse
-        --color="pointer:#fb4934,prompt:#fb4934,marker:#fb4934,spinner:#fb4934"
-        --color="hl:#928374,fg+:#ebdbb2,bg+:#3c3836,hl+:#fb4934,header:#928374"
+        --color="pointer:#fe8019,prompt:#fe8019,marker:#fe8019,spinner:#fe8019"
+        --color="hl:#928374,fg+:#ebdbb2,bg+:#3c3836,hl+:#fe8019,header:#928374"
         --color="border:#928374,gutter:-1,scrollbar:#504945,info:#7c6f64"
         --info=inline-right
         --scrollbar=█

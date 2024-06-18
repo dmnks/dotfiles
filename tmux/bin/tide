@@ -62,7 +62,7 @@ select_list() {
 
         if echo "$sessions" | grep -q "^${full}\$"; then
             todo=' switch'
-            color='#fabd2f'
+            color='#fe8019'
         elif [ "$what" == "branch" ]; then
             todo=' add   '
             color='#7c6f64'
@@ -165,16 +165,16 @@ cmd_status() {
         icon)
             shift
             case "$1" in
-                code)   echo " " ;;
-                git)    echo "󰘬 " ;;
-                build)  echo " " ;;
-                debug)  echo " " ;;
+                Code)   echo " " ;;
+                Git)    echo "󰘬 " ;;
+                Build)  echo " " ;;
+                Debug)  echo " " ;;
+                Man)    echo " " ;;
+                Blame)  echo " " ;;
+                Slack)  echo "󰒱 " ;;
+                Mutt)   echo "󰇰 " ;;
+                Plan)   echo " " ;;
                 bash)   echo " " ;;
-                slack)  echo "󰒱 " ;;
-                mutt)   echo "󰇰 " ;;
-                plan)   echo " " ;;
-                man)    echo " " ;;
-                blame)  echo " " ;;
                 *)      echo " " ;;
             esac
         ;;
