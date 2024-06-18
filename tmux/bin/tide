@@ -175,7 +175,7 @@ cmd_status() {
                 plan)   echo " " ;;
                 man)    echo " " ;;
                 blame)  echo " " ;;
-                *)      echo "" ;;
+                *)      echo " " ;;
             esac
         ;;
         line)
