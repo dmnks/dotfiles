@@ -119,15 +119,15 @@ cmd_open() {
     local name=$(echo "$forg/$repo/$tree" | sed 's/\./-/g')
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
-        tmux new-session -ds "$name" -n "code" \
+        tmux new-session -ds "$name" -n "Code" \
                          -x "$(tput cols)" -y "$(tput lines)" \
                          "sleep 0.1; vim -c GFiles"
-        tmux new-window -t "$name" -n "git" "tig"
+        tmux new-window -t "$name" -n "Git" "tig"
         tmux split-window -t "$name" -l12 -d
-        tmux new-window -t "$name" -n "build"
-        tmux new-window -t "$name" -n "debug"
+        tmux new-window -t "$name" -n "Build"
+        tmux new-window -t "$name" -n "Debug"
         tmux split-window -t "$name" -l12 -d
-        tmux new-window -t "$name" -n "man"
+        tmux new-window -t "$name" -n "Man"
         tmux split-window -t "$name" -h -d
         tmux select-window -t ${name}:+1
     fi
@@ -165,16 +165,16 @@ cmd_status() {
         icon)
             shift
             case "$1" in
-                code)   echo " " ;;
-                git)    echo "󰘬 " ;;
-                build)  echo " " ;;
-                debug)  echo " " ;;
+                Code)   echo " " ;;
+                Git)    echo "󰘬 " ;;
+                Build)  echo " " ;;
+                Debug)  echo " " ;;
+                Man)    echo " " ;;
+                Blame)  echo " " ;;
+                Slack)  echo "󰒱 " ;;
+                Mutt)   echo "󰇰 " ;;
+                Plan)   echo " " ;;
                 bash)   echo " " ;;
-                slack)  echo "󰒱 " ;;
-                mutt)   echo "󰇰 " ;;
-                plan)   echo " " ;;
-                man)    echo " " ;;
-                blame)  echo " " ;;
                 *)      echo " " ;;
             esac
         ;;
