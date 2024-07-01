@@ -131,7 +131,7 @@ nmap <leader>gb :call
     \ system('tmux popup -E -w 80% -h 80% tig blame +'
     \ . line('.') . ' ' . expand('%'))<CR>
 nmap <leader>gB :call
-    \ system('tmux new-window -n blame tig blame +'
+    \ system('tmux new-window -n Blame tig blame +'
     \ . line('.') . ' ' . expand('%'))<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
