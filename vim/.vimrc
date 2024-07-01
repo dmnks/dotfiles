@@ -22,7 +22,7 @@ endfunction
 command! GFiles
     \ call fzf#run(fzf#wrap({
     \   'source':  'git ls-files',
-    \   'options': '-m --prompt "Git Files: "',
+    \   'options': '-m --prompt "Git File: "',
     \ }))
 command! Buffers
     \ call fzf#run(fzf#wrap({
