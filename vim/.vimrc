@@ -66,24 +66,6 @@ autocmd FileType gitcommit setlocal spell
 autocmd BufRead,BufNewfile */.tmux.conf setlocal formatoptions-=t
 set scrolloff=0
 
-function! s:toggle_bg()
-    let &background = ( &background == "dark"? "light" : "dark" )
-    if &background == "dark"
-        hi ColorColumn guibg=#282828
-        hi TabLineFill guibg=#282828
-        hi TabLineSel guifg=#ebdbb2
-        hi VertSplit guifg=#171a1a
-        hi StatusLineNC guifg=#1d2021
-    else
-        hi ColorColumn guibg=#fbf1c7
-        hi TabLineFill guibg=#fbf1c7
-        hi TabLineSel guifg=#3c3836
-        hi VertSplit guifg=#171a1a
-        hi StatusLineNC guifg=#f9f5d7
-    endif
-endfunction
-nmap <F5> :call <sid>toggle_bg()<CR>
-
 " Simplify tabline
 " Taken from: https://www.reddit.com/r/vim/comments/ghedcp/
 "             is_it_possible_to_make_the_tab_name_only_be_the/
