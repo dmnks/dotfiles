@@ -127,8 +127,9 @@ cmd_open() {
         tmux new-window -t "$name" -n "Build"
         tmux new-window -t "$name" -n "Debug"
         tmux split-window -t "$name" -l12 -d
-        tmux new-window -t "$name" -n "Man"
-        tmux split-window -t "$name" -h -d
+        tmux new-window -t "$name" -n "Manual"
+        tmux split-window -t "$name" -l71 -h "vim ~/plan/${tree}.plan"
+        tmux set-option remain-on-exit
         tmux select-window -t ${name}:+1
     fi
 
@@ -169,7 +170,7 @@ cmd_status() {
                 Git)    echo "󰘬 " ;;
                 Build)  echo " " ;;
                 Debug)  echo " " ;;
-                Man)    echo " " ;;
+                Manual) echo " " ;;
                 Blame)  echo " " ;;
                 Slack)  echo "󰒱 " ;;
                 Mutt)   echo "󰇰 " ;;
