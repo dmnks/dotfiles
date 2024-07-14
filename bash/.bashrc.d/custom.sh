@@ -21,6 +21,8 @@ if which fzf &>/dev/null; then
         --header=''
         --border=none
         --padding=1,2
+        --no-separator
+        --highlight-line
     '
 fi
 

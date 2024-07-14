@@ -175,8 +175,8 @@ cmd_status() {
                 Slack)  echo "󰒱 " ;;
                 Mutt)   echo "󰇰 " ;;
                 Plan)   echo " " ;;
-                bash)   echo " " ;;
-                *)      echo " " ;;
+                bash)   echo " " ;;
+                *)      echo " " ;;
             esac
         ;;
         line)
