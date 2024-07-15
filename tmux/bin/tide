@@ -19,13 +19,13 @@ Commands:
 
 worktree_list() {
     local dir
-    find "$ROOTDIR" -maxdepth 4 -name ".git" -type d -printf '%h\n' | \
+    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | \
     while read repo; do
         dir=$(dirname "$repo")
-        git -C "$repo" worktree list --porcelain | grep ^worktree
-        echo "custom $dir/<name>"
+        git -C "$repo" worktree list --porcelain | \
+            sed -n "s|^worktree |W $repo |p"
         git -C "$repo" branch | grep -v '^[+\*]' | cut -c3- | \
-            sed "s|^|branch $dir/|"
+            sed "s|^|B $repo $dir/|"
     done
 }
 
@@ -41,73 +41,42 @@ reset_color() {
 }
 
 select_list() {
-    local type
     local name
-    local forg
     local icon
-    local todo
+    local color
     local sessions=$(tmux list-sessions -F '#S')
-    local cols=$(( $(tput cols) - 26 ))
 
     worktree_list | \
-    while read path; do
-        what=$(echo "$path" | cut -d' ' -f1)
-        path=$(echo "$path" | cut -d' ' -f2 | sed "s,$ROOTDIR/,,")
-
-        full=$(echo "$path" | cut -d/ -f1- | sed 's/\./-/g')
-        name=$(echo "$path" | cut -d/ -f2-)
-
-        forg=$(echo "$path" | cut -d/ -f1)
-        forg="$(forge $forg)"
-
-        if echo "$sessions" | grep -q "^${full}\$"; then
-            todo=' switch'
+    while read line; do
+        item=$(echo "$line" | cut -d' ' -f1)
+        name=$(echo "$line" | cut -d' ' -f3 | sed "s,$ROOTDIR/,,")
+        root=$(echo "$line" | cut -d' ' -f2 | xargs basename)
+        if echo "$sessions" | grep -q "^${name}\$"; then
+            icon=''
             color='#fabd2f'
-        elif [ "$what" == "branch" ]; then
-            todo=' add   '
-            color='#7c6f64'
-        elif [ "$what" == "custom" ]; then
-            todo=' add   '
-            color='#928374'
+        elif [ "$item" == "B" ]; then
+            icon=''
+            color='#b8bb26'
         else
-            todo=' open  '
+            icon=''
             color=
         fi
-        printf "$(set_color $color)%-${cols}s %-11s %s$(reset_color)\n" \
-               "$name" "$forg" "$todo"
+        printf "$(set_color $color)%s %s $(set_color '#7c6f64') %s$(reset_color)\n" $icon $name $root
     done
 }
 
-forge()
-{
-    case "$1" in
-        github) printf "" ;;
-        gitlab) printf "" ;;
-        fedora) printf "" ;;
-        centos) printf "" ;;
-        redhat) printf "" ;;
-        *)      printf " " ;;
-    esac
-    echo " $1"
-}
-
 cmd_open() {
-    local line=$(select_list | fzf +s --ansi --prompt "Worktree: ")
+    local line=$(select_list | fzf +s -n2 --ansi --prompt " Worktree ")
     [ -z "$line" ] && return
 
-    local path=$(echo "$line" | awk '{ print $1 }' | sed "s,$ROOTDIR/,,")
-    local forg=$(echo "$line" | awk '{ print $3 }')
-    local repo=$(echo "$path" | cut -d/ -f1)
-    local tree=$(echo "$path" | cut -d/ -f2)
-    cd $ROOTDIR/$forg/$repo
+    line=${line:2}
+    local repo=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)
+    local tree=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f2)
+    local root=$(echo "$line" | cut -d' ' -f3)
+    cd $ROOTDIR/$repo
 
-    if [ "$tree" == "<name>" ]; then
-        echo -n "Enter worktree name: "
-        read tree
-        [ -z "$tree" ] && return
-    fi
     if [ ! -d "$tree" ]; then
-        if ! git -C "$(ls -1 | head -1)" worktree add ../$tree; then
+        if ! git -C "$ROOTDIR/$repo/$root" worktree add ../$tree; then
             echo
             echo -n "Press ENTER to close"
             read
@@ -116,7 +85,7 @@ cmd_open() {
     fi
     cd $tree
 
-    local name=$(echo "$forg/$repo/$tree" | sed 's/\./-/g')
+    local name=$(echo "$repo/$tree" | sed 's/\./-/g')
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
         tmux new-session -ds "$name" -n "Code" \
@@ -152,9 +121,11 @@ cmd_status() {
         printf "#[fg=#83a598]󰘬 $(git rev-parse --abbrev-ref HEAD)#[default]  "
     }
 
-    print_forge() {
-        local name=$(echo "$session_path" | sed "s,$ROOTDIR/,," | cut -d/ -f1)
-        printf "$(forge $name)  "
+    print_repo() {
+        cd "$session_path"
+        git rev-parse --is-inside-work-tree >/dev/null || return 0
+        printf " $(git rev-parse --path-format=absolute --git-common-dir | \
+                    xargs dirname | xargs basename)  "
     }
 
     print_toolbox() {
@@ -182,7 +153,7 @@ cmd_status() {
         line)
             print_toolbox
             print_branch
-            print_forge
+            print_repo
         ;;
     esac
 }

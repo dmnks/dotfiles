@@ -22,18 +22,18 @@ endfunction
 command! GFiles
     \ call fzf#run(fzf#wrap({
     \   'source':  'git ls-files',
-    \   'options': '-m --prompt "Git File: "',
+    \   'options': '-m --prompt " File "',
     \ }))
 command! Buffers
     \ call fzf#run(fzf#wrap({
     \   'source':  reverse(<sid>buflist()),
-    \   'options': '+m --prompt "Buffer: "',
+    \   'options': '+m --prompt " Buffer "',
     \ }))
 command! Tags
     \ if !empty(tagfiles()) | call fzf#run(fzf#wrap({
     \   'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
     \   'sink':    'tag',
-    \   'options': '+m --prompt "Tag: "',
+    \   'options': '+m --prompt " Tag "',
     \ })) | else | echoerr 'No tags found' | endif
 nmap <leader>ff :GFiles<CR>
 nmap <leader><leader> :Buffers<CR>
