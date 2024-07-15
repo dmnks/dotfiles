@@ -19,7 +19,7 @@ Commands:
 
 worktree_list() {
     local dir
-    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | \
+    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
     while read repo; do
         dir=$(dirname "$repo")
         git -C "$repo" worktree list --porcelain | \
@@ -55,8 +55,8 @@ select_list() {
             icon=''
             color='#fabd2f'
         elif [ "$item" == "B" ]; then
-            icon=''
-            color='#b8bb26'
+            icon=''
+            color='#83a598'
         else
             icon=''
             color=
