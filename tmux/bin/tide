@@ -25,6 +25,7 @@ worktree_list() {
     local icon
     local color
     local name
+    local hint
     local sessions=$(tmux list-sessions -F '#S')
 
     find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
@@ -36,30 +37,40 @@ worktree_list() {
         awk '{print $2}' | xargs -n1 basename | \
         while read ln_tree; read ln_id; read ln_branch; do
             id=$(echo "$ln_id" | head -c10)
-            main=" $tree"
+            main="  $tree"
             if echo "$sessions" | grep -q "^$repo/$ln_tree\$"; then
                 icon=""
                 color='#fabd2f'
+                hint="Switches to the session"
             elif [ "$ln_tree" == "$tree" ]; then
                 icon=""
                 color=
+                hint="Opens the repository"
                 main=
             else
                 icon=""
                 color=
+                hint="Opens the worktree"
             fi
             echo "$(set_color $color)$icon $repo/$ln_tree" \
-                 "$(set_color '#7c6f64')󰘬 $ln_branch  $id $main$(reset_color)"
+                 "$(set_color '#7c6f64')󰘬 $ln_branch  $id$main" \
+                 "$(set_color '#665c54')󰔦 $(set_italics)$hint$(reset_color)"
         done
 
+        hint="Creates a new worktree"
         git -C "$path" branch -v | grep -v '^[+\*]' | cut -c3- | \
         while read line; do
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
-            echo "$(set_color '#83a598') $repo/$name" \
-                 "$(set_color '#7c6f64') $id  $tree$(reset_color)"
+            echo "$(set_color '#83a598')󰫣 $repo/$name" \
+                 "$(set_color '#7c6f64') $id  $tree$(reset_color)" \
+                 "$(set_color '#665c54')󰔦 $(set_italics)$hint$(reset_color)"
         done
     done
+}
+
+set_italics() {
+    printf "\x1b[3m"
 }
 
 set_color() {
