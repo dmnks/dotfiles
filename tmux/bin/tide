@@ -18,14 +18,47 @@ Commands:
 }
 
 worktree_list() {
-    local dir
+    local repo
+    local tree
+    local id
+    local main
+    local icon
+    local color
+    local name
+    local sessions=$(tmux list-sessions -F '#S')
+
     find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
-    while read repo; do
-        dir=$(dirname "$repo")
-        git -C "$repo" worktree list --porcelain | \
-            sed -n "s|^worktree |W $repo |p"
-        git -C "$repo" branch | grep -v '^[+\*]' | cut -c3- | \
-            sed "s|^|B $repo $dir/|"
+    while read path; do
+        repo=$(basename $(dirname $path))
+        tree=$(basename $path)
+
+        git -C $path worktree list --porcelain | \
+        awk '{print $2}' | xargs -n1 basename | \
+        while read ln_tree; read ln_id; read ln_branch; do
+            id=$(echo "$ln_id" | head -c10)
+            main=" $tree"
+            if echo "$sessions" | grep -q "^$repo/$ln_tree\$"; then
+                icon=""
+                color='#fabd2f'
+            elif [ "$ln_tree" == "$tree" ]; then
+                icon=""
+                color=
+                main=
+            else
+                icon=""
+                color=
+            fi
+            echo "$(set_color $color)$icon $repo/$ln_tree" \
+                 "$(set_color '#7c6f64')󰘬 $ln_branch  $id $main$(reset_color)"
+        done
+
+        git -C "$path" branch -v | grep -v '^[+\*]' | cut -c3- | \
+        while read line; do
+            name=$(echo "$line" | awk '{print $1}')
+            id=$(echo "$line" | awk '{print $2}')
+            echo "$(set_color '#83a598') $repo/$name" \
+                 "$(set_color '#7c6f64') $id  $tree$(reset_color)"
+        done
     done
 }
 
@@ -40,39 +73,14 @@ reset_color() {
     printf "\x1b[0m"
 }
 
-select_list() {
-    local name
-    local icon
-    local color
-    local sessions=$(tmux list-sessions -F '#S')
-
-    worktree_list | \
-    while read line; do
-        item=$(echo "$line" | cut -d' ' -f1)
-        name=$(echo "$line" | cut -d' ' -f3 | sed "s,$ROOTDIR/,,")
-        root=$(echo "$line" | cut -d' ' -f2 | xargs basename)
-        if echo "$sessions" | grep -q "^${name}\$"; then
-            icon=''
-            color='#fabd2f'
-        elif [ "$item" == "B" ]; then
-            icon=''
-            color='#83a598'
-        else
-            icon=''
-            color=
-        fi
-        printf "$(set_color $color)%s %s $(set_color '#7c6f64') %s$(reset_color)\n" $icon $name $root
-    done
-}
-
 cmd_open() {
-    local line=$(select_list | fzf +s -n2 --ansi --prompt " Worktree ")
+    local line=$(worktree_list | fzf +s -n2,4 --ansi --prompt " Worktree ")
     [ -z "$line" ] && return
 
     line=${line:2}
     local repo=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)
     local tree=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f2)
-    local root=$(echo "$line" | cut -d' ' -f3)
+    local root=$(echo "$line" | cut -d' ' -f5)
     cd $ROOTDIR/$repo
 
     if [ ! -d "$tree" ]; then
