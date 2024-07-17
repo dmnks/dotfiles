@@ -31,18 +31,25 @@ worktree_list() {
     find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
     while read path; do
         repo=$(basename $(dirname $path))
-        tree=$(basename $path)
+        orig=$(basename $path)
 
-        git -C $path worktree list --porcelain | \
-        awk '{print $2}' | xargs -n1 basename | \
-        while read ln_tree; read ln_id; read ln_branch; do
-            id=$(echo "$ln_id" | head -c10)
-            main="  $tree"
-            if echo "$sessions" | grep -q "^$repo/$ln_tree\$"; then
+        git -C $path worktree list --porcelain | awk '{print $2}' | \
+        while read tree; read id; read ref; do
+            tree=$(basename "$tree")
+            main="  $orig"
+            id=$(echo "$id" | head -c10)
+
+            if [ -n "$ref" ]; then
+                ref="󰘬 $(basename "$ref") "
+            else
+                ref=
+            fi
+
+            if echo "$sessions" | grep -q "^$repo/$tree\$"; then
                 icon=""
                 color='#fabd2f'
                 hint="Switches to the session"
-            elif [ "$ln_tree" == "$tree" ]; then
+            elif [ "$tree" == "$orig" ]; then
                 icon=""
                 color=
                 hint="Opens the repository"
@@ -52,9 +59,11 @@ worktree_list() {
                 color=
                 hint="Opens the worktree"
             fi
-            echo "$(set_color $color)$icon $repo/$ln_tree" \
-                 "$(set_color '#7c6f64')󰘬 $ln_branch  $id$main" \
+
+            echo "$(set_color $color)$icon $repo/$tree" \
+                 "$(set_color '#7c6f64')${ref} $id$main" \
                  "$(set_color '#665c54')󰔦 $(set_italics)$hint$(reset_color)"
+            read
         done
 
         hint="Creates a new worktree"
@@ -63,7 +72,7 @@ worktree_list() {
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
             echo "$(set_color '#83a598')󰫣 $repo/$name" \
-                 "$(set_color '#7c6f64') $id  $tree$(reset_color)" \
+                 "$(set_color '#7c6f64') $id  $orig$(reset_color)" \
                  "$(set_color '#665c54')󰔦 $(set_italics)$hint$(reset_color)"
         done
     done
