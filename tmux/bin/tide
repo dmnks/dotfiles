@@ -30,7 +30,8 @@ worktree_list() {
 
     find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
     while read path; do
-        repo=$(basename $(dirname $path))
+        dirn=$(dirname $path)
+        repo=$(basename $dirn)
         orig=$(basename $path)
 
         git -C $path worktree list --porcelain | awk '{print $2}' | \
@@ -39,40 +40,37 @@ worktree_list() {
             main="  $orig"
             id=$(echo "$id" | head -c10)
             icon=""
-            hint="Opens the worktree"
 
-            if [ -n "$ref" ]; then
-                ref="󰘬 $(basename "$ref") "
-            else
-                ref=
-            fi
+            msg=$(git -C $dirn/$tree rev-list --format=%B --max-count=1 \
+                      --no-commit-header HEAD | head -n1)
+
+            [ -n "$ref" ] && ref="󰘬 $(basename "$ref") "
 
             if echo "$sessions" | grep -q "^$repo/$tree\$"; then
                 icon=""
                 color='#fabd2f'
-                hint="Switches to the session"
             elif [ "$tree" == "$orig" ]; then
                 color=
-                hint="Opens the repository"
                 main=
             else
                 color=
             fi
 
             echo "$(set_color $color)$icon $repo/$tree" \
-                 "$(set_color '#7c6f64')${ref} $id$main" \
-                 "$(set_color '#665c54')󰦨 $(set_italics)$hint$(reset_color)"
+                 "$(set_color '#7c6f64')${ref} $id$main$(reset_color)" \
+                 "$(set_color '#665c54')󰦨 $(set_italics)$msg$(reset_color)"
             read
         done
 
-        hint="Creates a new worktree"
         git -C "$path" branch -v | grep -v '^[+\*]' | cut -c3- | \
         while read line; do
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
+            msg=$(git -C $path rev-list --format=%B --max-count=1 \
+                      --no-commit-header $id | head -n1)
             echo "$(set_color '#83a598')󰫣 $repo/$name" \
                  "$(set_color '#7c6f64') $id  $orig$(reset_color)" \
-                 "$(set_color '#665c54')󰦨 $(set_italics)$hint$(reset_color)"
+                 "$(set_color '#665c54')󰦨 $(set_italics)$msg$(reset_color)"
         done
     done
 }
