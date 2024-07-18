@@ -109,6 +109,13 @@ cmd_reload() {
     load_worktrees
 }
 
+cmd_create() {
+    local name=$(echo "$@" | awk '{print $2}')
+    read -p "Enter worktree name: "
+    [ -n "$REPLY" ] || return
+    git -C $ROOTDIR/$name worktree add ../$REPLY || press_key
+}
+
 cmd_kill() {
     local name=$(echo "$@" | awk '{print $2}')
     if tmux has-session -t="$name" 2>/dev/null; then
@@ -142,8 +149,9 @@ confirm() {
 cmd_open() {
     local line=$(load_worktrees | fzf \
          --bind 'ctrl-r:reload(tide reload)' \
+         --bind 'alt-n:execute(tide create {})+reload(tide reload)' \
          --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
-         --header $'Press ENTER to open, ALT-D to close/remove, CTRL-R to reload\n\n' \
+         --header $'Press ENTER to open, ALT-D to close/remove, ALT-N to create, CTRL-R to reload\n\n' \
          +s -n2,4 --ansi --prompt " Worktree ")
     [ -z "$line" ] && return
 
@@ -239,6 +247,7 @@ case $CMD in
     open)               cmd_open "$@" ;;
     reload)             cmd_reload "$@" ;;
     expire)             cmd_expire "$@" ;;
+    create)             cmd_create "$@" ;;
     kill)               cmd_kill "$@" ;;
     status)             cmd_status "$@" ;;
     *)                  cmd_usage ;;
