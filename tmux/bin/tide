@@ -111,13 +111,10 @@ cmd_reload() {
 
 cmd_kill() {
     local name=$(echo "$@" | awk '{print $2}')
-    tmux has-session -t="$name" 2>/dev/null || return
-    confirm "Kill session $name" tmux kill-session -t $name
-}
-
-cmd_remove() {
-    local name=$(echo "$@" | awk '{print $2}')
-    tmux has-session -t="$name" 2>/dev/null && return
+    if tmux has-session -t="$name" 2>/dev/null; then
+        confirm "Close worktree $name" tmux kill-session -t $name
+        return
+    fi
     [ -d "$ROOTDIR/$name" ] || return
     confirm "Remove worktree $name" \
     git -C $ROOTDIR/$name worktree remove . || press_key
@@ -144,11 +141,10 @@ confirm() {
 
 cmd_open() {
     local line=$(load_worktrees | fzf \
-                 --bind 'ctrl-r:reload(tide reload)' \
-                 --bind 'alt-k:execute(tide kill {})+reload(tide reload)' \
-                 --bind 'alt-d:execute(tide remove {})+reload(tide reload)' \
-                 --header $'Press CTRL-R to reload, ALT-K to kill session, ALT-D to remove worktree\n\n' \
-                 +s -n2,4 --ansi --prompt " Worktree ")
+         --bind 'ctrl-r:reload(tide reload)' \
+         --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
+         --header $'Press ENTER to open, ALT-D to close/remove, CTRL-R to reload\n\n' \
+         +s -n2,4 --ansi --prompt " Worktree ")
     [ -z "$line" ] && return
 
     line=${line:2}
@@ -244,7 +240,6 @@ case $CMD in
     reload)             cmd_reload "$@" ;;
     expire)             cmd_expire "$@" ;;
     kill)               cmd_kill "$@" ;;
-    remove)             cmd_remove "$@" ;;
     status)             cmd_status "$@" ;;
     *)                  cmd_usage ;;
 esac
