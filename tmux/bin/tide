@@ -112,7 +112,7 @@ cmd_reload() {
 cmd_create() {
     local name=$(echo "$@" | awk '{print $2}')
     clear; echo
-    read -p "  Enter worktree name: "
+    read -p "  Enter worktree name: $(dirname $name)/"
     [ -n "$REPLY" ] || return
     git -C $ROOTDIR/$name worktree add ../$REPLY || press_key
 }
