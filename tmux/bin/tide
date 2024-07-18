@@ -124,8 +124,9 @@ cmd_create() {
 
 cmd_kill() {
     local name=$(get_repo "$@")
-    if tmux has-session -t="$name" 2>/dev/null; then
-        confirm "Close worktree $name" tmux kill-session -t $name
+    local session=$(echo "$name" | sed 's/\./-/g')
+    if tmux has-session -t="$session" 2>/dev/null; then
+        confirm "Close worktree $session" tmux kill-session -t="$session"
         return
     fi
     [ -d "$ROOTDIR/$name" ] || return
