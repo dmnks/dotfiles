@@ -111,7 +111,8 @@ cmd_reload() {
 
 cmd_create() {
     local name=$(echo "$@" | awk '{print $2}')
-    read -p "Enter worktree name: "
+    clear; echo
+    read -p "  Enter worktree name: "
     [ -n "$REPLY" ] || return
     git -C $ROOTDIR/$name worktree add ../$REPLY || press_key
 }
@@ -136,8 +137,8 @@ press_key() {
 
 confirm() {
     local prompt=$1; shift
-    clear
-    read -p "${prompt}? " -n1 -r
+    clear; echo
+    read -p "  ${prompt} [y/N]? " -n1 -r
     echo    # (optional) move to a new line
     if [ $REPLY = y ]
     then
@@ -151,7 +152,7 @@ cmd_open() {
          --bind 'ctrl-r:reload(tide reload)' \
          --bind 'alt-n:execute(tide create {})+reload(tide reload)' \
          --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
-         --header $'Press ENTER to open, ALT-D to close/remove, ALT-N to create, CTRL-R to reload\n\n' \
+         --header $'Press ENTER to open/create, ALT-D to close/remove, ALT-N to create new, CTRL-R to reload\n\n' \
          +s -n2,4 --ansi --prompt " Worktree ")
     [ -z "$line" ] && return
 
