@@ -3,6 +3,8 @@
 PROGRAM=$(basename $0)
 CMD=$1; shift
 ROOTDIR=$HOME/code
+CACHEDIR=$HOME/.cache/tide
+WORKTREES_FILE=$HOME/.cache/tide/worktrees
 
 cmd_usage() {
     echo "\
@@ -90,8 +92,49 @@ reset_color() {
     printf "\x1b[0m"
 }
 
+load_worktrees() {
+    if [ ! -f $WORKTREES_FILE ]; then
+        mkdir -p $CACHEDIR
+        worktree_list > $WORKTREES_FILE
+    fi
+    cat $WORKTREES_FILE
+}
+
+cmd_expire() {
+    rm $WORKTREES_FILE
+}
+
+cmd_reload() {
+    cmd_expire
+    load_worktrees
+}
+
+cmd_kill() {
+    name=$(echo "$@" | awk '{print $2}')
+    tmux has-session -t="$name" 2>/dev/null || return
+    tmux kill-session -t $name
+}
+
+cmd_remove() {
+    name=$(echo "$@" | awk '{print $2}')
+    [ -d "$ROOTDIR/$name" ] || return
+    cmd_kill "$@"
+    git -C $ROOTDIR/$name worktree remove . || press_key
+}
+
+press_key() {
+    echo
+    echo -n "Press ENTER to continue"
+    read
+}
+
 cmd_open() {
-    local line=$(worktree_list | fzf +s -n2,4 --ansi --prompt " Worktree ")
+    local line=$(load_worktrees | fzf \
+                 --bind 'ctrl-r:reload(tide reload)' \
+                 --bind 'alt-k:execute(tide kill {})+reload(tide reload)' \
+                 --bind 'alt-d:execute(tide remove {})+reload(tide reload)' \
+                 --header $'Press CTRL-R to reload, ALT-K to kill session, ALT-D to remove worktree\n\n' \
+                 +s -n2,4 --ansi --prompt " Worktree ")
     [ -z "$line" ] && return
 
     line=${line:2}
@@ -102,9 +145,7 @@ cmd_open() {
 
     if [ ! -d "$tree" ]; then
         if ! git -C "$ROOTDIR/$repo/$root" worktree add ../$tree; then
-            echo
-            echo -n "Press ENTER to close"
-            read
+            press_key
             return
         fi
     fi
@@ -125,6 +166,7 @@ cmd_open() {
         tmux split-window -t "$name" -l71 -h "vim ~/plan/${tree}.plan"
         tmux set-option remain-on-exit
         tmux select-window -t ${name}:+1
+        cmd_expire
     fi
 
     if [ -z "$TMUX" ]; then
@@ -185,6 +227,10 @@ cmd_status() {
 
 case $CMD in
     open)               cmd_open "$@" ;;
+    reload)             cmd_reload "$@" ;;
+    expire)             cmd_expire "$@" ;;
+    kill)               cmd_kill "$@" ;;
+    remove)             cmd_remove "$@" ;;
     status)             cmd_status "$@" ;;
     *)                  cmd_usage ;;
 esac
