@@ -110,15 +110,16 @@ cmd_reload() {
 }
 
 cmd_kill() {
-    name=$(echo "$@" | awk '{print $2}')
+    local name=$(echo "$@" | awk '{print $2}')
     tmux has-session -t="$name" 2>/dev/null || return
-    tmux kill-session -t $name
+    confirm "Kill session $name" tmux kill-session -t $name
 }
 
 cmd_remove() {
-    name=$(echo "$@" | awk '{print $2}')
+    local name=$(echo "$@" | awk '{print $2}')
+    tmux has-session -t="$name" 2>/dev/null && return
     [ -d "$ROOTDIR/$name" ] || return
-    cmd_kill "$@"
+    confirm "Remove worktree $name" \
     git -C $ROOTDIR/$name worktree remove . || press_key
 }
 
@@ -126,6 +127,20 @@ press_key() {
     echo
     echo -n "Press ENTER to continue"
     read
+    clear
+}
+
+confirm() {
+    local prompt=$1; shift
+    read -p "${prompt}? " -n1 -r
+    echo    # (optional) move to a new line
+    if [ $REPLY = y ]
+    then
+        "$@"
+        clear
+        return $?
+    fi
+    clear
 }
 
 cmd_open() {
