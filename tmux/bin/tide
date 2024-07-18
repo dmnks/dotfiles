@@ -64,7 +64,7 @@ worktree_list() {
             read
         done
 
-        git -C "$path" branch -v | grep -v '^[+\*]' | cut -c3- | \
+        git -C "$path" branch -v --abbrev=10 | grep -v '^[+\*]' | cut -c3- | \
         while read line; do
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
