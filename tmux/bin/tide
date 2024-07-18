@@ -95,7 +95,8 @@ reset_color() {
 load_worktrees() {
     if [ ! -f $WORKTREE_FILE ]; then
         mkdir -p $CACHEDIR
-        worktree_list > $WORKTREE_FILE
+        worktree_list > ${WORKTREE_FILE}.part
+        mv ${WORKTREE_FILE}{.part,}
     fi
     if [ -z "$WORKTREE_REPO" ]; then
         cat $WORKTREE_FILE
