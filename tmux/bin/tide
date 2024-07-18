@@ -132,15 +132,14 @@ press_key() {
 
 confirm() {
     local prompt=$1; shift
+    clear
     read -p "${prompt}? " -n1 -r
     echo    # (optional) move to a new line
     if [ $REPLY = y ]
     then
         "$@"
-        clear
         return $?
     fi
-    clear
 }
 
 cmd_open() {
