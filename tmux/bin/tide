@@ -152,7 +152,7 @@ cmd_open() {
          --bind 'ctrl-r:reload(tide reload)' \
          --bind 'alt-n:execute(tide create {})+reload(tide reload)' \
          --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
-         --header $'Press ENTER to open/create, ALT-D to close/remove, ALT-N to create new, CTRL-R to reload\n\n' \
+         --header $'ENTER 󰁔 open/create, ALT-D 󰁔 close/remove, ALT-N 󰁔 create new, CTRL-R 󰁔 reload\n\n' \
          +s -n2,4 --ansi --prompt " Worktree ")
     [ -z "$line" ] && return
 
