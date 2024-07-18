@@ -4,7 +4,7 @@ PROGRAM=$(basename $0)
 CMD=$1; shift
 ROOTDIR=$HOME/code
 CACHEDIR=$HOME/.cache/tide
-WORKTREES_FILE=$HOME/.cache/tide/worktrees
+WORKTREE_FILE=$HOME/.cache/tide/worktrees
 
 cmd_usage() {
     echo "\
@@ -93,15 +93,19 @@ reset_color() {
 }
 
 load_worktrees() {
-    if [ ! -f $WORKTREES_FILE ]; then
+    if [ ! -f $WORKTREE_FILE ]; then
         mkdir -p $CACHEDIR
-        worktree_list > $WORKTREES_FILE
+        worktree_list > $WORKTREE_FILE
     fi
-    cat $WORKTREES_FILE
+    if [ -z "$WORKTREE_REPO" ]; then
+        cat $WORKTREE_FILE
+        return
+    fi
+    cat $WORKTREE_FILE | sed -n "s# $WORKTREE_REPO/# #p"
 }
 
 cmd_expire() {
-    rm $WORKTREES_FILE
+    rm $WORKTREE_FILE
 }
 
 cmd_reload() {
@@ -110,7 +114,7 @@ cmd_reload() {
 }
 
 cmd_create() {
-    local name=$(echo "$@" | awk '{print $2}')
+    local name=$(get_repo "$@")
     clear; echo
     read -p "  Enter worktree name: $(dirname $name)/"
     [ -n "$REPLY" ] || return
@@ -118,7 +122,7 @@ cmd_create() {
 }
 
 cmd_kill() {
-    local name=$(echo "$@" | awk '{print $2}')
+    local name=$(get_repo "$@")
     if tmux has-session -t="$name" 2>/dev/null; then
         confirm "Close worktree $name" tmux kill-session -t $name
         return
@@ -126,6 +130,15 @@ cmd_kill() {
     [ -d "$ROOTDIR/$name" ] || return
     confirm "Remove worktree $name" \
     git -C $ROOTDIR/$name worktree remove . || press_key
+}
+
+get_repo() {
+    local name=$(echo "$@" | awk '{print $2}')
+    if [ -n "$WORKTREE_REPO" ]; then
+        echo $WORKTREE_REPO/$name
+        return
+    fi
+    echo $name
 }
 
 press_key() {
@@ -139,25 +152,36 @@ confirm() {
     local prompt=$1; shift
     clear; echo
     read -p "  ${prompt} [y/N]? " -n1 -r
-    echo    # (optional) move to a new line
-    if [ $REPLY = y ]
-    then
+    clear
+    if [ $REPLY = y ]; then
         "$@"
         return $?
     fi
 }
 
 cmd_open() {
+    local prompt
+    local repo=$(tmux display -p '#S' | xargs dirname)
+
+    unset WORKTREE_REPO
+    if [ "$1" == "-r" ]; then
+        if [ -n "$repo" ]; then
+            export WORKTREE_REPO=$repo
+            prompt=$WORKTREE_REPO/
+        fi
+        shift
+    fi
+
     local line=$(load_worktrees | fzf \
          --bind 'ctrl-r:reload(tide reload)' \
          --bind 'alt-n:execute(tide create {})+reload(tide reload)' \
          --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
-         --header $'ENTER 󰁔 open/create, ALT-D 󰁔 close/remove, ALT-N 󰁔 create new, CTRL-R 󰁔 reload\n\n' \
-         +s -n2,4 --ansi --prompt " Worktree ")
+         --header $'ENTER 󰁔 open/create, ALT-D 󰁔 close/remove, ALT-N 󰁔 create, CTRL-R 󰁔 reload\n\n' \
+         +s -n2,4 --ansi --prompt " Worktree $prompt")
     [ -z "$line" ] && return
 
     line=${line:2}
-    local repo=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)
+    repo=${WORKTREE_REPO:-$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)}
     local tree=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f2)
     local root=$(echo "$line" | cut -d' ' -f5)
     cd $ROOTDIR/$repo
