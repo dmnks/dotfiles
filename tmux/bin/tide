@@ -102,12 +102,12 @@ load_worktrees() {
     cat $WORKTREE_FILE
 }
 
-cmd_expire() {
+expire() {
     rm $WORKTREE_FILE
 }
 
 cmd_reload() {
-    cmd_expire
+    expire
     load_worktrees
 }
 
@@ -143,7 +143,7 @@ confirm() {
     clear; echo
     read -p "  ${prompt} [y/N]? " -n1 -r
     clear
-    if [ $REPLY = y ]; then
+    if [ "$REPLY" = "y" ]; then
         "$@"
         return $?
     fi
@@ -199,7 +199,7 @@ cmd_open() {
         tmux split-window -t "$name" -l71 -h "vim ~/plan/${tree}.plan"
         tmux set-option remain-on-exit
         tmux select-window -t ${name}:+1
-        cmd_expire
+        expire
     fi
 
     if [ -z "$TMUX" ]; then
@@ -261,7 +261,6 @@ cmd_status() {
 case $CMD in
     open)               cmd_open "$@" ;;
     reload)             cmd_reload "$@" ;;
-    expire)             cmd_expire "$@" ;;
     create)             cmd_create "$@" ;;
     kill)               cmd_kill "$@" ;;
     status)             cmd_status "$@" ;;
