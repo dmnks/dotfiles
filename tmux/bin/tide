@@ -59,9 +59,7 @@ worktree_list() {
                 color=
             fi
 
-            echo "$(set_color $color)$icon $repo/$tree" \
-                 "$(set_color '#7c6f64')${ref} $id$main$(reset_color)" \
-                 "$(set_color '#665c54')󰦨 $(set_italics)$msg$(reset_color)"
+            print_line "$color" "$icon $repo/$tree" "${ref} $id$main" "$msg"
             read
         done
 
@@ -71,11 +69,19 @@ worktree_list() {
             id=$(echo "$line" | awk '{print $2}')
             msg=$(git -C $path rev-list --format=%B --max-count=1 \
                       --no-commit-header $id | head -n1)
-            echo "$(set_color '#83a598')󰫣 $repo/$name" \
-                 "$(set_color '#7c6f64') $id  $orig$(reset_color)" \
-                 "$(set_color '#665c54')󰦨 $(set_italics)$msg$(reset_color)"
+            print_line "#83a598" "󰫣 $repo/$name" " $id  $orig" "$msg"
         done
     done
+}
+
+print_line() {
+    local color=$1
+    local repo=$2
+    local info=$3
+    local msg=$4
+    echo "$(set_color $color)$repo" \
+         "$(set_color "#7c6f64")$info$(reset_color)" \
+         "$(set_color "#665c54")󰦨 $(set_italics)$msg$(reset_color)"
 }
 
 set_italics() {
