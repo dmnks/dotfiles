@@ -71,6 +71,11 @@ worktree_list() {
                       --no-commit-header $id | head -n1)
             print_line "#83a598" "󰫣 $repo/$name" " $id  $orig" "$msg"
         done
+
+        id=$(git -C $path rev-parse HEAD | head -c10)
+        msg=$(git -C $path rev-list --format=%B --max-count=1 \
+                  --no-commit-header HEAD | head -n1)
+        print_line "#83a598" "󰫣 $repo/<name>" " $id  $orig" "$msg"
     done
 }
 
@@ -119,10 +124,6 @@ cmd_reload() {
 
 cmd_create() {
     local name=$(echo "$@" | awk '{print $2}')
-    clear; echo
-    read -p "  Enter worktree name: $(dirname $name)/"
-    [ -n "$REPLY" ] || return
-    git -C $ROOTDIR/$name worktree add ../$REPLY || press_key
 }
 
 cmd_kill() {
@@ -156,15 +157,13 @@ confirm() {
 }
 
 header() {
-    echo -e "ENTER 󰁔 open/create, ALT-D 󰁔 close/remove, ALT-N 󰁔 create new," \
-            "ALT-A 󰁔 toggle all\nCTRL-R 󰁔 reload"
+    echo -e "ENTER 󰁔 open/create, ALT-D 󰁔 close/remove, ALT-A 󰁔 toggle all, CTRL-R 󰁔 reload"
 }
 
 cmd_open() {
     local query="^$WORKTREE_REPO/ "
     local line=$(load_worktrees | fzf \
          --bind 'ctrl-r:reload(tide reload)' \
-         --bind 'alt-n:execute(tide create {})+reload(tide reload)' \
          --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
          --bind 'alt-w:close' \
          --bind "alt-a:transform:[ \${FZF_QUERY:0:1} == ^ ] &&
@@ -182,6 +181,12 @@ cmd_open() {
     local root=$(echo "$line" | cut -d' ' -f5)
     cd $ROOTDIR/$repo
 
+    if [ "$tree" == "<name>" ]; then
+        clear; echo
+        read -p "  Enter worktree name: $repo/"
+        [ -n "$REPLY" ] || return
+        tree=$REPLY
+    fi
     if [ ! -d "$tree" ]; then
         if ! git -C "$ROOTDIR/$repo/$root" worktree add ../$tree; then
             press_key
