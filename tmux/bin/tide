@@ -229,7 +229,7 @@ cmd_status() {
     print_branch() {
         cd "$session_path"
         git rev-parse --is-inside-work-tree >/dev/null || return 0
-        printf "#[fg=#83a598]󰘬 $(git rev-parse --abbrev-ref HEAD)#[default]  "
+        printf "󰘬 $(git rev-parse --abbrev-ref HEAD)  "
     }
 
     print_repo() {
@@ -241,7 +241,7 @@ cmd_status() {
 
     print_toolbox() {
         [ "$pane_command" == "toolbox" ] || return 0
-        printf "#[fg=#d3869b]󰆧#[default]  "
+        printf "󰆧  "
     }
 
     case $cmd in
@@ -257,6 +257,8 @@ cmd_status() {
                 Slack)  echo "󰒱 " ;;
                 Mutt)   echo "󰇰 " ;;
                 Plan)   echo " " ;;
+                Dashboard)
+                        echo "󰕮 " ;;
                 bash)   echo " " ;;
                 *)      echo " " ;;
             esac
