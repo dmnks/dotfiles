@@ -113,17 +113,13 @@ load_worktrees() {
     cat $WORKTREE_FILE
 }
 
-expire() {
+cmd_expire() {
     rm $WORKTREE_FILE
 }
 
 cmd_reload() {
-    expire
+    cmd_expire
     load_worktrees
-}
-
-cmd_create() {
-    local name=$(echo "$@" | awk '{print $2}')
 }
 
 cmd_kill() {
@@ -207,10 +203,9 @@ cmd_open() {
         tmux new-window -t "$name" -n "Debug"
         tmux split-window -t "$name" -l12 -d
         tmux new-window -t "$name" -n "Manual"
-        tmux split-window -t "$name" -l71 -h "vim ~/plan/${tree}.plan"
-        tmux set-option remain-on-exit
+        tmux split-window -t "$name" -h
         tmux select-window -t ${name}:+1
-        expire
+        cmd_expire
     fi
 
     if [ -z "$TMUX" ]; then
@@ -274,7 +269,7 @@ cmd_status() {
 case $CMD in
     open)               cmd_open "$@" ;;
     reload)             cmd_reload "$@" ;;
-    create)             cmd_create "$@" ;;
+    expire)             cmd_expire "$@" ;;
     kill)               cmd_kill "$@" ;;
     status)             cmd_status "$@" ;;
     *)                  cmd_usage ;;
