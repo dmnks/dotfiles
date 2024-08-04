@@ -44,9 +44,6 @@ worktree_list() {
             id=$(echo "$id" | head -c10)
             icon=""
 
-            msg=$(git -C $dirn/$tree rev-list --format=%B --max-count=1 \
-                      --no-commit-header HEAD | head -n1)
-
             [ -n "$ref" ] && ref="󰘬 $(basename "$ref") "
 
             if echo "$sessions" | grep -q "^$repo/$tree\$"; then
@@ -59,7 +56,7 @@ worktree_list() {
                 color=
             fi
 
-            print_line "$color" "$icon $repo/$tree" "${ref} $id$main" "$msg"
+            print_line "$color" "$icon $repo/$tree" "${ref} $id$main"
             read
         done
 
@@ -67,15 +64,11 @@ worktree_list() {
         while read line; do
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
-            msg=$(git -C $path rev-list --format=%B --max-count=1 \
-                      --no-commit-header $id | head -n1)
-            print_line "#83a598" "󰫣 $repo/$name" " $id  $orig" "$msg"
+            print_line "#83a598" "󰫣 $repo/$name" " $id  $orig"
         done
 
         id=$(git -C $path rev-parse HEAD | head -c10)
-        msg=$(git -C $path rev-list --format=%B --max-count=1 \
-                  --no-commit-header HEAD | head -n1)
-        print_line "#83a598" "󰫣 $repo/<name>" " $id  $orig" "$msg"
+        print_line "#83a598" "󰫣 $repo/<name>" " $id  $orig"
     done
 }
 
@@ -83,10 +76,8 @@ print_line() {
     local color=$1
     local repo=$2
     local info=$3
-    local msg=$4
     echo "$(set_color $color)$repo" \
-         "$(set_color "#7c6f64")$info$(reset_color)" \
-         "$(set_color "#665c54")󰦨 $(set_italics)$msg$(reset_color)"
+         "$(set_color "#7c6f64")$info$(reset_color)"
 }
 
 set_italics() {
@@ -202,7 +193,6 @@ cmd_open() {
         tmux new-window -t "$name" -n "Build"
         tmux split-window -t "$name" -h -d
         tmux new-window -t "$name" -n "Debug"
-        tmux split-window -t "$name" -l12 -d
         tmux new-window -t "$name" -n "Manual"
         tmux split-window -t "$name" -h
         tmux select-window -t ${name}:+1
