@@ -198,8 +198,9 @@ cmd_open() {
                          -x "$(tput cols)" -y "$(tput lines)" \
                          "sleep 0.1; vim -c GFiles"
         tmux new-window -t "$name" -n "Git" "tig"
-        tmux split-window -t "$name" -l12 -d
+        tmux split-window -t "$name" -h -l50 -d
         tmux new-window -t "$name" -n "Build"
+        tmux split-window -t "$name" -h -d
         tmux new-window -t "$name" -n "Debug"
         tmux split-window -t "$name" -l12 -d
         tmux new-window -t "$name" -n "Manual"
