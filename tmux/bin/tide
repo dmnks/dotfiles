@@ -5,7 +5,6 @@ CMD=$1; shift
 ROOTDIR=$HOME/code
 CACHEDIR=$HOME/.cache/tide
 WORKTREE_FILE=$HOME/.cache/tide/worktrees
-WORKTREE_REPO=$(tmux display -p '#S' | xargs dirname)
 
 cmd_usage() {
     echo "\
@@ -148,7 +147,12 @@ header() {
 }
 
 cmd_open() {
-    local query="^$WORKTREE_REPO/ "
+    local repo=
+    local query=
+    if [ -n "$TMUX" ]; then
+        repo="$(tmux display -p '#S' | xargs dirname)"
+        [ "$repo" != "." ] && query="^${repo}/ "
+    fi
     local line=$(load_worktrees | fzf \
          --bind 'ctrl-r:reload(tide reload)' \
          --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
@@ -163,7 +167,7 @@ cmd_open() {
     [ -z "$line" ] && return
 
     line=${line:2}
-    local repo=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)
+    repo=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)
     local tree=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f2)
     local root=$(echo "$line" | cut -d' ' -f5)
     cd $ROOTDIR/$repo
