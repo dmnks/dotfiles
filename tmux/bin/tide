@@ -63,11 +63,11 @@ worktree_list() {
         while read line; do
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
-            print_line "#83a598" "󰫣 $repo/$name" " $id  $orig"
+            print_line "#83a598" " $repo/$name" " $id  $orig"
         done
 
         id=$(git -C $path rev-parse HEAD | head -c10)
-        print_line "#83a598" "󰫣 $repo/<name>" " $id  $orig"
+        print_line "#83a598" " $repo/<name>" " $id  $orig"
     done
 }
 
@@ -240,7 +240,7 @@ cmd_status() {
             case "$1" in
                 Code)   echo " " ;;
                 Git)    echo "󰘬 " ;;
-                Build)  echo " " ;;
+                Build)  echo " " ;;
                 Debug)  echo " " ;;
                 Manual) echo " " ;;
                 Blame)  echo " " ;;
