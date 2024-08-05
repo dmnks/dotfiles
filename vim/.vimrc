@@ -52,7 +52,6 @@ hi ColorColumn guibg=#282828
 hi TabLineFill guibg=#282828
 hi TabLineSel guifg=#ebdbb2
 hi VertSplit guifg=#504945
-hi StatusLineNC guifg=#1d2021
 set fillchars=vert:│
 set number
 set numberwidth=6
