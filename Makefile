@@ -26,11 +26,11 @@ software:
 		 vim
 
 install:
-	stow -Rv --no-folding $(PACKAGES)
+	stow --target ${HOME} -Rv --no-folding $(PACKAGES)
 	update-desktop-database ~/.local/share/applications/
 
 uninstall:
-	stow -Dv $(PACKAGES)
+	stow --target ${HOME} -Dv $(PACKAGES)
 
 vim:
 	mkdir -p $(VIMPACK)
