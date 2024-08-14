@@ -95,12 +95,18 @@ reset_color() {
 }
 
 load_worktrees() {
+    local repo
     if [ ! -f $WORKTREE_FILE ]; then
         mkdir -p $CACHEDIR
         worktree_list > ${WORKTREE_FILE}.part
         mv ${WORKTREE_FILE}{.part,}
     fi
-    cat $WORKTREE_FILE
+    if [ "${FZF_PROMPT: -1}" == "/" ]; then
+        repo=$(echo "$FZF_PROMPT" | cut -d' ' -f3)
+        cat $WORKTREE_FILE | sed -n "s|\(^.\+ \)$repo|\1|p"
+    else
+        cat $WORKTREE_FILE
+    fi
 }
 
 cmd_expire() {
@@ -108,17 +114,24 @@ cmd_expire() {
 }
 
 cmd_reload() {
-    cmd_expire
+    [ $1 == -r ] && cmd_expire
     load_worktrees
 }
 
 cmd_kill() {
-    local name=$(echo "$@" | awk '{print $2}')
-    local session=$(echo "$name" | sed 's/\./-/g')
+    local repo
+    local tree
+    local session
+
+    read repo tree < <(parse_name "$1")
+    name="$repo/$tree"
+    session=$(echo "$name" | sed 's/\./-/g')
+
     if tmux has-session -t="$session" 2>/dev/null; then
         confirm "Close worktree $session" tmux kill-session -t="$session"
         return
     fi
+
     [ -d "$ROOTDIR/$name" ] || return
     confirm "Remove worktree $name" \
     git -C $ROOTDIR/$name worktree remove . || press_key
@@ -142,34 +155,55 @@ confirm() {
     fi
 }
 
+parse_name() {
+    local name=$(echo "${1:2}" | cut -d' ' -f1)
+    local repo=$(echo "$FZF_PROMPT" | cut -d' ' -f3 | head -c-2)
+    if [[ $name == */* ]]; then
+        echo $name | sed 's|/| |'
+    else
+        echo $repo $name
+    fi
+}
+
 header() {
     echo -e "ENTER 󰁔 open/create, ALT-D 󰁔 close/remove, ALT-A 󰁔 toggle all, CTRL-R 󰁔 reload"
 }
 
 cmd_open() {
-    local repo=
-    local query=
-    if [ -n "$TMUX" ]; then
-        repo="$(tmux display -p '#S' | xargs dirname)"
-        [ "$repo" != "." ] && query="^${repo}/ "
-    fi
-    local line=$(load_worktrees | fzf \
-         --bind 'ctrl-r:reload(tide reload)' \
-         --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
-         --bind 'alt-w:close' \
-         --bind "alt-a:transform:[ \${FZF_QUERY:0:1} == ^ ] &&
-                 echo 'clear-query' || echo 'change-query:$query'" \
-         --bind 'ctrl-d:close' \
-         --bind "ctrl-u:transform:[ \${FZF_QUERY:0:1} == ^ ] &&
-                 echo 'change-query:$query' || echo 'clear-query'" \
-         --header "$(header)"$'\n\n' \
-         +s -n2,4 --ansi --prompt " Worktree " --query "$query")
-    [ -z "$line" ] && return
+    local line
+    local repo
+    local tree
+    local root
 
-    line=${line:2}
-    repo=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)
-    local tree=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f2)
-    local root=$(echo "$line" | cut -d' ' -f5)
+    if [ -n "$TMUX" ]; then
+        repo=$(tmux display -p '#S' | xargs dirname)
+        if [ "$repo" != "." ]; then
+            repo="$repo/"
+        else
+            repo=
+        fi
+    else
+        repo=
+    fi
+
+    local prompt_pre=" Worktree"
+    local prompt_all="$prompt_pre "
+    local prompt_loc="$prompt_pre $repo"
+
+    export FZF_PROMPT=$prompt_loc
+    line=$(load_worktrees | fzf \
+         --bind 'ctrl-r:reload(tide reload -r)' \
+         --bind 'alt-d:execute(tide kill {})+reload(tide reload -r)' \
+         --bind 'alt-w:close' \
+         --bind "alt-a:transform:\
+                 [ \${FZF_PROMPT: -1} == '/' ] &&
+                 echo 'change-prompt($prompt_all)+reload(tide reload)' ||
+                 echo 'change-prompt($prompt_loc)+reload(tide reload)'" \
+         --header "$(header)"$'\n\n' \
+         +s -n2,4 --ansi --prompt "$prompt_loc")
+
+    [ -z "$line" ] && return
+    read repo tree < <(parse_name "$line")
     cd $ROOTDIR/$repo
 
     if [ "$tree" == "<name>" ]; then
@@ -179,6 +213,7 @@ cmd_open() {
         tree=$REPLY
     fi
     if [ ! -d "$tree" ]; then
+        root=$(echo "$line" | cut -d' ' -f6)
         if ! git -C "$ROOTDIR/$repo/$root" worktree add ../$tree; then
             press_key
             return
