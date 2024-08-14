@@ -39,7 +39,7 @@ worktree_list() {
         git -C $path worktree list --porcelain | awk '{print $2}' | \
         while read tree; read id; read ref; do
             tree=$(basename "$tree")
-            main="  $orig"
+            main="  $orig"
             id=$(echo "$id" | head -c10)
             icon=""
 
@@ -63,11 +63,11 @@ worktree_list() {
         while read line; do
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
-            print_line "#83a598" " $repo/$name" " $id  $orig"
+            print_line "#83a598" " $repo/$name" " $id  $orig"
         done
 
         id=$(git -C $path rev-parse HEAD | head -c10)
-        print_line "#83a598" " $repo/<name>" " $id  $orig"
+        print_line "#83a598" " $repo/<name>" " $id  $orig"
     done
 }
 
@@ -225,7 +225,7 @@ cmd_status() {
     print_repo() {
         cd "$session_path"
         git rev-parse --is-inside-work-tree >/dev/null || return 0
-        printf " $(git rev-parse --path-format=absolute --git-common-dir | \
+        printf " $(git rev-parse --path-format=absolute --git-common-dir | \
                     xargs dirname | xargs basename)  "
     }
 
