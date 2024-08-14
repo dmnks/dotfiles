@@ -50,3 +50,6 @@
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
+[sendemail]
+    sendmailcmd = /usr/bin/msmtp -a rht
+    to = pmatilai@redhat.com,ffesti@redhat.com
