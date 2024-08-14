@@ -19,174 +19,16 @@ Commands:
     exit 1
 }
 
-worktree_list() {
-    local repo
-    local tree
-    local id
-    local main
-    local icon
-    local color
-    local name
-    local hint
-    local sessions=$(tmux list-sessions -F '#S')
+cmd_open() {
+    local name=$(echo "$1" | sed 's/\./-/g')
+    name=$(basename $(dirname $name))/$(basename $name)
 
-    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
-    while read path; do
-        dirn=$(dirname $path)
-        repo=$(basename $dirn)
-        orig=$(basename $path)
-
-        git -C $path worktree list --porcelain | awk '{print $2}' | \
-        while read tree; read id; read ref; do
-            tree=$(basename "$tree")
-            main="  $orig"
-            id=$(echo "$id" | head -c10)
-            icon=""
-
-            [ -n "$ref" ] && ref="󰘬 $(basename "$ref") "
-
-            if echo "$sessions" | grep -q "^$repo/$tree\$"; then
-                icon=""
-                color='#fabd2f'
-            elif [ "$tree" == "$orig" ]; then
-                color=
-                main=
-            else
-                color=
-            fi
-
-            print_line "$color" "$icon $repo/$tree" "${ref} $id$main"
-            read
-        done
-
-        git -C "$path" branch -v --abbrev=10 | grep -v '^[+\*]' | cut -c3- | \
-        while read line; do
-            name=$(echo "$line" | awk '{print $1}')
-            id=$(echo "$line" | awk '{print $2}')
-            print_line "#83a598" " $repo/$name" " $id  $orig"
-        done
-
-        id=$(git -C $path rev-parse HEAD | head -c10)
-        print_line "#83a598" " $repo/<name>" " $id  $orig"
-    done
-}
-
-print_line() {
-    local color=$1
-    local repo=$2
-    local info=$3
-    echo "$(set_color $color)$repo" \
-         "$(set_color "#7c6f64")$info$(reset_color)"
-}
-
-set_italics() {
-    printf "\x1b[3m"
-}
-
-set_color() {
-    [ $# == 0 ] && return
-    local hex=${1:1}
-    local rgb=$(printf "%d;%d;%d\n" 0x${hex:0:2} 0x${hex:2:2} 0x${hex:4:2})
-    printf "\x1b[38;2;${rgb}m"
-}
-
-reset_color() {
-    printf "\x1b[0m"
-}
-
-load_worktrees() {
-    if [ ! -f $WORKTREE_FILE ]; then
-        mkdir -p $CACHEDIR
-        worktree_list > ${WORKTREE_FILE}.part
-        mv ${WORKTREE_FILE}{.part,}
-    fi
-    cat $WORKTREE_FILE
-}
-
-cmd_expire() {
-    rm $WORKTREE_FILE
-}
-
-cmd_reload() {
-    cmd_expire
-    load_worktrees
-}
-
-cmd_kill() {
-    local name=$(echo "$@" | awk '{print $2}')
-    local session=$(echo "$name" | sed 's/\./-/g')
-    if tmux has-session -t="$session" 2>/dev/null; then
-        confirm "Close worktree $session" tmux kill-session -t="$session"
+    if [ "$(basename $1)" == ".." ] || [ ! -d $1 ] || [ ! -e $1/.git ]; then
+        echo >&2 "Not a git worktree, aborting"
+        read
         return
     fi
-    [ -d "$ROOTDIR/$name" ] || return
-    confirm "Remove worktree $name" \
-    git -C $ROOTDIR/$name worktree remove . || press_key
-}
-
-press_key() {
-    echo
-    echo -n "Press ENTER to continue"
-    read
-    clear
-}
-
-confirm() {
-    local prompt=$1; shift
-    clear; echo
-    read -p "  ${prompt} [y/N]? " -n1 -r
-    clear
-    if [ "$REPLY" = "y" ]; then
-        "$@"
-        return $?
-    fi
-}
-
-header() {
-    echo -e "ENTER 󰁔 open/create, ALT-D 󰁔 close/remove, ALT-A 󰁔 toggle all, CTRL-R 󰁔 reload"
-}
-
-cmd_open() {
-    local repo=
-    local query=
-    if [ -n "$TMUX" ]; then
-        repo="$(tmux display -p '#S' | xargs dirname)"
-        [ "$repo" != "." ] && query="^${repo}/ "
-    fi
-    local line=$(load_worktrees | fzf \
-         --bind 'ctrl-r:reload(tide reload)' \
-         --bind 'alt-d:execute(tide kill {})+reload(tide reload)' \
-         --bind 'alt-w:close' \
-         --bind "alt-a:transform:[ \${FZF_QUERY:0:1} == ^ ] &&
-                 echo 'clear-query' || echo 'change-query:$query'" \
-         --bind 'ctrl-d:close' \
-         --bind "ctrl-u:transform:[ \${FZF_QUERY:0:1} == ^ ] &&
-                 echo 'change-query:$query' || echo 'clear-query'" \
-         --header "$(header)"$'\n\n' \
-         +s -n2,4 --ansi --prompt " Worktree " --query "$query")
-    [ -z "$line" ] && return
-
-    line=${line:2}
-    repo=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f1)
-    local tree=$(echo "$line" | cut -d' ' -f1 | cut -d/ -f2)
-    local root=$(echo "$line" | cut -d' ' -f5)
-    cd $ROOTDIR/$repo
-
-    if [ "$tree" == "<name>" ]; then
-        clear; echo
-        read -p "  Enter worktree name: $repo/"
-        [ -n "$REPLY" ] || return
-        tree=$REPLY
-    fi
-    if [ ! -d "$tree" ]; then
-        if ! git -C "$ROOTDIR/$repo/$root" worktree add ../$tree; then
-            press_key
-            return
-        fi
-    fi
-    cd $tree
-
-    local name=$(echo "$repo/$tree" | sed 's/\./-/g')
+    cd $1
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
         tmux new-session -ds "$name" -n "Code" \
@@ -200,7 +42,6 @@ cmd_open() {
         tmux new-window -t "$name" -n "Manual"
         tmux split-window -t "$name" -h
         tmux select-window -t ${name}:+1
-        cmd_expire
     fi
 
     if [ -z "$TMUX" ]; then
@@ -208,6 +49,7 @@ cmd_open() {
     else
         tmux switch-client -t "$name"
     fi
+    exit
 }
 
 cmd_status() {
@@ -263,9 +105,6 @@ cmd_status() {
 
 case $CMD in
     open)               cmd_open "$@" ;;
-    reload)             cmd_reload "$@" ;;
-    expire)             cmd_expire "$@" ;;
-    kill)               cmd_kill "$@" ;;
     status)             cmd_status "$@" ;;
     *)                  cmd_usage ;;
 esac
