@@ -195,10 +195,9 @@ cmd_open() {
          --bind 'ctrl-r:reload(tide reload -r)' \
          --bind 'alt-d:execute(tide kill {})+reload(tide reload -r)' \
          --bind 'alt-w:close' \
-         --bind "alt-a:transform:\
-                 [ \${FZF_PROMPT: -1} == '/' ] &&
-                 echo 'change-prompt($prompt_all)+reload(tide reload)' ||
-                 echo 'change-prompt($prompt_loc)+reload(tide reload)'" \
+         --bind "alt-a:transform([ \${FZF_PROMPT: -1} == '/' ] &&
+                 echo 'change-prompt($prompt_all)' ||
+                 echo 'change-prompt($prompt_loc)')+reload(tide reload)" \
          --header "$(header)"$'\n\n' \
          +s -n2,4 --ansi --prompt "$prompt_loc")
 
