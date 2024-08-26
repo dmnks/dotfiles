@@ -49,7 +49,8 @@ let g:gruvbox_guisp_fallback = "bg"
 colorscheme gruvbox
 set background=dark
 hi ColorColumn guibg=#282828
-hi TabLineFill guibg=#282828
+hi TabLineFill guibg=#1d2021
+hi TabLine cterm=NONE guifg=#928374 guibg=#1d2021
 hi TabLineSel guifg=#ebdbb2
 hi VertSplit guifg=#171a1a
 hi StatusLineNC guifg=#1d2021
