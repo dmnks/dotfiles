@@ -7,7 +7,7 @@ bind generic S :source ~/.tigrc
 bind main E !git rebase -i %(commit)^
 bind status A !?git commit --amend
 bind main g move-first-line
-bind generic H @sh -c "echo -n %(commit) | wl-copy"
+bind generic H @sh -c "echo -n %(commit) | wl-copy -o"
 bind diff V @sh -c "xdg-open https://github.com/rpm-software-management/rpm/commit/%(commit)"
 bind diff C @sh -c "xdg-open $(git changeset %(commit) | tail -n1)"
 
