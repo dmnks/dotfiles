@@ -115,7 +115,7 @@ set noincsearch
 set grepprg=git\ grep\ -n\ $*
 command -nargs=+ G exec "silent grep! " . <q-args> . " ':(exclude)po/*.po'"
     \ | copen | redraw!
-nnoremap * :let @/='\<'.expand('<cword>').'\>'<bar>set hlsearch<CR>
+nnoremap <silent> * :let @/='\<'.expand('<cword>').'\>'<bar>set hlsearch<CR>
 
 " #############################################################################
 " # Misc

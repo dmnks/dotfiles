@@ -24,11 +24,13 @@ function! s:planInit()
     syntax match planPost "^+ .\+$"
     syntax match planDrop "^- .\+$"
     syntax match planNote "^# .\+$"
+    syntax match planGoal "^@ .\+$"
     highlight planDate ctermfg=13
     highlight planOpen ctermfg=10
     highlight planPost ctermfg=11
     highlight planDrop ctermfg=8
     highlight planNote ctermfg=8
+    highlight planGoal ctermfg=12
 
     " Mappings
     nmap <buffer> <silent> <NUL>
