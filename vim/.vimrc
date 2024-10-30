@@ -68,6 +68,8 @@ autocmd BufRead,BufNewfile */.tmux.conf setlocal formatoptions-=t
 autocmd VimResized,TabEnter * wincmd =
 set scrolloff=0
 
+let c_no_curly_error = 1
+
 " Simplify tabline
 " Taken from: https://www.reddit.com/r/vim/comments/ghedcp/
 "             is_it_possible_to_make_the_tab_name_only_be_the/
