@@ -1,10 +1,6 @@
 export EDITOR=vim
 
 if which git &>/dev/null; then
-    source /usr/share/git-core/contrib/completion/git-prompt.sh
-    GIT_PS1_SHOWDIRTYSTATE=1
-    GIT_PS1_SHOWUPSTREAM="auto"
-    GIT_PS1_SHOWSTASHSTATE=1
     alias gdiff='git diff --no-index --'
 fi
 
@@ -45,7 +41,6 @@ setup_ps1() {
     local prompt=${green}
 
     local toolbox
-    local gitps="\$(__git_ps1 \"${purple}%s \")"
     local shlvl=$(( SHLVL - 1 ))
     local level=
 
@@ -58,7 +53,7 @@ setup_ps1() {
     [ -n "$TMUX" ] && shlvl=$(( shlvl - 1 ))
     [ $shlvl -gt 0 ] && level="${blue}$(printf '%.0s' $(seq 1 $shlvl)) "
 
-    PS1="${toolbox}${prompt}󰁕 \W ${gitps}${level}"
+    PS1="${toolbox}${prompt}󰁕 \W ${level}"
     PS1+="\$(dollar)\$${reset} "
 
     export PS1

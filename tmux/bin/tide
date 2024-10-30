@@ -268,7 +268,12 @@ cmd_status() {
     print_branch() {
         cd "$session_path"
         git rev-parse --is-inside-work-tree >/dev/null || return 0
-        printf "#[fg=#83a598]󰘬 $(git rev-parse --abbrev-ref HEAD)#[default]  "
+        source /usr/share/git-core/contrib/completion/git-prompt.sh
+        GIT_PS1_SHOWDIRTYSTATE=1
+        GIT_PS1_SHOWSTASHSTATE=1
+        GIT_PS1_SHOWUPSTREAM="auto"
+        GIT_PS1_STATESEPARATOR=""
+        printf "󰘬 $(__git_ps1 '%s')  "
     }
 
     print_repo() {
@@ -279,8 +284,11 @@ cmd_status() {
     }
 
     print_toolbox() {
-        [ "$pane_command" == "toolbox" ] || return 0
-        printf "#[fg=#d3869b]󰆧#[default]  "
+        local name=$(echo "$session_name" | sed 's/\//-/')
+        podman container exists "$name" || return 0
+        local pfx=".Config.Labels"
+        local key="{{${pfx}.name}}:{{${pfx}.version}}"
+        printf "󰆧 $(podman inspect --format "$key" "$name")  "
     }
 
     case $cmd in
