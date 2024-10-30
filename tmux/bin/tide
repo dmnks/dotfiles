@@ -5,6 +5,7 @@ CMD=$1; shift
 ROOTDIR=$HOME/code
 CACHEDIR=$HOME/.cache/tide
 WORKTREE_FILE=$HOME/.cache/tide/worktrees
+COLOR_DIM='#7c6f64'
 
 cmd_usage() {
     echo "\
@@ -47,7 +48,7 @@ worktree_list() {
 
             if echo "$sessions" | grep -q "^$repo/$tree\$"; then
                 icon=""
-                color='#fabd2f'
+                color=$(get_accent 2)
             elif [ "$tree" == "$orig" ]; then
                 color=
                 main=
@@ -63,11 +64,11 @@ worktree_list() {
         while read line; do
             name=$(echo "$line" | awk '{print $1}')
             id=$(echo "$line" | awk '{print $2}')
-            print_line "#83a598" " $repo/$name" " $id  $orig"
+            print_line $COLOR_DIM " $repo/$name" " $id  $orig"
         done
 
         id=$(git -C $path rev-parse HEAD | head -c10)
-        print_line "#83a598" " $repo/<name>" " $id  $orig"
+        print_line $COLOR_DIM " $repo/<name>" " $id  $orig"
     done
 }
 
@@ -76,7 +77,7 @@ print_line() {
     local repo=$2
     local info=$3
     echo "$(set_color $color)$repo" \
-         "$(set_color "#7c6f64")$info$(reset_color)"
+         "$(set_color $COLOR_DIM)$info$(reset_color)"
 }
 
 set_italics() {
@@ -92,6 +93,20 @@ set_color() {
 
 reset_color() {
     printf "\x1b[0m"
+}
+
+get_accent() {
+    local arg=$1
+    case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
+        blue)   echo '#458588 #83a598' ;;
+        teal)   echo '#689d6a #8ec07c' ;;
+        green)  echo '#98971a #b8bb26' ;;
+        yellow) echo '#d79921 #fabd2f' ;;
+        orange) echo '#d65d0e #fe8019' ;;
+        red)    echo '#cc241d #fb4934' ;;
+        purple) echo '#b16286 #d3869b' ;;
+        slate)  echo '#a89984 #ebdbb2' ;;
+    esac | cut -d' ' -f$arg
 }
 
 load_worktrees() {
@@ -295,11 +310,16 @@ cmd_status() {
     esac
 }
 
+cmd_accent() {
+    get_accent "$@"
+}
+
 case $CMD in
     open)               cmd_open "$@" ;;
     reload)             cmd_reload "$@" ;;
     expire)             cmd_expire "$@" ;;
     kill)               cmd_kill "$@" ;;
     status)             cmd_status "$@" ;;
+    accent)             cmd_accent "$@" ;;
     *)                  cmd_usage ;;
 esac
