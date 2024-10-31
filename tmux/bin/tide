@@ -48,7 +48,7 @@ worktree_list() {
 
             if echo "$sessions" | grep -q "^$repo/$tree\$"; then
                 icon=""
-                color=$(get_accent 2)
+                color=$ACCENT_COLOR_FG
             elif [ "$tree" == "$orig" ]; then
                 color=
                 main=
@@ -95,20 +95,6 @@ reset_color() {
     printf "\x1b[0m"
 }
 
-get_accent() {
-    local arg=$1
-    case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
-        blue)   echo '#458588 #83a598' ;;
-        teal)   echo '#689d6a #8ec07c' ;;
-        green)  echo '#98971a #b8bb26' ;;
-        yellow) echo '#d79921 #fabd2f' ;;
-        orange) echo '#d65d0e #fe8019' ;;
-        red)    echo '#cc241d #fb4934' ;;
-        purple) echo '#b16286 #d3869b' ;;
-        slate)  echo '#a89984 #ebdbb2' ;;
-    esac | cut -d' ' -f$arg
-}
-
 load_worktrees() {
     local repo
     if [ ! -f $WORKTREE_FILE ]; then
@@ -125,7 +111,7 @@ load_worktrees() {
 }
 
 cmd_expire() {
-    rm $WORKTREE_FILE
+    rm -f $WORKTREE_FILE
 }
 
 cmd_reload() {
@@ -318,8 +304,12 @@ cmd_status() {
     esac
 }
 
-cmd_accent() {
-    get_accent "$@"
+cmd_refresh() {
+    for var in ACCENT_COLOR_BG ACCENT_COLOR_FG FZF_DEFAULT_OPTS; do
+        tmux set-environment -g $var "${!var}"
+    done
+    tmux source-file ~/.tmux.conf
+    cmd_expire
 }
 
 case $CMD in
@@ -328,6 +318,6 @@ case $CMD in
     expire)             cmd_expire "$@" ;;
     kill)               cmd_kill "$@" ;;
     status)             cmd_status "$@" ;;
-    accent)             cmd_accent "$@" ;;
+    refresh)            cmd_refresh "$@" ;;
     *)                  cmd_usage ;;
 esac
