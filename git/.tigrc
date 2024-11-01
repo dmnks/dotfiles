@@ -3,6 +3,7 @@ set show-untracked = false
 set main-view-id-display = yes
 
 # BINDINGS
+bind generic <esc>s :quit
 bind generic S :source ~/.tigrc
 bind main E !git rebase -i %(commit)^
 bind status A !?git commit --amend

@@ -11,7 +11,7 @@ let mapleader = ' '
 " FZF
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
-let g:fzf_layout = { 'tmux': '-p -yS' }
+let g:fzf_layout = { 'tmux': '-yS' }
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
@@ -49,12 +49,12 @@ let g:gruvbox_guisp_fallback = "bg"
 colorscheme gruvbox
 set background=dark
 hi ColorColumn guibg=#282828
-hi TabLineFill guibg=#1d2021
-hi TabLine cterm=NONE guifg=#928374 guibg=#1d2021
-hi TabLineSel guifg=#ebdbb2
-hi VertSplit guifg=#171a1a
-hi StatusLineNC guifg=#1d2021
-set fillchars=vert:┃
+hi TabLineFill guibg=#282828
+hi TabLine cterm=NONE guifg=#928374 guibg=#3c3836
+hi TabLineSel guifg=#ebdbb2 guibg=#504945
+hi VertSplit guifg=#504945
+hi StatusLineNC guifg=#3c3836
+set fillchars=vert:│
 set number
 set numberwidth=6
 set title
@@ -131,18 +131,18 @@ let g:ft_man_open_mode = 'vert'
 
 nnoremap <silent> <C-l> :nohl<CR><C-l>
 nmap <leader>gg :exec "G <cword>"<CR>
-nmap <leader>gb :call
-    \ system('tmux popup -E -w 80% -h 80% tig blame +'
-    \ . line('.') . ' ' . expand('%'))<CR>
-nmap <leader>gB :call
-    \ system('tmux new-window -n Blame tig blame +'
-    \ . line('.') . ' ' . expand('%'))<CR>
+nmap <silent> <leader>gb :call
+    \ system('tmux popup -E -w 80% -h 80% ' .
+    \        'sh -c "TIG_SCRIPT=<(echo :enter) tig blame +' .
+    \        line('.') . ' ' . expand('%') . '"')<CR>
+nmap <silent> <leader>gB :call
+    \ system('tmux new-window -n BLAME ' .
+    \        'sh -c "TIG_SCRIPT=<(echo :enter) tig blame +' .
+    \        line('.') . ' ' . expand('%') . '"')<CR>
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
 nmap <leader>c :call system('git ctags')<CR>
-nmap <C-j> ddp
-nmap <C-k> ddkP
 
 if has('nvim')
     autocmd BufReadPost *

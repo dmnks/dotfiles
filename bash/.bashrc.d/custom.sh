@@ -1,6 +1,10 @@
 export EDITOR=vim
 
 if which git &>/dev/null; then
+    source /usr/share/git-core/contrib/completion/git-prompt.sh
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWUPSTREAM="auto"
+    GIT_PS1_SHOWSTASHSTATE=1
     alias gdiff='git diff --no-index --'
 fi
 
@@ -27,14 +31,15 @@ if which fzf &>/dev/null; then
         --color='pointer:$ACCENT_COLOR_FG,prompt:$ACCENT_COLOR_FG'
         --color='marker:$ACCENT_COLOR_FG,spinner:$ACCENT_COLOR_FG'
         --color='hl+:$ACCENT_COLOR_FG'
-        --color='hl:#928374,fg+:#ebdbb2,bg+:#3c3836,header:#7c6f64'
-        --color='border:#928374,gutter:-1,scrollbar:#504945,info:#7c6f64'
+        --color='hl:#928374,fg+:#fbf1c7,bg+:#3c3836,header:#7c6f64'
+        --color='border:#504945,gutter:-1,scrollbar:#504945,info:#7c6f64'
+        --no-bold
         --info=inline-right
         --scrollbar=█
-        --pointer=▌
+        --pointer=''
         --header=''
-        --border=none
-        --padding=1,2
+        --border=sharp
+        --padding=0
         --no-separator
         --highlight-line
     "
@@ -56,6 +61,7 @@ setup_ps1() {
     local prompt=${green}
 
     local toolbox
+    local gitps="\$(__git_ps1 \"${purple}%s \")"
     local shlvl=$(( SHLVL - 1 ))
     local level=
 
@@ -68,7 +74,7 @@ setup_ps1() {
     [ -n "$TMUX" ] && shlvl=$(( shlvl - 1 ))
     [ $shlvl -gt 0 ] && level="${blue}$(printf '%.0s' $(seq 1 $shlvl)) "
 
-    PS1="${toolbox}${prompt}󰁕 \W ${level}"
+    PS1="${toolbox}${prompt}󰁕 \W ${gitps}${level}"
     PS1+="\$(dollar)\$${reset} "
 
     export PS1
