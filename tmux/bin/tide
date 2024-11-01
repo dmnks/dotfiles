@@ -56,19 +56,24 @@ worktree_list() {
                 color=
             fi
 
-            print_line "$color" "$icon $repo/$tree" "${ref} $id$main"
+            # print_line "$color" "$icon $repo/$tree" "${ref} $id$main"
+            echo "$icon $repo/$tree ${ref} $id$main"
             read
         done
 
-        git -C "$path" branch -v --abbrev=10 | grep -v '^[+\*]' | cut -c3- | \
-        while read line; do
-            name=$(echo "$line" | awk '{print $1}')
-            id=$(echo "$line" | awk '{print $2}')
-            print_line $COLOR_DIM " $repo/$name" " $id  $orig"
+        git -C "$path" branch -a \
+        --format='%(if)%(HEAD)%(then)%(else)\
+                  %(refname:short) %(objectname:short=10)%(end)' | \
+                  sed 's|/|:|' | \
+        while read name id; do
+            [ -z "$name" ] && continue
+            # print_line $COLOR_DIM " $repo/$name" " $id  $orig"
+            printf " $repo/$name  $id  $orig\n"
         done
 
         id=$(git -C $path rev-parse HEAD | head -c10)
-        print_line $COLOR_DIM " $repo/<name>" " $id  $orig"
+        # print_line $COLOR_DIM " $repo/<name>" " $id  $orig"
+        echo " $repo/<name>  $id  $orig"
     done
 }
 
@@ -149,6 +154,7 @@ press_key() {
     echo -n "Press ENTER to continue"
     read
     clear
+    exit 1
 }
 
 confirm() {
@@ -181,6 +187,7 @@ cmd_open() {
     local repo
     local tree
     local root
+    local fork
 
     if [ -n "$TMUX" ]; then
         repo=$(tmux display -p '#S' | xargs dirname)
@@ -219,11 +226,14 @@ cmd_open() {
         tree=$REPLY
     fi
     if [ ! -d "$tree" ]; then
-        root=$(echo "$line" | cut -d' ' -f6)
-        if ! git -C "$ROOTDIR/$repo/$root" worktree add ../$tree; then
-            press_key
-            return
+        root=${line##* }
+        if [[ $tree == *:* ]]; then
+            fork=$(echo "$tree" | cut -d: -f1)
+            tree=$(echo "$tree" | cut -d: -f2)
+            git -C "$ROOTDIR/$repo/$root" fetch $fork $tree || press_key
+            git -C "$ROOTDIR/$repo/$root" branch $tree $fork/$tree || press_key
         fi
+        git -C "$ROOTDIR/$repo/$root" worktree add ../$tree || press_key
     fi
     cd $tree
 
