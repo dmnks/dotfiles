@@ -122,6 +122,7 @@ cmd_reload() {
 cmd_kill() {
     local repo
     local tree
+    local root
     local session
 
     read repo tree < <(parse_name "$1")
@@ -133,9 +134,14 @@ cmd_kill() {
         return
     fi
 
-    [ -d "$ROOTDIR/$name" ] || return
-    confirm "Remove worktree $name" \
-    git -C $ROOTDIR/$name worktree remove . || press_key
+    if [ -d "$ROOTDIR/$name" ]; then
+        confirm "Remove worktree $name" \
+        git -C $ROOTDIR/$name worktree remove . || press_key
+    else
+        root=${1##* }
+        confirm "Remove branch $tree from $root" \
+        git -C $ROOTDIR/$repo/$root branch -d $tree || press_key
+    fi
 }
 
 press_key() {
