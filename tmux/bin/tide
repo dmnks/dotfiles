@@ -62,10 +62,8 @@ worktree_list() {
         done
 
         # TODO:
-        # * only show branch for remotes
-        #   only show remotes that have no local tracking branch
-        #   omit HEAD in --format
-        #   adjust parser
+        # * show all branches without further distinction
+        #   adjust (simplify, revert) parser
         #   colors
 
         # --format='%(if)%(HEAD)%(then)%(else)\
