@@ -73,11 +73,17 @@ worktree_list() {
         # git -C "$path" branch -a \
         # --format=" $repo/%(refname:lstrip=-1)%(if)%(upstream)%(then)%(else) 󰘬 %(refname:short)%(end)  %(objectname:short=10)  $orig" | grep -v HEAD
 
-        git -C "$path" branch \
-        --format=" $repo/%(refname:lstrip=-1)  %(objectname:short=10)  $orig" | grep -v HEAD
+        # git -C "$path" branch \
+        # --format=" $repo/%(refname:lstrip=-1)  %(objectname:short=10)  $orig" | grep -v HEAD
 
-        git -C "$path" branch --remotes \
-        --format=" $repo/%(refname:lstrip=-1) 󰘬 %(refname:short)  %(objectname:short=10)  $orig" | grep -v HEAD
+        # git -C "$path" branch --remotes \
+        # --format=" $repo/%(refname:lstrip=-1) 󰘬 %(refname:short)  %(objectname:short=10)  $orig" | grep -v HEAD
+
+        git -C "$path" branch -a --format '%(refname:short) %(refname:lstrip=-1) %(objectname:short=10)' | sort -k2 -u | \
+        while read fork name id; do
+            printf " $repo/$name 󰘬 $fork  $id  $orig\n"
+        done
+
 
         # while read name id; do
         #     [ -z "$name" ] && continue
