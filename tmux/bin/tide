@@ -61,15 +61,30 @@ worktree_list() {
             read
         done
 
-        git -C "$path" branch -a \
-        --format='%(if)%(HEAD)%(then)%(else)\
-                  %(refname:short) %(objectname:short=10)%(end)' | \
-                  sed 's|/|:|' | \
-        while read name id; do
-            [ -z "$name" ] && continue
-            # print_line $COLOR_DIM " $repo/$name" " $id  $orig"
-            printf " $repo/$name  $id  $orig\n"
-        done
+        # TODO:
+        # * only show branch for remotes
+        #   only show remotes that have no local tracking branch
+        #   omit HEAD in --format
+        #   adjust parser
+        #   colors
+
+        # --format='%(if)%(HEAD)%(then)%(else)\
+        #           %(refname:short) %(objectname:short=10)%(end)' | \
+        # git -C "$path" branch -a \
+        # --format=" $repo/%(refname:lstrip=-1)%(if)%(upstream)%(then)%(else) 󰘬 %(refname:short)%(end)  %(objectname:short=10)  $orig" | grep -v HEAD
+
+        git -C "$path" branch \
+        --format=" $repo/%(refname:lstrip=-1)  %(objectname:short=10)  $orig" | grep -v HEAD
+
+        git -C "$path" branch --remotes \
+        --format=" $repo/%(refname:lstrip=-1) 󰘬 %(refname:short)  %(objectname:short=10)  $orig" | grep -v HEAD
+
+        # while read name id; do
+        #     [ -z "$name" ] && continue
+        #     # fork=$(dirname $name)
+        #     # print_line $COLOR_DIM " $repo/$name" " $id  $orig"
+        #     printf " $repo/$name  $id  $orig\n"
+        # done
 
         id=$(git -C $path rev-parse HEAD | head -c10)
         # print_line $COLOR_DIM " $repo/<name>" " $id  $orig"
