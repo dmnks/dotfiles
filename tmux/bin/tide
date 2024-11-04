@@ -62,7 +62,8 @@ worktree_list() {
         done
 
         # TODO:
-        # * show all branches without further distinction
+        #   show all branches without further distinction
+        #   omit branches in worktree names
         #   adjust (simplify, revert) parser
         #   colors
 
