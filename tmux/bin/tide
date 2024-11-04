@@ -73,6 +73,7 @@ worktree_list() {
         # git -C "$path" branch -a \
         # --format=" $repo/%(refname:lstrip=-1)%(if)%(upstream)%(then)%(else) 󰘬 %(refname:short)%(end)  %(objectname:short=10)  $orig" | grep -v HEAD
 
+        # git -C "$path" branch --format="+ $repo/%(refname:lstrip=-1) = $orig" | uniq
         loc=$(git -C "$path" branch --format="%(refname:lstrip=-1)" | sort)
         echo "$loc" | while read name id; do
             printf " $repo/$name  $orig\n"
