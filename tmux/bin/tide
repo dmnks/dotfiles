@@ -30,6 +30,8 @@ worktree_list() {
     local name
     local hint
     local sessions=$(tmux list-sessions -F '#S')
+    local dim=$(set_color "$COLOR_DIM")
+    local reset=$(reset_color)
 
     find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
     while read path; do
@@ -67,22 +69,11 @@ worktree_list() {
         #   adjust (simplify, revert) parser
         #   colors
 
-        # --format='%(if)%(HEAD)%(then)%(else)\
-        #           %(refname:short) %(objectname:short=10)%(end)' | \
-        # git -C "$path" branch -a \
-        # --format=" $repo/%(refname:lstrip=-1)%(if)%(upstream)%(then)%(else) 󰘬 %(refname:short)%(end)  %(objectname:short=10)  $orig" | grep -v HEAD
+        git -C "$path" for-each-ref refs/{heads,remotes} \
+            --format="%(if)%(worktreepath)%(then)%(else)${dim} $repo/%(refname:lstrip=-1) 󰘬 %(refname:lstrip=-1)  %(objectname:short=10)  $orig${reset}%(end)" | grep -v HEAD | sort -u
 
-        # git -C "$path" branch \
-        # --format=" $repo/%(refname:lstrip=-1)  %(objectname:short=10)  $orig" | grep -v HEAD
-
-        # git -C "$path" branch --remotes \
-        # --format=" $repo/%(refname:lstrip=-1) 󰘬 %(refname:short)  %(objectname:short=10)  $orig" | grep -v HEAD
-
-        git -C "$path" branch -a --format '%(refname:short) %(refname:lstrip=-1) %(objectname:short=10)' | sort -k2 -u | \
-        while read fork name id; do
-            printf " $repo/$name 󰘬 $fork  $id  $orig\n"
-        done
-
+        git -C "$path" for-each-ref refs/tags \
+            --format="%(if)%(worktreepath)%(then)%(else)${dim} $repo/%(refname:lstrip=-1)  %(refname:lstrip=-1)  %(objectname:short=10)  $orig${reset}%(end)" | grep -v HEAD | sort -u
 
         # while read name id; do
         #     [ -z "$name" ] && continue
