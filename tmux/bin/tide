@@ -5,7 +5,7 @@ CMD=$1; shift
 ROOTDIR=$HOME/code
 CACHEDIR=$HOME/.cache/tide
 WORKTREE_FILE=$HOME/.cache/tide/worktrees
-COLOR_DIM='#7c6f64'
+COLOR_DIM='#928374'
 
 cmd_usage() {
     echo "\
@@ -63,28 +63,13 @@ worktree_list() {
             read
         done
 
-        # TODO:
-        #   show all branches without further distinction
-        #   omit branches in worktree names
-        #   adjust (simplify, revert) parser
-        #   colors
-
         git -C "$path" for-each-ref refs/{heads,remotes} \
-            --format="%(if)%(worktreepath)%(then)%(else)${dim} $repo/%(refname:lstrip=-1) 󰘬 %(refname:lstrip=-1)  %(objectname:short=10)  $orig${reset}%(end)" | grep -v HEAD | sort -u
-
+            --format="${dim} $repo/%(refname:lstrip=-1) 󰘬 %(refname:lstrip=-1)  %(objectname:short=10)  $orig" | grep -v HEAD | sort -u | sed '/^$/d'
         git -C "$path" for-each-ref refs/tags \
-            --format="%(if)%(worktreepath)%(then)%(else)${dim} $repo/%(refname:lstrip=-1)  %(refname:lstrip=-1)  %(objectname:short=10)  $orig${reset}%(end)" | grep -v HEAD | sort -u
-
-        # while read name id; do
-        #     [ -z "$name" ] && continue
-        #     # fork=$(dirname $name)
-        #     # print_line $COLOR_DIM " $repo/$name" " $id  $orig"
-        #     printf " $repo/$name  $id  $orig\n"
-        # done
+            --format="${dim} $repo/%(refname:lstrip=-1)  %(refname:lstrip=-1)  %(objectname:short=10)  $orig" | grep -v HEAD | sort -u | sed '/^$/d'
 
         id=$(git -C $path rev-parse HEAD | head -c10)
-        # print_line $COLOR_DIM " $repo/<name>" " $id  $orig"
-        echo " $repo/<name>  $id  $orig"
+        echo "${dim} $repo/<name>  $id  $orig${reset}"
     done
 }
 
