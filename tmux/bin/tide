@@ -29,45 +29,43 @@ worktree_list() {
     local color
     local name
     local hint
-    local sessions=$(tmux list-sessions -F '#S')
     local dim=$(set_color "$COLOR_DIM")
     local reset=$(reset_color)
 
-    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%h\n' | sort | \
-    while read path; do
-        dirn=$(dirname $path)
-        repo=$(basename $dirn)
-        orig=$(basename $path)
+    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%P\n' | sed -e 's|/\.git$||' -e 's|/| |' | sort | \
+    while read repo tree; do
+#         git -C $path worktree list --porcelain | awk '{print $2}' | \
+#         while read tree; read id; read ref; do
+#             tree=$(basename "$tree")
+#             main="  $orig"
+#             id=$(echo "$id" | head -c10)
+#             icon=""
 
-        git -C $path worktree list --porcelain | awk '{print $2}' | \
-        while read tree; read id; read ref; do
-            tree=$(basename "$tree")
-            main="  $orig"
-            id=$(echo "$id" | head -c10)
-            icon=""
+#             [ -n "$ref" ] && ref="󰘬 $(basename "$ref") "
 
-            [ -n "$ref" ] && ref="󰘬 $(basename "$ref") "
+#             if echo "$sessions" | grep -q "^$repo/$tree\$"; then
+#                 icon=""
+#                 color=$ACCENT_COLOR_FG
+#             elif [ "$tree" == "$orig" ]; then
+#                 color=
+#                 main=
+#             else
+#                 color=
+#             fi
 
-            if echo "$sessions" | grep -q "^$repo/$tree\$"; then
-                icon=""
-                color=$ACCENT_COLOR_FG
-            elif [ "$tree" == "$orig" ]; then
-                color=
-                main=
-            else
-                color=
-            fi
+#             # print_line "$color" "$icon $repo/$tree" "${ref} $id$main"
+#             echo "$icon $repo/$tree ${ref} $id$main"
+#             read
+#         done
 
-            # print_line "$color" "$icon $repo/$tree" "${ref} $id$main"
-            echo "$icon $repo/$tree ${ref} $id$main"
-            read
-        done
+        # TODO
+        # - configurable ref list
+        # - only allow deleting workdir (not killing session)
+        # - adjust parser to this updated format
+        git -C "$ROOTDIR/$repo/$tree" for-each-ref refs/{heads,remotes/{ffesti,pmatilai}}\
+            --format="%(if)%(worktreepath)%(then)%(else)${dim}%(end) $repo/%(refname:lstrip=-1) %(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end) %(refname:short)  %(objectname:short=10)  $tree${reset}"
 
-        git -C "$path" for-each-ref \
-            --format="%(if:equals=HEAD)%(refname:lstrip=-1)%(then)%(else) $repo/%(refname:lstrip=-1) %(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end) %(refname:short)  %(objectname:short=10)  $orig%(end)"
-
-        id=$(git -C $path rev-parse HEAD | head -c10)
-        echo "${dim} $repo/<name>  $id  $orig${reset}"
+        echo "${dim} $repo/<name>  $tree${reset}"
     done
 }
 
