@@ -5,7 +5,10 @@ CMD=$1; shift
 ROOTDIR=$HOME/code
 CACHEDIR=$HOME/.cache/tide
 WORKTREE_FILE=$HOME/.cache/tide/worktrees
+REMOTES="ffesti,pmatilai"
 COLOR_DIM='#928374'
+COLOR_ADD='#b8bb26'
+REFS=$(awk -F "=" '/refs/ {print $2}' $HOME/.config/tide/config.ini)
 
 cmd_usage() {
     echo "\
@@ -23,62 +26,29 @@ Commands:
 worktree_list() {
     local repo
     local tree
-    local id
-    local main
-    local icon
-    local color
-    local name
-    local hint
+    local format
     local dim=$(set_color "$COLOR_DIM")
+    local add=$(set_color "$COLOR_ADD")
     local reset=$(reset_color)
 
-    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%P\n' | sed -e 's|/\.git$||' -e 's|/| |' | sort | \
+    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%P\n' | \
+    sed -e 's|/\.git$||' -e 's|/| |' | sort | \
     while read repo tree; do
-#         git -C $path worktree list --porcelain | awk '{print $2}' | \
-#         while read tree; read id; read ref; do
-#             tree=$(basename "$tree")
-#             main="  $orig"
-#             id=$(echo "$id" | head -c10)
-#             icon=""
-
-#             [ -n "$ref" ] && ref="󰘬 $(basename "$ref") "
-
-#             if echo "$sessions" | grep -q "^$repo/$tree\$"; then
-#                 icon=""
-#                 color=$ACCENT_COLOR_FG
-#             elif [ "$tree" == "$orig" ]; then
-#                 color=
-#                 main=
-#             else
-#                 color=
-#             fi
-
-#             # print_line "$color" "$icon $repo/$tree" "${ref} $id$main"
-#             echo "$icon $repo/$tree ${ref} $id$main"
-#             read
-#         done
-
         # TODO
-        # - configurable ref list
         # - only allow deleting workdir (not killing session)
         # - adjust parser to this updated format
-        git -C "$ROOTDIR/$repo/$tree" for-each-ref refs/{heads,remotes/{ffesti,pmatilai}}\
-            --format="%(if)%(worktreepath)%(then)%(else)${dim}%(end) $repo/%(refname:lstrip=-1) %(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end) %(refname:short)  %(objectname:short=10)  $tree${reset}"
+        format=(
+            "%(if)%(worktreepath)%(then)%(else)${add}%(end)"
+            "$repo/%(refname:lstrip=-1)"
+            "${dim}%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
+            "%(refname:short)  %(objectname:short=10)  ${tree}${reset}"
+        )
 
-        echo "${dim} $repo/<name>  $tree${reset}"
+        git -C "$ROOTDIR/$repo/$tree" for-each-ref \
+            --format="${format[*]}" ${REFS[*]}
+
+        echo "${add} $repo/<name> ${dim} ${tree}${reset}"
     done
-}
-
-print_line() {
-    local color=$1
-    local repo=$2
-    local info=$3
-    echo "$(set_color $color)$repo" \
-         "$(set_color $COLOR_DIM)$info$(reset_color)"
-}
-
-set_italics() {
-    printf "\x1b[3m"
 }
 
 set_color() {
