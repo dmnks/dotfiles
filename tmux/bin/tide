@@ -5,7 +5,6 @@ CMD=$1; shift
 ROOTDIR=$HOME/code
 CACHEDIR=$HOME/.cache/tide
 WORKTREE_FILE=$HOME/.cache/tide/worktrees
-REMOTES="ffesti,pmatilai"
 COLOR_DIM='#928374'
 COLOR_ADD='#b8bb26'
 REFS=$(awk -F "=" '/refs/ {print $2}' $HOME/.config/tide/config.ini)
@@ -35,7 +34,6 @@ worktree_list() {
     sed -e 's|/\.git$||' -e 's|/| |' | sort | \
     while read repo tree; do
         # TODO
-        # - only allow deleting workdir (not killing session)
         # - adjust parser to this updated format
         format=(
             "%(if)%(worktreepath)%(then)%(else)${add}%(end)"
@@ -97,8 +95,8 @@ cmd_kill() {
     session=$(echo "$name" | sed 's/\./-/g')
 
     if tmux has-session -t="$session" 2>/dev/null; then
-        confirm "Close worktree $session" tmux kill-session -t="$session"
-        return
+        echo "Worktree $session is open, aborting."
+        press_key
     fi
 
     if [ -d "$ROOTDIR/$name" ]; then
