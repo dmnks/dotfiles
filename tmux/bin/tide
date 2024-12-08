@@ -39,11 +39,11 @@ worktree_list() {
             "%(if)%(worktreepath)%(then)%(else)${add}%(end)"
             "$repo/%(refname:lstrip=-1)"
             "${dim}%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
-            "%(refname:short)  %(objectname:short=10)  ${tree}${reset}"
+            "%(refname:lstrip=-1)  %(objectname:short=10)  ${tree}${reset}"
         )
 
         git -C "$ROOTDIR/$repo/$tree" for-each-ref \
-            --format="${format[*]}" ${REFS[*]}
+            --format="${format[*]}" ${REFS[*]} | sort -u
 
         echo "${add} $repo/<name> ${dim} ${tree}${reset}"
     done
@@ -187,12 +187,6 @@ cmd_open() {
     fi
     if [ ! -d "$tree" ]; then
         root=${line##* }
-        if [[ $tree == *:* ]]; then
-            fork=$(echo "$tree" | cut -d: -f1)
-            tree=$(echo "$tree" | cut -d: -f2)
-            git -C "$ROOTDIR/$repo/$root" fetch $fork $tree || press_key
-            git -C "$ROOTDIR/$repo/$root" branch $tree $fork/$tree || press_key
-        fi
         git -C "$ROOTDIR/$repo/$root" worktree add ../$tree || press_key
     fi
     cd $tree
