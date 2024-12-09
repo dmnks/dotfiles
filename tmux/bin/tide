@@ -30,23 +30,26 @@ worktree_list() {
     local add=$(set_color "$COLOR_ADD")
     local reset=$(reset_color)
 
-    find "$ROOTDIR" -maxdepth 3 -name ".git" -type d -printf '%P\n' | \
+    find "$ROOTDIR" -maxdepth 3 -name ".git" -printf '%P\n' | \
     sed -e 's|/\.git$||' -e 's|/| |' | sort | \
     while read repo tree; do
         # TODO
         # - adjust parser to this updated format
+        echo " $repo/$tree ${dim} ${tree}${reset}"
+        [ -d "$ROOTDIR/$repo/$tree/.git" ] || continue
+
         format=(
-            "%(if)%(worktreepath)%(then)%(else)${add}%(end)"
+            "%(if)%(worktreepath)%(then)%(else)${add}"
             "${repo}/%(refname:lstrip=-1)"
             "${dim}%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
             "%(if)%(upstream)%(then)%(upstream:short)%(else)%(refname:short)%(end)"
-            " %(objectname:short=10)  ${tree}${reset}"
+            " %(objectname:short=10)  ${tree}${reset}%(end)"
         )
 
         git -C "$ROOTDIR/$repo/$tree" for-each-ref \
             --format="${format[*]}" ${REFS[*]} | sort -u -k2
 
-        echo "${add} $repo/<name> ${dim} ${tree}${reset}"
+        # echo "${add} $repo/<name> ${dim} ${tree}${reset}"
     done
 }
 
