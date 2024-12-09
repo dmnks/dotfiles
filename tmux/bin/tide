@@ -39,7 +39,8 @@ worktree_list() {
             "%(if)%(worktreepath)%(then)%(else)${add}%(end)"
             "${repo}/%(refname:lstrip=-1)"
             "${dim}%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
-            "%(refname:lstrip=-1)  %(objectname:short=10)  ${tree}${reset}"
+            "%(if)%(upstream)%(then)%(upstream:short)%(else)%(refname:short)%(end)"
+            " %(objectname:short=10)  ${tree}${reset}"
         )
 
         git -C "$ROOTDIR/$repo/$tree" for-each-ref \
@@ -108,7 +109,7 @@ press_key() {
     echo -n "Press ENTER to continue"
     read
     clear
-    exit 1
+    [ "$1" == "-n" ] || exit 1
 }
 
 confirm() {
@@ -137,11 +138,7 @@ header() {
 }
 
 cmd_open() {
-    local line
-    local repo
-    local tree
-    local root
-    local fork
+    local line repo tree root refn upst
 
     if [ -n "$TMUX" ]; then
         repo=$(tmux display -p '#S' | xargs dirname)
@@ -179,10 +176,24 @@ cmd_open() {
         [ -n "$REPLY" ] || return
         tree=$REPLY
     fi
-    if [ ! -d "$tree" ]; then
+
+    if [ -d "$tree" ]; then
+        #TODO
+        echo
+    else
         root=${line##* }
-        git -C "$ROOTDIR/$repo/$root" worktree add ../$tree $tree || press_key
+        refn=$(echo "$line" | cut -d' ' -f4)
+        if git -C "$ROOTDIR/$repo/$root" rev-parse --verify $tree >/dev/null; then
+            upst=$(git -C "$ROOTDIR/$repo/$root" for-each-ref --format='%(upstream:short)' refs/heads/$tree)
+            if [ "$refn" != "$upst" ]; then
+                echo "Branch $tree already exists and tracks $upst, using that."
+                press_key -n
+            fi
+        fi
+        git -C "$ROOTDIR/$repo/$root" branch $tree $refn 2>/dev/null
+        git -C "$ROOTDIR/$repo/$root" worktree add ../$tree || press_key
     fi
+
     cd $tree
 
     local name=$(echo "$repo/$tree" | sed 's/\./-/g')
