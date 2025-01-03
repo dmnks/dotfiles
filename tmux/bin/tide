@@ -167,6 +167,7 @@ cmd_checkout() {
         git branch $ref $upstream || press_key
     fi
     git checkout $ref || press_key
+    git ctags
     tmux refresh-client
 }
 

@@ -5,10 +5,21 @@ let mapleader = ' '
 " #############################################################################
 
 call plug#begin()
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'nvim-tree/nvim-web-devicons'
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-commentary'
 call plug#end()
+
+" Lualine
+lua << EOF
+require('lualine').setup {
+  options = {
+    globalstatus = true,
+  },
+}
+EOF
 
 " Gruvbox
 let g:gruvbox_guisp_fallback = "bg"
@@ -74,6 +85,7 @@ set cursorline
 set colorcolumn=80
 set scrolloff=0
 set laststatus=3
+set noshowmode
 
 let c_no_curly_error = 1
 
