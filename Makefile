@@ -17,6 +17,7 @@ software:
 		 gnome-tweaks \
 		 jetbrains-mono-nl-fonts \
 		 lsd \
+		 neovim \
 		 pass \
 		 pavucontrol \
 		 podman \
@@ -33,11 +34,9 @@ uninstall:
 	stow --target ${HOME} -Dv $(PACKAGES)
 
 vim:
-	mkdir -p $(VIMPACK)
-	git clone \
-	    https://github.com/morhetz/gruvbox $(VIMPACK)/gruvbox
-	git clone \
-	    https://github.com/tpope/vim-commentary $(VIMPACK)/commentary
+	curl -fLo \
+	    ${HOME}/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+	    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 gnome:
 	dconf load /org/gnome/ < gnome.conf

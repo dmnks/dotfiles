@@ -1,4 +1,5 @@
-export EDITOR=vim
+export EDITOR=nvim
+alias vim=nvim
 
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh

@@ -103,7 +103,7 @@ cmd_open() {
     if ! tmux has-session -t="$name" 2>/dev/null; then
         tmux new-session -ds "$name" -n "CODE" \
                          -x "$(tput cols)" -y "$(tput lines)" \
-                         "sleep 0.1; vim -c GFiles"
+                         "sleep 0.1; nvim -c GFiles"
         tmux new-window -t "$name" -n "GIT" "tig"
         tmux split-window -t "$name" -h -l50 -d
         tmux new-window -t "$name" -n "BUILD"
