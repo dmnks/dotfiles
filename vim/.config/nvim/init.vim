@@ -5,8 +5,9 @@ let mapleader = ' '
 " #############################################################################
 
 call plug#begin()
+Plug 'ellisonleao/gruvbox.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-commentary'
-Plug 'morhetz/gruvbox'
 call plug#end()
 
 " Gruvbox
@@ -18,6 +19,20 @@ hi TabLine cterm=NONE guifg=#928374 guibg=#3c3836
 hi TabLineSel guifg=#ebdbb2 guibg=#504945
 hi WinSeparator guifg=#504945
 hi StatusLineNC guifg=#3c3836
+
+" Treesitter
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "c", "cpp", "bash", "lua", "vim", "vimdoc", "query",
+                       "cmake", "markdown", "markdown_inline" },
+  sync_install = false,
+  auto_install = false,
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
 
 " FZF
 let g:fzf_layout = { 'tmux': '-yS' }
