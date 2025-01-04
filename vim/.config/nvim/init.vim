@@ -1,3 +1,14 @@
+" #############################################################################
+" # Startup
+" #############################################################################
+
+" Eagerly disable netrw to avoid race conditions with nvim-tree
+" (see :h nvim-tree for details)
+lua << EOF
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+EOF
+
 let mapleader = ' '
 
 " #############################################################################
@@ -5,8 +16,9 @@ let mapleader = ' '
 " #############################################################################
 
 call plug#begin()
-Plug 'nvim-lualine/lualine.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'nvim-tree/nvim-tree.lua'
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-commentary'
@@ -21,6 +33,20 @@ require('lualine').setup {
 }
 EOF
 
+" Nvim-tree
+lua << EOF
+require('nvim-tree').setup {
+  actions = {
+    open_file = {
+      window_picker =  {
+        enable = false,
+      },
+    },
+  },
+}
+EOF
+nmap <leader>e :NvimTreeToggle<CR>
+
 " Gruvbox
 let g:gruvbox_guisp_fallback = "bg"
 colorscheme gruvbox
@@ -33,7 +59,7 @@ hi StatusLineNC guifg=#3c3836
 
 " Treesitter
 lua << EOF
-require'nvim-treesitter.configs'.setup {
+require('nvim-treesitter.configs').setup {
   ensure_installed = { "c", "cpp", "bash", "lua", "vim", "vimdoc", "query",
                        "cmake", "markdown", "markdown_inline" },
   sync_install = false,
@@ -75,6 +101,15 @@ nmap <leader>ff :GFiles<CR>
 nmap <leader>fs :Tags<CR>
 
 " #############################################################################
+" # Navigation
+" #############################################################################
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" #############################################################################
 " # Appearance
 " #############################################################################
 
@@ -101,8 +136,9 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 set ttimeoutlen=10
+set mouse=
 
-nmap <leader>e :windo e<CR>
+nmap <leader>r :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
 
@@ -120,7 +156,7 @@ set keywordprg=:Man
 let g:ft_man_open_mode = 'vert'
 
 nnoremap <silent> * :let @/='\<'.expand('<cword>').'\>'<bar>set hlsearch<CR>
-nnoremap <silent> <C-l> :nohl<CR><C-l>
+nnoremap <silent> <esc><esc> :nohl<CR>
 
 " #############################################################################
 " # Git integration
