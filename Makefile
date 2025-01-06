@@ -31,7 +31,7 @@ install:
 	update-desktop-database ~/.local/share/applications/
 
 uninstall:
-	stow --target ${HOME} -Dv $(PACKAGES)
+	stow --target ${HOME} -Dv --no-folding $(PACKAGES)
 
 vim:
 	curl -fLo \

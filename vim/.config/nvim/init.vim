@@ -48,7 +48,6 @@ EOF
 nmap <leader>e :NvimTreeToggle<CR>
 
 " Gruvbox
-let g:gruvbox_guisp_fallback = "bg"
 colorscheme gruvbox
 hi ColorColumn guibg=#282828
 hi TabLineFill guibg=#282828
