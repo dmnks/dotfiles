@@ -24,16 +24,15 @@ function! s:planInit()
     syntax match planPost "^+ .\+$"
     syntax match planDrop "^- .\+$"
     syntax match planNote "^# .\+$"
-    syntax match planGoal "^@ .\+$"
-    highlight planDate ctermfg=13
-    highlight planOpen ctermfg=10
-    highlight planPost ctermfg=11
-    highlight planDrop ctermfg=8
-    highlight planNote ctermfg=8
-    highlight planGoal ctermfg=12
+    " syntax match planGoal "^@ .\+$"
+    highlight link planDate Constant
+    highlight link planOpen Macro
+    highlight link planPost Type
+    highlight link planDrop Comment
+    " highlight link planGoal Define
 
     " Mappings
-    nmap <buffer> <silent> <NUL>
+    nmap <buffer> <silent> <C-space>
     \   :call <sid>planCycle([' ', '*', '+', '-'])<CR>
     nmap <buffer> <silent> <CR>         :call <sid>planNext()<CR>
     nmap <silent> q :q<CR>

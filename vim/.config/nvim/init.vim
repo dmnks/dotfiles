@@ -2,12 +2,12 @@
 " # Startup
 " #############################################################################
 
-" Eagerly disable netrw to avoid race conditions with nvim-tree
-" (see :h nvim-tree for details)
-lua << EOF
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-EOF
+" " Eagerly disable netrw to avoid race conditions with nvim-tree
+" " (see :h nvim-tree for details)
+" lua << EOF
+" vim.g.loaded_netrw = 1
+" vim.g.loaded_netrwPlugin = 1
+" EOF
 
 let mapleader = ' '
 
@@ -16,36 +16,36 @@ let mapleader = ' '
 " #############################################################################
 
 call plug#begin()
-Plug 'nvim-tree/nvim-web-devicons'
-Plug 'nvim-lualine/lualine.nvim'
-Plug 'nvim-tree/nvim-tree.lua'
+" Plug 'nvim-tree/nvim-web-devicons'
+" Plug 'nvim-lualine/lualine.nvim'
+" Plug 'nvim-tree/nvim-tree.lua'
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-commentary'
 call plug#end()
 
-" Lualine
-lua << EOF
-require('lualine').setup {
-  options = {
-    globalstatus = true,
-  },
-}
-EOF
+" " Lualine
+" lua << EOF
+" require('lualine').setup {
+"   options = {
+"     globalstatus = true,
+"   },
+" }
+" EOF
 
-" Nvim-tree
-lua << EOF
-require('nvim-tree').setup {
-  actions = {
-    open_file = {
-      window_picker =  {
-        enable = false,
-      },
-    },
-  },
-}
-EOF
-nmap <leader>e :NvimTreeToggle<CR>
+" " Nvim-tree
+" lua << EOF
+" require('nvim-tree').setup {
+"   actions = {
+"     open_file = {
+"       window_picker =  {
+"         enable = false,
+"       },
+"     },
+"   },
+" }
+" EOF
+" nmap <leader>e :NvimTreeToggle<CR>
 
 " Gruvbox
 colorscheme gruvbox
@@ -119,7 +119,6 @@ set cursorline
 set colorcolumn=80
 set scrolloff=0
 set laststatus=3
-set noshowmode
 
 let c_no_curly_error = 1
 
@@ -137,7 +136,7 @@ set expandtab
 set ttimeoutlen=10
 set mouse=
 
-nmap <leader>r :windo e<CR>
+nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
 
