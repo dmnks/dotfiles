@@ -15,7 +15,7 @@
     untracked = 9
     unmerged = 9
 [core]
-    editor = vim
+    editor = nvim
     # Stow ignores .gitignore files so using a different name
     excludesfile = ~/.gitign
 [alias]

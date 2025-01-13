@@ -13,9 +13,6 @@ bind diff V @sh -c "xdg-open https://github.com/rpm-software-management/rpm/comm
 bind diff C @sh -c "xdg-open $(git changeset %(commit) | tail -n1)"
 
 # COLORS
-color title-blur            default     color237
-color title-focus           default     color239    bold
-color cursor                default     color237    bold
 color "Refs: "              default     default
 color "Author: "            default     default
 color "AuthorDate: "        default     default
@@ -36,3 +33,5 @@ color grep.file             color12     default
 color help-group            color12     default
 color diff-stat             color12     default
 color graph-commit          color12     default
+
+source ~/.colorscheme.tigrc
