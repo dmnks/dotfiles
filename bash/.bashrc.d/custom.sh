@@ -33,14 +33,14 @@ if which fzf &>/dev/null; then
         --color='marker:$ACCENT_COLOR_FG,spinner:$ACCENT_COLOR_FG'
         --color='hl+:$ACCENT_COLOR_FG'
         --color='hl:#928374,fg+:#fbf1c7,bg+:#3c3836,header:#7c6f64'
-        --color='border:#504945,gutter:-1,scrollbar:#504945,info:#7c6f64'
+        --color='gutter:-1,scrollbar:#504945,info:#7c6f64'
         --no-bold
         --info=inline-right
         --scrollbar=█
         --pointer=''
         --header=''
-        --border=sharp
-        --padding=0
+        --border=none
+        --padding=1,2
         --no-separator
         --highlight-line
     "
