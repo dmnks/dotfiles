@@ -109,6 +109,8 @@ cmd_open() {
         tmux split-window -t "$name" -h -d
         tmux new-window -t "$name" -n " Debug"
         tmux split-window -t "$name" -h -d
+        tmux new-window -t "$name" -n " Manual"
+        tmux split-window -t "$name" -h -d
         tmux select-window -t "${name}:+1"
     fi
 
