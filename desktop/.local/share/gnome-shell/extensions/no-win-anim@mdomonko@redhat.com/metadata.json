@@ -3,6 +3,6 @@
   "description": "Disable animations related to window management.",
   "uuid": "no-win-anim@mdomonko@redhat.com",
   "shell-version": [
-    "43"
+    "47"
   ]
 }

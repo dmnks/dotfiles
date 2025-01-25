@@ -18,12 +18,10 @@
 
 /* exported init */
 
-const Main = imports.ui.main;
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-class Extension {
-    constructor() {
-    }
-
+export default class NoWinAnimExtension extends Extension {
     enable() {
         this.orig = Main.wm._shouldAnimate;
         Main.wm._shouldAnimate = function() {
@@ -34,8 +32,4 @@ class Extension {
     disable() {
         Main.wm._shouldAnimate = this.orig;
     }
-}
-
-function init() {
-    return new Extension();
 }
