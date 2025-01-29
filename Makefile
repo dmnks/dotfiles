@@ -9,6 +9,7 @@ software:
 	sudo dnf install -y \
 		 ctags \
 		 dejavu-sans-mono-fonts \
+		 eza \
 		 foot \
 		 fzf \
 		 gh \
@@ -16,7 +17,6 @@ software:
 		 gnome-extensions-app \
 		 gnome-tweaks \
 		 jetbrains-mono-nl-fonts \
-		 lsd \
 		 neovim \
 		 pass \
 		 pavucontrol \

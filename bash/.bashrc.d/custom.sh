@@ -46,8 +46,8 @@ if which fzf &>/dev/null; then
     "
 fi
 
-if which lsd &>/dev/null; then
-    alias ls='lsd'
+if which eza &>/dev/null; then
+    alias ls='eza'
     alias tree='ls --tree'
 fi
 
