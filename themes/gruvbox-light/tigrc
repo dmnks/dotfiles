@@ -1,0 +1,4 @@
+# Gruvbox Light
+color title-blur            default     color223
+color title-focus           default     color225    bold
+color cursor                default     color223    bold

@@ -34,4 +34,4 @@ color help-group            color12     default
 color diff-stat             color12     default
 color graph-commit          color12     default
 
-source ~/.colorscheme.tigrc
+source ~/.theme/tigrc
