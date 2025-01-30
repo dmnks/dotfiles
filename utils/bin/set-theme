@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd "$(dirname "$(readlink -f "$0")")"/../../
+
+theme=$(ls -1 themes | fzf --prompt " Theme ")
+[ -n "$theme" ] || exit
+[ -L ~/.theme ] || exit
+
+rm ~/.theme
+ln -s $PWD/themes/$theme ~/.theme
