@@ -242,8 +242,8 @@ cmd_status() {
 cmd_refresh() {
     for var in ACCENT_COLOR_BG \
                ACCENT_COLOR_FG \
-               THEME_COLOR_ACTIVE_FG \
                THEME_COLOR_ACTIVE_BG \
+               THEME_COLOR_ACTIVE_FG \
                THEME_COLOR_DIM1 \
                THEME_COLOR_DIM2 \
                THEME_COLOR_DIM3 \
