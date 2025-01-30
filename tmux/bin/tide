@@ -245,7 +245,7 @@ cmd_refresh() {
     tmux set-environment ACCENT_COLOR $(accent_color 2)
     tmux set-environment -g ACCENT_COLOR $(accent_color 2)
     tmux source-file ~/.tmux.conf
-    tmux display-message "Config reloaded"
+    tmux display-message "  Config reloaded"
 }
 
 cmd_status() {
