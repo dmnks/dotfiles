@@ -47,8 +47,6 @@ call plug#end()
 " EOF
 " nmap <leader>e :NvimTreeToggle<CR>
 
-source ~/.theme/init.vim
-
 " Treesitter
 lua << EOF
 require('nvim-treesitter.configs').setup {
@@ -62,6 +60,8 @@ require('nvim-treesitter.configs').setup {
   },
 }
 EOF
+
+source ~/.theme/init.vim
 
 " FZF
 let g:fzf_layout = { 'tmux': '-yS' }
