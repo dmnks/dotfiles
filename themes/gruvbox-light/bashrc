@@ -1,0 +1,21 @@
+# Gruvbox Light
+
+export THEME_COLOR_ACTIVE_FG='#282828'
+export THEME_COLOR_ACTIVE_BG='#ebdbb2'
+export THEME_COLOR_DIM1='#928374'
+export THEME_COLOR_DIM2='#a89984'
+export THEME_COLOR_DIM3='#bdae93'
+export THEME_COLOR_DIM4='#d5c4a1'
+
+_accent_color() {
+    case $1 in
+        blue)   echo '#458588 #076678' ;;
+        teal)   echo '#689d6a #427b58' ;;
+        green)  echo '#98971a #79740e' ;;
+        yellow) echo '#d79921 #b57614' ;;
+        orange) echo '#d65d0e #af3a03' ;;
+        red)    echo '#cc241d #9d0006' ;;
+        purple) echo '#b16286 #8f3f71' ;;
+        slate)  echo '#7c6f64 #3c3836' ;;
+    esac
+}

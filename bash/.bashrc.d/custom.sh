@@ -1,6 +1,17 @@
 export EDITOR=nvim
 alias vim=nvim
 
+source ~/.theme/bashrc
+
+accent_color() {
+    local arg=$1
+    local col=$(dconf read /org/gnome/desktop/interface/accent-color | tr -d \')
+    _accent_color $col | cut -d' ' -f$arg
+}
+
+export ACCENT_COLOR_BG=$(accent_color 1)
+export ACCENT_COLOR_FG=$(accent_color 2)
+
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
     GIT_PS1_SHOWDIRTYSTATE=1
@@ -9,31 +20,16 @@ if which git &>/dev/null; then
     alias gdiff='git diff --no-index --'
 fi
 
-accent_color() {
-    local arg=$1
-    case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
-        blue)   echo '#458588 #83a598' ;;
-        teal)   echo '#689d6a #8ec07c' ;;
-        green)  echo '#98971a #b8bb26' ;;
-        yellow) echo '#d79921 #fabd2f' ;;
-        orange) echo '#d65d0e #fe8019' ;;
-        red)    echo '#cc241d #fb4934' ;;
-        purple) echo '#b16286 #d3869b' ;;
-        slate)  echo '#a89984 #ebdbb2' ;;
-    esac | cut -d' ' -f$arg
-}
-
 if which fzf &>/dev/null; then
     source /usr/share/fzf/shell/key-bindings.bash
-    export ACCENT_COLOR_BG=$(accent_color 1)
-    export ACCENT_COLOR_FG=$(accent_color 2)
     export FZF_DEFAULT_OPTS="
         --layout=reverse
         --color='pointer:$ACCENT_COLOR_FG,prompt:$ACCENT_COLOR_FG'
         --color='marker:$ACCENT_COLOR_FG,spinner:$ACCENT_COLOR_FG'
         --color='hl+:$ACCENT_COLOR_FG'
-        --color='hl:#928374,fg+:#fbf1c7,bg+:#3c3836,header:#7c6f64'
-        --color='gutter:-1,scrollbar:#504945,info:#7c6f64'
+        --color='hl:$THEME_COLOR_DIM1,fg+:$THEME_COLOR_ACTIVE_FG'
+        --color='bg+:$THEME_COLOR_ACTIVE_BG,header:$THEME_COLOR_DIM2'
+        --color='scrollbar:$THEME_COLOR_DIM4,info:$THEME_COLOR_DIM2,gutter:-1'
         --no-bold
         --info=inline-right
         --scrollbar=█

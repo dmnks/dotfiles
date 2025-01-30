@@ -16,7 +16,7 @@ set_color() {
 }
 
 ROOTDIR=$(get_conf rootdir)
-C_DIM=$(set_color '#928374')
+C_DIM=$(set_color $THEME_COLOR_DIM1)
 C_RES=$(printf "\x1b[0m")
 
 cmd_usage() {
@@ -240,7 +240,15 @@ cmd_status() {
 }
 
 cmd_refresh() {
-    for var in ACCENT_COLOR_BG ACCENT_COLOR_FG FZF_DEFAULT_OPTS; do
+    for var in ACCENT_COLOR_BG \
+               ACCENT_COLOR_FG \
+               THEME_COLOR_ACTIVE_FG \
+               THEME_COLOR_ACTIVE_BG \
+               THEME_COLOR_DIM1 \
+               THEME_COLOR_DIM2 \
+               THEME_COLOR_DIM3 \
+               THEME_COLOR_DIM4 \
+               FZF_DEFAULT_OPTS; do
         tmux set-environment -g $var "${!var}"
     done
     tmux source-file ~/.tmux.conf
