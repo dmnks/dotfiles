@@ -4,6 +4,8 @@ PROGRAM=$(basename $0)
 CMD=$1; shift
 REPO=$(dirname $PWD | xargs basename)
 
+source ~/.theme/bashrc
+
 get_conf() {
     awk -F "=" "/$1/ {print \$2}" $HOME/.config/tide/config.ini
 }
@@ -240,18 +242,10 @@ cmd_status() {
 }
 
 cmd_refresh() {
-    for var in ACCENT_COLOR_BG \
-               ACCENT_COLOR_FG \
-               THEME_COLOR_ACTIVE_BG \
-               THEME_COLOR_ACTIVE_FG \
-               THEME_COLOR_DIM1 \
-               THEME_COLOR_DIM2 \
-               THEME_COLOR_DIM3 \
-               THEME_COLOR_DIM4 \
-               FZF_DEFAULT_OPTS; do
-        tmux set-environment -g $var "${!var}"
-    done
+    tmux set-environment ACCENT_COLOR $(accent_color 2)
+    tmux set-environment -g ACCENT_COLOR $(accent_color 2)
     tmux source-file ~/.tmux.conf
+    tmux display-message "Config reloaded"
 }
 
 cmd_status() {

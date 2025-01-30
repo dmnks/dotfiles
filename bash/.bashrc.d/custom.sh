@@ -1,17 +1,6 @@
 export EDITOR=nvim
 alias vim=nvim
 
-source ~/.theme/bashrc
-
-accent_color() {
-    local arg=$1
-    local col=$(dconf read /org/gnome/desktop/interface/accent-color | tr -d \')
-    _accent_color $col | cut -d' ' -f$arg
-}
-
-export ACCENT_COLOR_BG=$(accent_color 1)
-export ACCENT_COLOR_FG=$(accent_color 2)
-
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
     GIT_PS1_SHOWDIRTYSTATE=1
@@ -22,24 +11,6 @@ fi
 
 if which fzf &>/dev/null; then
     source /usr/share/fzf/shell/key-bindings.bash
-    export FZF_DEFAULT_OPTS="
-        --layout=reverse
-        --color='pointer:$ACCENT_COLOR_FG,prompt:$ACCENT_COLOR_FG'
-        --color='marker:$ACCENT_COLOR_FG,spinner:$ACCENT_COLOR_FG'
-        --color='hl+:$ACCENT_COLOR_FG'
-        --color='hl:$THEME_COLOR_DIM1,fg+:$THEME_COLOR_ACTIVE_FG'
-        --color='bg+:$THEME_COLOR_ACTIVE_BG,header:$THEME_COLOR_DIM2'
-        --color='scrollbar:$THEME_COLOR_DIM4,info:$THEME_COLOR_DIM2,gutter:-1'
-        --no-bold
-        --info=inline-right
-        --scrollbar=█
-        --pointer=''
-        --header=''
-        --border=none
-        --padding=1,2
-        --no-separator
-        --highlight-line
-    "
 fi
 
 if which eza &>/dev/null; then

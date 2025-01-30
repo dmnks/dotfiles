@@ -1,0 +1,24 @@
+#!/bin/bash
+
+source ~/.theme/bashrc
+
+export FZF_DEFAULT_OPTS="
+    --layout=reverse
+    --color='pointer:$ACCENT_COLOR,prompt:$ACCENT_COLOR'
+    --color='marker:$ACCENT_COLOR,spinner:$ACCENT_COLOR'
+    --color='hl+:$ACCENT_COLOR'
+    --color='hl:$THEME_COLOR_DIM1,fg+:$THEME_COLOR_ACTIVE_FG'
+    --color='bg+:$THEME_COLOR_ACTIVE_BG,header:$THEME_COLOR_DIM2'
+    --color='scrollbar:$THEME_COLOR_DIM4,info:$THEME_COLOR_DIM2,gutter:-1'
+    --no-bold
+    --info=inline-right
+    --scrollbar=█
+    --pointer=''
+    --header=''
+    --border=none
+    --padding=1,2
+    --no-separator
+    --highlight-line
+"
+
+exec /usr/bin/fzf "$@"

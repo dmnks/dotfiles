@@ -1,14 +1,7 @@
 # Gruvbox Dark
 
-export THEME_COLOR_ACTIVE_FG='#fbf1c7'
-export THEME_COLOR_ACTIVE_BG='#3c3836'
-export THEME_COLOR_DIM1='#928374'
-export THEME_COLOR_DIM2='#7c6f64'
-export THEME_COLOR_DIM3='#665c54'
-export THEME_COLOR_DIM4='#504945'
-
-_accent_color() {
-    case $1 in
+accent_color() {
+    case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
         blue)   echo '#458588 #83a598' ;;
         teal)   echo '#689d6a #8ec07c' ;;
         green)  echo '#98971a #b8bb26' ;;
@@ -17,5 +10,12 @@ _accent_color() {
         red)    echo '#cc241d #fb4934' ;;
         purple) echo '#b16286 #d3869b' ;;
         slate)  echo '#a89984 #ebdbb2' ;;
-    esac
+    esac | cut -d' ' -f$1
 }
+
+export THEME_COLOR_ACTIVE_FG='#fbf1c7'
+export THEME_COLOR_ACTIVE_BG='#3c3836'
+export THEME_COLOR_DIM1='#928374'
+export THEME_COLOR_DIM2='#7c6f64'
+export THEME_COLOR_DIM3='#665c54'
+export THEME_COLOR_DIM4='#504945'
