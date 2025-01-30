@@ -8,3 +8,6 @@ theme=$(ls -1 themes | fzf --prompt " Theme ")
 
 rm ~/.theme
 ln -s $PWD/themes/$theme ~/.theme
+
+tide refresh
+tmux detach-client
