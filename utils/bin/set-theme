@@ -10,4 +10,5 @@ rm ~/.theme
 ln -s $PWD/themes/$theme ~/.theme
 
 tide refresh
+tmux send-keys -t1.1 C-[ ' r'
 tmux detach-client
