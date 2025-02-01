@@ -13,7 +13,7 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --no-bold
     --info=inline-right
     --scrollbar=█
-    --pointer=''
+    --pointer=▎
     --header=''
     --border=none
     --padding=1,2
