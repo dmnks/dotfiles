@@ -1,6 +1,8 @@
 export EDITOR=nvim
 alias vim=nvim
 
+source ~/.theme/bashrc
+
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
     GIT_PS1_SHOWDIRTYSTATE=1

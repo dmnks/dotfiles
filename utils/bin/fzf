@@ -2,7 +2,7 @@
 
 source ~/.theme/bashrc
 
-export FZF_DEFAULT_OPTS="
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --layout=reverse
     --color='pointer:$ACCENT_COLOR,prompt:$ACCENT_COLOR'
     --color='marker:$ACCENT_COLOR,spinner:$ACCENT_COLOR'
