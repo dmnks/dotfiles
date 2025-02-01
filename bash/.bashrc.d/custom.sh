@@ -11,12 +11,12 @@ if which git &>/dev/null; then
     alias gdiff='git diff --no-index --'
 fi
 
-if which fzf &>/dev/null; then
+if which /usr/bin/fzf &>/dev/null; then
     source /usr/share/fzf/shell/key-bindings.bash
 fi
 
-if which eza &>/dev/null; then
-    alias ls='eza'
+if which lsd &>/dev/null; then
+    alias ls='lsd'
     alias tree='ls --tree'
 fi
 

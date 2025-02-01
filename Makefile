@@ -9,7 +9,7 @@ software:
 	sudo dnf install -y \
 		 ctags \
 		 dejavu-sans-mono-fonts \
-		 eza \
+		 lsd \
 		 foot \
 		 fzf \
 		 gh \

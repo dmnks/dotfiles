@@ -189,54 +189,28 @@ cmd_reload() {
 }
 
 cmd_status() {
-    local cmd="$1"
-    local session_name="$2"
-    local session_path="$3"
-    local pane_command="$4"
+    local cmd=$1
+    shift
 
     print_branch() {
-        cd "$session_path"
-        git rev-parse --is-inside-work-tree >/dev/null || return 0
-        source /usr/share/git-core/contrib/completion/git-prompt.sh
-        GIT_PS1_SHOWDIRTYSTATE=1
-        GIT_PS1_SHOWSTASHSTATE=1
-        GIT_PS1_SHOWUPSTREAM="auto"
-        GIT_PS1_STATESEPARATOR=""
-        printf "󰘬 $(__git_ps1 '%s') "
+        git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
+        printf "󰘬 $(git -C $1 rev-parse --abbrev-ref HEAD)"
     }
 
     print_toolbox() {
-        local name=$(echo "$session_name" | sed 's/\//-/')
+        local name=$(echo "$1" | sed 's/\//-/')
         podman container exists "$name" || return 0
         local pfx=".Config.Labels"
         local key="{{${pfx}.name}}:{{${pfx}.version}}"
-        printf "󰆧 $(podman inspect --format "$key" "$name")  "
+        printf "󰆧 $(podman inspect --format "$key" "$name")"
     }
 
     case $cmd in
-        icon)
-            shift
-            case "$1" in
-                Code)   echo " " ;;
-                Git)    echo "󰘬 " ;;
-                Build)  echo " " ;;
-                Debug)  echo " " ;;
-                Manual) echo " " ;;
-                Blame)  echo " " ;;
-                Slack)  echo "󰒱 " ;;
-                Mutt)   echo "󰇰 " ;;
-                Plan)   echo " " ;;
-                Dashboard)
-                        echo "󰕮 " ;;
-                bash)   echo " " ;;
-                *)      echo " " ;;
-            esac
+        left)
+            print_branch "$@"
         ;;
-        branch)
-            print_branch
-        ;;
-        line)
-            print_toolbox
+        right)
+            print_toolbox "$@"
         ;;
     esac
 }
@@ -250,7 +224,7 @@ cmd_refresh() {
     tmux display-message "  Config reloaded"
 }
 
-cmd_status() {
+cmd_git_status() {
     local num=$(git diff --staged --stat | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
@@ -262,6 +236,7 @@ case $CMD in
     checkout)           cmd_checkout "$@" ;;
     reload)             cmd_reload "$@" ;;
     status)             cmd_status "$@" ;;
+    git-status)         cmd_git_status "$@" ;;
     refresh)            cmd_refresh "$@" ;;
     *)                  cmd_usage ;;
 esac

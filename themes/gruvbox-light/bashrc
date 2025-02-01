@@ -1,6 +1,7 @@
 # Gruvbox Light
 
 accent_color() {
+    which dconf &>/dev/null || return $ACCENT_COLOR
     case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
         blue)   echo '#458588 #076678' ;;
         teal)   echo '#689d6a #427b58' ;;
