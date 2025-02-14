@@ -162,12 +162,12 @@ set grepformat=%f:%l:%m,%f:%l%m,%f\ \ %l%m
 command -nargs=+ G exec "silent grep! <args>" | copen | redraw
 
 nmap <leader>gg :exec "G <cword>"<CR>
+nmap <silent> <leader>gl :call
+\   system('tmux popup -E -w 80% -h 80% ' .
+\          'sh -c "TIG_SCRIPT=<(echo :enter) tig -L' .
+\          line('.') . ',+1:' . expand('%') . '"')<CR>
 nmap <silent> <leader>gb :call
 \   system('tmux popup -E -w 80% -h 80% ' .
-\          'sh -c "TIG_SCRIPT=<(echo :enter) tig blame +' .
-\          line('.') . ' ' . expand('%') . '"')<CR>
-nmap <silent> <leader>gB :call
-\   system('tmux new-window -n BLAME ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig blame +' .
 \          line('.') . ' ' . expand('%') . '"')<CR>
 nmap <leader>c :call system('git ctags')<CR>

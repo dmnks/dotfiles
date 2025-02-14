@@ -38,6 +38,7 @@
     rc = rebase --continue
     ra = rebase --abort
     cc = cherry-pick --continue
+    cb = cherry-pick --abort
 [merge]
     tool = vimdiff
 [pull]

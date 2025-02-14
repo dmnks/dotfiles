@@ -1,0 +1,18 @@
+#!/bin/bash
+
+git rev-list --reverse "$@" | \
+while read commit; do
+    msg=$(git rev-list -n1 --format=%B "$commit")
+    hash=$(echo "$msg" | sed -n 1p | sed 's/^commit //')
+    subject=$(echo "$msg" | sed -n 2p)
+    orig=$(echo "$msg" | sed -n 's/^(backported from commit \(.*\))/\1/p')
+    [ -z "$orig" ] && continue
+    echo "<details>"
+    echo "<summary>$hash $subject</summary>"
+    echo
+    echo '```diff'
+    git diff <(git show $orig) <(git show $hash) | cat
+    echo '```'
+    echo
+    echo "</details>"
+done
