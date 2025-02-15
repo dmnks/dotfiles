@@ -49,11 +49,11 @@ list_worktrees() {
     while read label path; read label obj; read ref; read; do
         name=${repo}$(basename $path)
         if [ "$ref" != "detached" ]; then
-            branch=" 󰘬 $(echo $ref | awk '{print $2}' | xargs basename)"
+            branch=$(echo $ref | awk '{print $2}' | xargs basename)
         else
-            branch=
+            branch=HEAD
         fi
-        printf "${name}${C_DIM}${branch}  ${obj:0:10}  ${path}${C_RES}\n"
+        printf "${name}${C_DIM} 󰘬 ${branch}  ${obj:0:10}  ${path}${C_RES}\n"
     done
 }
 
