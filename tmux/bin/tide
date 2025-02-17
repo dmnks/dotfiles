@@ -176,7 +176,7 @@ cmd_checkout() {
 cmd_reload() {
     case $1 in
         --refs)
-            git fetch --quiet $(get_conf remotes)
+            get_conf remotes | xargs -n1 git fetch --quiet
             list_branches
         ;;
         --all)
