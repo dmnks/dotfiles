@@ -54,3 +54,5 @@
 [sendemail]
     sendmailcmd = /usr/bin/msmtp -a rht
     to = pmatilai@redhat.com,ffesti@redhat.com
+[init]
+	defaultBranch = main
