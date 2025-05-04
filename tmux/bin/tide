@@ -197,20 +197,11 @@ cmd_status() {
         printf "󰘬 $(git -C $1 rev-parse --abbrev-ref HEAD)"
     }
 
-    print_toolbox() {
-        local name=$(echo "$1" | sed 's/\//-/')
-        podman container exists "$name" || return 0
-        local pfx=".Config.Labels"
-        local key="{{${pfx}.name}}:{{${pfx}.version}}"
-        printf "󰆧 $(podman inspect --format "$key" "$name")"
-    }
-
     case $cmd in
         left)
             print_branch "$@"
         ;;
         right)
-            print_toolbox "$@"
         ;;
     esac
 }
