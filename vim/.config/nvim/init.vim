@@ -17,21 +17,12 @@ let mapleader = ' '
 
 call plug#begin()
 " Plug 'nvim-tree/nvim-web-devicons'
-" Plug 'nvim-lualine/lualine.nvim'
 " Plug 'nvim-tree/nvim-tree.lua'
+" Plug 'nvim-lualine/lualine.nvim'
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-commentary'
 call plug#end()
-
-" " Lualine
-" lua << EOF
-" require('lualine').setup {
-"   options = {
-"     globalstatus = true,
-"   },
-" }
-" EOF
 
 " " Nvim-tree
 " lua << EOF
@@ -45,7 +36,16 @@ call plug#end()
 "   },
 " }
 " EOF
-" nmap <leader>e :NvimTreeToggle<CR>
+" nmap <leader>t :NvimTreeToggle<CR>
+
+" " Lualine
+" lua << EOF
+" require('lualine').setup {
+"   options = {
+"     globalstatus = true,
+"   },
+" }
+" EOF
 
 " Treesitter
 lua << EOF
