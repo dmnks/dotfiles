@@ -35,34 +35,20 @@ Commands:
 }
 
 list_worktrees() {
-    local repo args label path obj ref name branch
-
-    if [ $# -gt 0 ]; then
-        repo="$1/"
-        args="-C $2"
-    else
-        repo=
-        args=
-    fi
-
-    git $args worktree list --porcelain | \
-    while read label path; read label obj; read ref; read; do
-        name=${repo}$(basename $path)
-        if [ "$ref" != "detached" ]; then
-            branch=$(echo $ref | awk '{print $2}' | xargs basename)
-        else
-            branch=HEAD
-        fi
-        printf "${name}${C_DIM} 󰘬 ${branch}  ${obj:0:10}  ${path}${C_RES}\n"
+    local repo=${1:-$PWD}
+    local name=${repo##$ROOTDIR/}
+    git -C $repo worktree list --porcelain | \
+    while read label path; read label obj; read label ref; read; do
+        path=${path##$ROOTDIR/}
+        ref=${ref##*/}
+        printf "${path}${C_DIM} 󰘬 ${ref:-HEAD}  ${obj:0:10}  $name${C_RES}\n"
     done
 }
 
 list_repos() {
-    local path repo
-    find "$ROOTDIR" -maxdepth 3 -name .git -type d -printf '%h\n' | sort | \
+    find "$ROOTDIR" -maxdepth 4 -name .git -type d -printf '%h\n' | sort | \
     while read path; do
-        repo=$(dirname $path | xargs basename)
-        list_worktrees $repo $path
+        list_worktrees $path
     done
 }
 
@@ -75,32 +61,23 @@ press_key() {
 }
 
 cmd_open() {
-    local prompt header line tree path name
-    prompt=" Worktree"
-    header="Select a worktree to open or switch to (press ALT-A to toggle all)"
+    local hint ghost_loc ghost_all line path name
+    hint="press CTRL-G to show"
+    ghost_loc="Open a worktree ($hint global)"
+    ghost_all="Open a worktree ($hint local)"
 
-    # --bind 'alt-d:execute(tide kill {})+reload(tide reload -r)' \
     line=$(list_worktrees | \
-    fzf --prompt "$prompt $REPO/" --ansi +s -n1,3 \
-        --header "$header"$'\n\n' \
+    fzf --prompt "  " --ansi +s -n1,3 \
+        --ghost "$ghost_loc" \
         --bind 'alt-w:close' \
-        --bind "alt-a:transform:[ \${FZF_PROMPT: -1} == '/' ] &&
-                echo 'change-prompt($prompt )+reload(tide reload --all)' ||
-                echo 'change-prompt($prompt $REPO/)+reload(tide reload)'")
+        --bind "ctrl-g:transform:[[ \$FZF_GHOST == '$ghost_loc' ]] &&
+                echo 'change-ghost($ghost_all)+reload(tide reload --all)' ||
+                echo 'change-ghost($ghost_loc)+reload(tide reload)'")
 
     [ -z "$line" ] && return
-    tree=$(echo "$line" | awk '{print $1}')
-    path=$(echo "$line" | awk '{print $7}')
-    if [[ $tree == */* ]]; then
-        name=$tree
-    else
-        name=$REPO/$tree
-    fi
-    name=$(echo "$name" | sed 's/\./-/g')
-    # if [ ! -d "../$tree" ]; then
-    #     git worktree add ../$tree $tree || press_key
-    # fi
-    cd "$path"
+    path=$(echo "$line" | awk '{print $1}')
+    name=$(echo "$path" | sed 's/\./-/g')
+    cd "$ROOTDIR/$path"
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
         tmux new-session -ds "$name" -n " Code" \
@@ -152,12 +129,11 @@ list_branches() {
 }
 
 cmd_checkout() {
-    local header line ref
-    header="Select a branch or tag to checkout (press CTRL-R to fetch all)"
+    local line ref
 
     line=$(list_branches | \
-    fzf --prompt " Checkout " --ansi +s -n2,4 \
-        --header "$header"$'\n\n' \
+    fzf --prompt "  " --ansi +s -n2,4 \
+        --ghost "Checkout a branch or tag (press CTRL-R to fetch all)" \
         --bind 'ctrl-r:reload(tide reload --refs)' \
         --bind 'alt-e:close')
 
@@ -200,8 +176,6 @@ cmd_status() {
     case $cmd in
         left)
             print_branch "$@"
-        ;;
-        right)
         ;;
     esac
 }
