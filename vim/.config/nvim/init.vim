@@ -134,6 +134,7 @@ set mouse=
 nmap <leader>e :windo e<CR>
 nmap <leader>s :set spell!<CR>
 nmap <leader>p :set paste!<CR>
+nmap <leader>p V"_dP
 
 " #############################################################################
 " # Searching
