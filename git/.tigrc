@@ -11,6 +11,10 @@ bind main g move-first-line
 bind generic H @sh -c "echo -n %(commit) | wl-copy -o"
 bind diff V @sh -c "xdg-open https://github.com/rpm-software-management/rpm/commit/%(commit)"
 bind diff C @sh -c "xdg-open $(git changeset %(commit) | tail -n1)"
+bind diff d scroll-half-page-down
+bind diff u scroll-half-page-up
+bind diff e scroll-line-down
+bind diff y scroll-line-up
 
 # COLORS
 color "Refs: "              default     default
