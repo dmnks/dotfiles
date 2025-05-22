@@ -35,13 +35,19 @@ Commands:
 }
 
 list_worktrees() {
-    local repo=${1:-$PWD}
-    local name=${repo##$ROOTDIR/}
+    local repo name
+    if [ $# == 0 ]; then
+        repo=$PWD
+        name=
+    else
+        repo=$1
+        name="  ${repo##$ROOTDIR/}"
+    fi
     git -C $repo worktree list --porcelain | \
     while read label path; read label obj; read label ref; read; do
         path=${path##$ROOTDIR/}
         ref=${ref##*/}
-        printf "${path}${C_DIM} 󰘬 ${ref:-HEAD}  ${obj:0:10}  $name${C_RES}\n"
+        printf "${path}${C_DIM} 󰘬 ${ref:-HEAD}  ${obj:0:10}${name}${C_RES}\n"
     done
 }
 
