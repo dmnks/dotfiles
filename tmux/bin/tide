@@ -205,7 +205,7 @@ cmd_palette() {
     cmd=$(printf "%s\n" "${list[@]}" | \
     fzf --prompt "  " \
         --ghost "Choose a command to run" \
-        --bind 'alt-o:close' \
+        --bind 'alt-w:close' \
     )
 
     [ -z "$cmd" ] && return
