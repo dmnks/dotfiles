@@ -104,30 +104,17 @@ cmd_open() {
 }
 
 list_branches() {
-    local fmt_loc fmt_rem fmt_pat
-    local symbol ref upstream object
-
-    fmt_loc=(
+    format=(
         "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
-        "%(refname:lstrip=-1)"
-        "%(if)%(upstream)%(then)%(upstream:short)%(else)%(end)"
+        "%(refname:short)"
+        "%(if)%(upstream)%(then)%(upstream:short)%(else)none%(end)"
         "%(objectname:short=10)"
     )
-    fmt_rem="󰘬 %(refname:lstrip=-1) %(refname:short) %(objectname:short=10)"
-    fmt_pat="^󰘬 %(refname:lstrip=-1) "
-
-    (git for-each-ref --format="${fmt_loc[*]}" refs/{heads,tags};
-     grep -f <(git for-each-ref --format="${fmt_pat}" refs/heads | sort) \
-          -v <(git for-each-ref --format="${fmt_rem}" refs/remotes | sort)) | \
-    while read symbol ref upstream object; do
-        [ $ref == HEAD ] && continue
-        if [ -z "$object" ]; then
-            object=$upstream
-            upstream=
-        else
-            upstream=" $upstream "
-        fi
-        printf "${symbol} ${ref} ${C_DIM}${upstream} ${object}${C_RES}\n"
+    git for-each-ref --format="${format[*]}" refs/{heads,tags} | \
+    while read symbol name upstream object; do
+        [ $name == HEAD ] && continue
+        [ "$upstream" == "none" ] && upstream= || upstream=" $upstream "
+        printf "${symbol} ${name} ${C_DIM}${upstream} ${object}${C_RES}\n"
     done
 }
 
@@ -136,8 +123,7 @@ cmd_checkout() {
 
     line=$(list_branches | \
     fzf --prompt "  " --ansi +s -n2,4 \
-        --ghost "Checkout a branch or tag (press CTRL-R to fetch all)" \
-        --bind 'ctrl-r:reload(tide reload --refs)' \
+        --ghost "Checkout a branch or tag" \
         --bind 'alt-e:close')
 
     [ -z "$line" ] && return
@@ -154,10 +140,6 @@ cmd_checkout() {
 
 cmd_reload() {
     case $1 in
-        --refs)
-            get_conf remotes | xargs -n1 git fetch --quiet
-            list_branches
-        ;;
         --all)
             list_repos
         ;;
