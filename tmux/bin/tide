@@ -73,12 +73,12 @@ cmd_open() {
     ghost_all="Open a worktree ($hint local)"
 
     line=$(list_worktrees | \
-    fzf --prompt "  " --ansi +s -n1,3 \
+    fzf --prompt "  " --ansi -n1,3 \
         --ghost "$ghost_loc" \
-        --bind 'alt-w:close' \
         --bind "ctrl-g:transform:[[ \$FZF_GHOST == '$ghost_loc' ]] &&
                 echo 'change-ghost($ghost_all)+reload(tide reload --all)' ||
-                echo 'change-ghost($ghost_loc)+reload(tide reload)'")
+                echo 'change-ghost($ghost_loc)+reload(tide reload)'" \
+    )
 
     [ -z "$line" ] && return
     path=$(echo "$line" | awk '{print $1}')
@@ -122,9 +122,9 @@ cmd_checkout() {
     local line ref
 
     line=$(list_branches | \
-    fzf --prompt "  " --ansi +s -n2,4 \
+    fzf --prompt "  " --ansi -n2,4 \
         --ghost "Checkout a branch or tag" \
-        --bind 'alt-e:close')
+    )
 
     [ -z "$line" ] && return
     ref=$(echo "$line" | awk '{print $2}')
@@ -137,6 +137,50 @@ cmd_checkout() {
     git ctags
     tmux refresh-client
 }
+
+cmd_checkout_gh() {
+    local line ref
+    template=(
+        '{{range .}}{{.number}} {{.author.login}} '
+        '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
+    )
+    line=$(gh pr list --json number,title,author,headRefName \
+                      --template "${template[*]}" | \
+    while read number author ref title; do
+        printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s 󰘬 %s${C_RES}\n" \
+               "$number" "$title" "$author" "$ref"
+    done | \
+    fzf --prompt "  " --ansi \
+        --ghost "Checkout a GitHub Pull Request" \
+    )
+
+    [ -z "$line" ] && return
+    ref=$(echo "$line" | awk '{print $1}')
+
+    gh pr checkout $ref || press_key
+    git ctags
+    tmux refresh-client
+}
+
+cmd_clone() {
+    local forge line repo
+    forge=$1
+
+    line=$(cat ~/.config/tide/${forge}.txt | \
+    fzf --prompt "  " --ansi \
+        --ghost "Clone a $forge repo" \
+    )
+
+    [ -z "$line" ] && return
+    path=$ROOTDIR/$line/$forge/main
+    [ -d "$path" ] && return
+    mkdir -p $path
+
+    $forge clone $line $path
+}
+
+cmd_clone_fedora() { cmd_clone fedpkg; }
+cmd_clone_redhat() { cmd_clone rhpkg; }
 
 cmd_reload() {
     case $1 in
@@ -181,12 +225,46 @@ cmd_git_status() {
     TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
 }
 
+cmd_theme() {
+    set-theme
+}
+
+cmd_palette() {
+    local cmds menu list text cmd
+    declare -A menu
+
+    cmds=(
+        cmd_open        	"Git: Open Worktree"
+        cmd_checkout		"Git: Checkout"
+        cmd_clone_fedora    	"Git: Clone Repo (fedpkg)"
+        cmd_clone_redhat    	"Git: Clone Repo (rhpkg)"
+        cmd_checkout_gh		"GitHub: Checkout Pull Request"
+        cmd_theme       	"Settings: Set Theme"
+    )
+
+    list=()
+    for ((i = 0; i < ${#cmds[@]}; i += 2)); do
+        text=${cmds[i + 1]}
+        menu[$text]=${cmds[i]}
+        list+=("$text")
+    done
+
+    cmd=$(printf "%s\n" "${list[@]}" | \
+    fzf --prompt "  " \
+        --ghost "Choose a command to run" \
+        --bind 'alt-w:close' \
+    )
+
+    [ -z "$cmd" ] && return
+    ${menu[$cmd]}
+}
+
 case $CMD in
     open)               cmd_open "$@" ;;
-    checkout)           cmd_checkout "$@" ;;
     reload)             cmd_reload "$@" ;;
     status)             cmd_status "$@" ;;
     git-status)         cmd_git_status "$@" ;;
+    palette)            cmd_palette "$@" ;;
     refresh)            cmd_refresh "$@" ;;
     *)                  cmd_usage ;;
 esac

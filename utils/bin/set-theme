@@ -2,7 +2,10 @@
 
 cd "$(dirname "$(readlink -f "$0")")"/../../
 
-theme=$(ls -1 themes | fzf --prompt " Theme ")
+theme=$(ls -1 themes | fzf \
+    --prompt "  " \
+    --ghost "Select a color theme to apply" \
+)
 [ -n "$theme" ] || exit
 [ -L ~/.theme ] || exit
 
@@ -11,4 +14,3 @@ ln -s $PWD/themes/$theme ~/.theme
 
 tide refresh
 tmux send-keys -t1.1 C-[ ' r'
-tmux detach-client
