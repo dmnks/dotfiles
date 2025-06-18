@@ -92,10 +92,9 @@ cmd_open() {
         tmux new-window -t "$name" -n " Build"
         tmux new-window -t "$name" -n " Debug"
         tmux select-window -t "${name}:+1"
+        tmux set @repo $(echo "${path%%/*}")
+        tmux set @path $(echo "${path#*/}")
     fi
-
-    tmux set @repo $(echo "${path%%/*}")
-    tmux set @path $(echo "${path#*/}")
 
     if [ -z "$TMUX" ]; then
         tmux attach -t "$name"
