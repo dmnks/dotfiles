@@ -138,20 +138,36 @@ cmd_checkout() {
     tmux refresh-client
 }
 
-cmd_checkout_gh() {
-    local line ref
+list_pr() {
+    if [ "$1" == "--all" ]; then
+        query=
+    else
+        query="user-review-requested:@me"
+    fi
     template=(
         '{{range .}}{{.number}} {{.author.login}} '
         '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
     )
-    line=$(gh pr list --json number,title,author,headRefName \
-                      --template "${template[*]}" | \
+    gh pr list --search "$query" \
+               --json number,title,author,headRefName \
+               --template "${template[*]}" | \
     while read number author ref title; do
         printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s 󰘬 %s${C_RES}\n" \
                "$number" "$title" "$author" "$ref"
-    done | \
+    done
+}
+
+cmd_checkout_gh() {
+    local line ref
+    hint="press CTRL-G to show"
+    ghost_loc="Checkout a GitHub Pull Request ($hint all)"
+    ghost_all="Checkout a GitHub Pull Request ($hint assigned)"
+    line=$(list_pr | \
     fzf --prompt "  " --ansi \
-        --ghost "Checkout a GitHub Pull Request" \
+        --ghost "$ghost_loc" \
+        --bind "ctrl-g:transform:[[ \$FZF_GHOST == '$ghost_loc' ]] &&
+                echo 'change-ghost($ghost_all)+reload(tide reload --pr-all)' ||
+                echo 'change-ghost($ghost_loc)+reload(tide reload --pr)'" \
     )
 
     [ -z "$line" ] && return
@@ -186,6 +202,12 @@ cmd_reload() {
     case $1 in
         --all)
             list_repos
+        ;;
+        --pr)
+            list_pr
+        ;;
+        --pr-all)
+            list_pr --all
         ;;
         *)
             list_worktrees
