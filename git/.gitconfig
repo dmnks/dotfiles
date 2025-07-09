@@ -56,3 +56,5 @@
     to = pmatilai@redhat.com,ffesti@redhat.com
 [init]
 	defaultBranch = main
+[rerere]
+	enabled = false

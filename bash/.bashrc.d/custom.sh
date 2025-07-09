@@ -15,11 +15,6 @@ if which /usr/bin/fzf &>/dev/null; then
     source /usr/share/fzf/shell/key-bindings.bash
 fi
 
-if which lsd &>/dev/null; then
-    alias ls='lsd'
-    alias tree='ls --tree'
-fi
-
 setup_ps1() {
     local red="\[$(tput setaf 9)\]"
     local green="\[$(tput setaf 10)\]"
