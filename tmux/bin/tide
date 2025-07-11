@@ -90,7 +90,6 @@ cmd_open() {
                          "sleep 0.1; while true; do $EDITOR -c GFiles; done"
         tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
         tmux new-window -t "$name" -n " Build"
-        tmux new-window -t "$name" -n " Debug"
         tmux select-window -t "${name}:+1"
         tmux set @repo $(echo "${path%%/*}")
         tmux set @path $(echo "${path#*/}")
