@@ -15,8 +15,6 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --scrollbar=█
     --pointer=▎
     --header=''
-    --border=none
-    --padding=1,2
     --no-separator
     --highlight-line
 "
