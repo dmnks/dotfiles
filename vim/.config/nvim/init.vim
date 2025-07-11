@@ -67,10 +67,12 @@ require('treesitter-context').setup {
 }
 EOF
 
-source ~/.theme/init.vim
+colorscheme gruvbox
+hi ColorColumn guibg=#282828
 
 " FZF
-let g:fzf_layout = { 'tmux': '-yS --padding 1,2' }
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6, 'yoffset': 0,
+\                                'border': 'sharp' } }
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
