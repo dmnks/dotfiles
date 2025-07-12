@@ -16,13 +16,15 @@ let mapleader = ' '
 " #############################################################################
 
 call plug#begin()
-" Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-tree/nvim-web-devicons'
 " Plug 'nvim-tree/nvim-tree.lua'
 " Plug 'nvim-lualine/lualine.nvim'
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'tpope/vim-commentary'
+"Plug 'junegunn/fzf.vim'
+Plug 'ibhagwan/fzf-lua'
 call plug#end()
 
 " " Nvim-tree
@@ -71,34 +73,34 @@ colorscheme gruvbox
 hi ColorColumn guibg=#282828
 
 " FZF
-let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6, 'yoffset': 0,
-\                                'border': 'sharp' } }
-function! s:buflist()
-    " Return listed buffers that have a name
-    let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-    let named = map(listed, 'bufname(v:val)')
-    let named = filter(named, '!empty(v:val)')
-    return named
-endfunction
-command! GFiles
-\   call fzf#run(fzf#wrap({
-\       'source':  'git ls-files',
-\       'options': '-m --prompt "  " --ghost "Open a file"',
-\   }))
-command! Buffers
-\   call fzf#run(fzf#wrap({
-\       'source':  reverse(<sid>buflist()),
-\       'options': '+m --prompt "  " --ghost "Open a buffer"',
-\   }))
-command! Tags
-\   if !empty(tagfiles()) | call fzf#run(fzf#wrap({
-\       'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
-\       'sink':    'tag',
-\       'options': '+m --prompt "  " --ghost "Find a symbol"',
-\   })) | else | echoerr 'No tags found' | endif
-nmap <leader><leader> :Buffers<CR>
-nmap <leader>ff :GFiles<CR>
-nmap <leader>fs :Tags<CR>
+" let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6, 'yoffset': 0,
+" \                                'border': 'sharp' } }
+" function! s:buflist()
+"     " Return listed buffers that have a name
+"     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+"     let named = map(listed, 'bufname(v:val)')
+"     let named = filter(named, '!empty(v:val)')
+"     return named
+" endfunction
+" command! GFiles
+" \   call fzf#run(fzf#wrap({
+" \       'source':  'git ls-files',
+" \       'options': '-m --prompt "  " --ghost "Open a file"',
+" \   }))
+" command! Buffers
+" \   call fzf#run(fzf#wrap({
+" \       'source':  reverse(<sid>buflist()),
+" \       'options': '+m --prompt "  " --ghost "Open a buffer"',
+" \   }))
+" command! Tags
+" \   if !empty(tagfiles()) | call fzf#run(fzf#wrap({
+" \       'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
+" \       'sink':    'tag',
+" \       'options': '+m --prompt "  " --ghost "Find a symbol"',
+" \   })) | else | echoerr 'No tags found' | endif
+" nmap <leader><leader> :Buffers<CR>
+" nmap <leader>ff :GFiles<CR>
+" nmap <leader>fs :Tags<CR>
 
 " #############################################################################
 " # Navigation
