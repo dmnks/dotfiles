@@ -183,7 +183,7 @@ cmd_clone() {
 
     line=$(cat ~/.config/tide/${forge}.txt | \
     fzf --prompt "  " --ansi \
-        --ghost "Clone a $forge repo" \
+        --ghost "Clone a repo with $forge" \
     )
 
     [ -z "$line" ] && return
@@ -255,10 +255,10 @@ cmd_palette() {
     declare -A menu
 
     cmds=(
-        cmd_open        	"Git: Open Worktree"
+        cmd_open        	"Worktree: Open"
         cmd_checkout		"Git: Checkout"
-        cmd_clone_fedora    	"Git: Clone Repo (fedpkg)"
-        cmd_clone_redhat    	"Git: Clone Repo (rhpkg)"
+        cmd_clone_fedora    	"Git: Clone Fedora Repo"
+        cmd_clone_redhat    	"Git: Clone RHEL Repo"
         cmd_checkout_gh		"GitHub: Checkout Pull Request"
         cmd_theme       	"Settings: Set Theme"
     )
