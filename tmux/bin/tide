@@ -146,7 +146,7 @@ cmd_worktree_add() {
 
     line=$(list_branches | \
     fzf --prompt "  " --ansi -n2,4 \
-        --ghost "Create a worktree for a branch or tag" \
+        --ghost "Add a worktree for a branch or tag" \
     )
 
     [ -z "$line" ] && return
@@ -290,7 +290,7 @@ cmd_palette() {
 
     cmds=(
         cmd_open        	"Worktree: Switch"
-        cmd_worktree_add        "Worktree: Create"
+        cmd_worktree_add        "Worktree: Add"
         cmd_worktree_rm         "Worktree: Remove"
         cmd_checkout		"Git: Checkout"
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
