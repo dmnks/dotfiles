@@ -16,7 +16,7 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --pointer=▎
     --header=''
     --border=none
-    --padding=1,2
+    --padding=0,1
     --no-separator
     --highlight-line
 "

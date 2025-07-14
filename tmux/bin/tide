@@ -68,8 +68,7 @@ press_key() {
 
 confirm() {
     local prompt=$1; shift
-    clear; echo
-    read -p "  ${prompt} [y/N]? " -n1 -r
+    read -p "${prompt} [y/N]? " -n1 -r
     clear
     if [ "$REPLY" = "y" ]; then
         "$@"
