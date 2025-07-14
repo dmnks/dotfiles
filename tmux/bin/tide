@@ -116,12 +116,12 @@ list_branches() {
     format=(
         "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
         "%(refname:lstrip=-1)"
+        "%(creatordate:relative)"
     )
-    git for-each-ref --format="${format[*]}" \
-        refs/{heads,remotes,tags} | sort -u | \
-    while read symbol name; do
-        [ $name == HEAD ] && continue
-        printf "${symbol} ${name}\n"
+    git for-each-ref --sort '-creatordate' --format="${format[*]}" \
+        | grep -v HEAD | awk '!seen[$2]++' | \
+    while read symbol name date; do
+        printf "${symbol} ${name} ${C_DIM}${date}${C_RES}\n"
     done
 }
 
