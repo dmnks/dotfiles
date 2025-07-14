@@ -80,8 +80,8 @@ confirm() {
 cmd_open() {
     local hint ghost_loc ghost_all line path name
     hint="press CTRL-G to show"
-    ghost_loc="Open a worktree ($hint global)"
-    ghost_all="Open a worktree ($hint local)"
+    ghost_loc="Switch to a worktree ($hint global)"
+    ghost_all="Switch to a worktree ($hint local)"
 
     line=$(list_worktrees | \
     fzf --prompt "  " --ansi -n1,3 \
@@ -296,8 +296,8 @@ cmd_palette() {
     declare -A menu
 
     cmds=(
-        cmd_open        	"Worktree: Open"
-        cmd_worktree_add        "Worktree: Add"
+        cmd_open        	"Worktree: Switch"
+        cmd_worktree_add        "Worktree: Create"
         cmd_worktree_rm         "Worktree: Remove"
         cmd_checkout		"Git: Checkout"
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
