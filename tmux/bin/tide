@@ -66,6 +66,17 @@ press_key() {
     [ "$1" == "-n" ] || exit 1
 }
 
+confirm() {
+    local prompt=$1; shift
+    clear; echo
+    read -p "  ${prompt} [y/N]? " -n1 -r
+    clear
+    if [ "$REPLY" = "y" ]; then
+        "$@"
+        return $?
+    fi
+}
+
 cmd_open() {
     local hint ghost_loc ghost_all line path name
     hint="press CTRL-G to show"
@@ -135,6 +146,36 @@ cmd_checkout() {
     git checkout $ref || press_key
     git ctags
     tmux refresh-client
+}
+
+cmd_worktree_add() {
+    local line ref
+
+    line=$(list_branches | \
+    fzf --prompt "  " --ansi -n2,4 \
+        --ghost "Add a worktree for a branch or tag" \
+    )
+
+    [ -z "$line" ] && return
+    ref=$(echo "$line" | awk '{print $2}')
+
+    [ -d ../$ref ] && return
+    git worktree add ../$ref || press_key
+}
+
+cmd_worktree_rm() {
+    local hint ghost_loc ghost_all line path name
+
+    line=$(list_worktrees | \
+    fzf --prompt "  " --ansi -n1,3 \
+        --ghost "Remove a worktree" \
+    )
+
+    [ -z "$line" ] && return
+    path=$(echo "$line" | awk '{print $1}')
+    name=$(echo "$path" | sed 's/\./-/g')
+    confirm "Remove worktree $ROOTDIR/$path" \
+    git worktree remove "$ROOTDIR/$path" || press_key
 }
 
 list_pr() {
@@ -256,6 +297,8 @@ cmd_palette() {
 
     cmds=(
         cmd_open        	"Worktree: Open"
+        cmd_worktree_add        "Worktree: Add"
+        cmd_worktree_rm         "Worktree: Remove"
         cmd_checkout		"Git: Checkout"
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
         cmd_clone_redhat    	"Git: Clone RHEL Repo"
