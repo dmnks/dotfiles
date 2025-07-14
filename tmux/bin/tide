@@ -115,15 +115,13 @@ cmd_open() {
 list_branches() {
     format=(
         "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
-        "%(refname:short)"
-        "%(if)%(upstream)%(then)%(upstream:short)%(else)none%(end)"
-        "%(objectname:short=10)"
+        "%(refname:lstrip=-1)"
     )
-    git for-each-ref --format="${format[*]}" refs/{heads,tags} | \
-    while read symbol name upstream object; do
+    git for-each-ref --format="${format[*]}" \
+        refs/{heads,remotes,tags} | sort -u | \
+    while read symbol name; do
         [ $name == HEAD ] && continue
-        [ "$upstream" == "none" ] && upstream= || upstream=" $upstream "
-        printf "${symbol} ${name} ${C_DIM}${upstream} ${object}${C_RES}\n"
+        printf "${symbol} ${name}\n"
     done
 }
 
@@ -137,11 +135,7 @@ cmd_checkout() {
 
     [ -z "$line" ] && return
     ref=$(echo "$line" | awk '{print $2}')
-    upstream=$(echo "$line" | awk '{print $4}')
 
-    if ! git rev-parse --verify $ref 2>&1 >/dev/null; then
-        git branch $ref $upstream || press_key
-    fi
     git checkout $ref || press_key
     git ctags
     tmux refresh-client
