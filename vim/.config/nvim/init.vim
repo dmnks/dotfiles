@@ -121,7 +121,7 @@ set laststatus=3
 
 let c_no_curly_error = 1
 
-nmap <leader>r :source ~/.config/nvim/init.vim<CR>
+nmap <silent> <leader>r :source ~/.config/nvim/init.vim<CR>
 
 " #############################################################################
 " # Editing
@@ -137,10 +137,10 @@ set expandtab
 set ttimeoutlen=10
 set mouse=
 
-nmap <leader>e :windo e<CR>
-nmap <leader>s :set spell!<CR>
-nmap <leader>p :set paste!<CR>
-nmap <leader>p V"_dP
+nmap <silent> <leader>e :windo e<CR>
+nmap <silent> <leader>s :set spell!<CR>
+nmap <silent> <leader>p :set paste!<CR>
+nmap <silent> <leader>p V"_dP
 
 " #############################################################################
 " # Searching
@@ -168,7 +168,7 @@ set grepprg=git\ grep\ -n\ $*
 set grepformat=%f:%l:%m,%f:%l%m,%f\ \ %l%m
 command -nargs=+ G exec "silent grep! <args>" | copen | redraw
 
-nmap <leader>gg :exec "G <cword>"<CR>
+nmap <silent> <leader>gg :exec "G <cword>"<CR>
 nmap <silent> <leader>gl :call
 \   system('tmux popup -E -yS -w 80% -h 80% ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig -L' .
@@ -177,7 +177,7 @@ nmap <silent> <leader>gb :call
 \   system('tmux popup -E -yS -w 80% -h 80% ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig blame +' .
 \          line('.') . ' ' . expand('%') . '"')<CR>
-nmap <leader>c :call system('git ctags')<CR>
+nmap <silent> <leader>c :call system('git ctags')<CR>
 
 " #############################################################################
 " # Misc
