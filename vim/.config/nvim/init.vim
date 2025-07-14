@@ -21,6 +21,7 @@ call plug#begin()
 " Plug 'nvim-lualine/lualine.nvim'
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'tpope/vim-commentary'
 call plug#end()
 
@@ -58,6 +59,11 @@ require('nvim-treesitter.configs').setup {
     enable = true,
     additional_vim_regex_highlighting = false,
   },
+}
+require('treesitter-context').setup {
+  enabled = true,
+  max_lines = 1,
+  trim_scope = 'inner',
 }
 EOF
 
