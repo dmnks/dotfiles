@@ -152,7 +152,7 @@ cmd_worktree_add() {
 
     line=$(list_branches | \
     fzf --prompt "  " --ansi -n2,4 \
-        --ghost "Add a worktree for a branch or tag" \
+        --ghost "Create a worktree for a branch or tag" \
     )
 
     [ -z "$line" ] && return
