@@ -281,7 +281,8 @@ cmd_git_status() {
 }
 
 list_commits() {
-    git log --format="${C_DIM}%h${C_RES} %s"
+    git log --date=relative \
+            --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
 }
 
 cmd_git_find() {
