@@ -172,17 +172,22 @@ cmd_worktree_rm() {
 }
 
 list_pr() {
-    if [ "$1" == "--all" ]; then
+    if [ "$1" == "--open" ]; then
         query=
+        args=
+    elif [ "$1" == "--merged" ]; then
+        query=
+        args="--state merged"
     else
         query="user-review-requested:@me"
+        args=
     fi
     template=(
         '{{range .}}{{.number}} {{.author.login}} '
         '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
     )
     gh pr list --search "$query" \
-               --json number,title,author,headRefName \
+               --json number,title,author,headRefName $args \
                --template "${template[*]}" | \
     while read number author ref title; do
         printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s 󰘬 %s${C_RES}\n" \
@@ -199,7 +204,7 @@ cmd_checkout_gh() {
     fzf --prompt "  " --ansi \
         --ghost "$ghost_loc" \
         --bind "ctrl-g:transform:[[ \$FZF_GHOST == '$ghost_loc' ]] &&
-                echo 'change-ghost($ghost_all)+reload(tide reload --pr-all)' ||
+                echo 'change-ghost($ghost_all)+reload(tide reload --pr-open)' ||
                 echo 'change-ghost($ghost_loc)+reload(tide reload --pr)'" \
     )
 
@@ -209,6 +214,23 @@ cmd_checkout_gh() {
     gh pr checkout $ref || press_key
     git ctags
     tmux refresh-client
+}
+
+cmd_pr_view() {
+    local line ref
+    line=$(list_pr --merged | \
+    fzf --prompt "  " --ansi \
+        --ghost "View a GitHub Pull Request" \
+    )
+
+    [ -z "$line" ] && return
+    ref=$(echo "$line" | awk '{print $1}')
+
+    base=$(gh pr view "$ref" --json baseRefOid | jq -r '.baseRefOid')
+    last=$(gh pr view "$ref" --json mergeCommit | jq -r '.[].oid')
+    tmux new-window -n "$ref" tig ${base}..${last}
+    tmux split-window -h -e PAGER='less -+F' "gh pr view --comments '$ref'"
+    tmux select-pane -t+1
 }
 
 cmd_clone() {
@@ -239,8 +261,8 @@ cmd_reload() {
         --pr)
             list_pr
         ;;
-        --pr-all)
-            list_pr --all
+        --pr-open)
+            list_pr --open
         ;;
         *)
             list_worktrees
@@ -296,6 +318,7 @@ cmd_palette() {
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
         cmd_clone_redhat    	"Git: Clone RHEL Repo"
         cmd_checkout_gh		"GitHub: Checkout Pull Request"
+        cmd_pr_view		"GitHub: View Pull Request"
         cmd_theme       	"Settings: Set Theme"
     )
 
