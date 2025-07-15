@@ -305,14 +305,14 @@ cmd_palette() {
     declare -A menu
 
     cmds=(
-        cmd_open        	"Worktree: Switch"
-        cmd_worktree_add        "Worktree: Add"
-        cmd_worktree_rm         "Worktree: Remove"
-        cmd_checkout		"Git: Checkout"
+        cmd_open        	"Git: Switch Worktree"
+        cmd_worktree_add        "Git: Add Worktree"
+        cmd_worktree_rm         "Git: Remove Worktree"
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
         cmd_clone_redhat    	"Git: Clone RHEL Repo"
+        cmd_checkout		"Git: Checkout"
+        cmd_checkout_gh		"Git: Checkout PR"
         cmd_git_find    	"Git: Find Commit"
-        cmd_checkout_gh		"GitHub: Checkout Pull Request"
         cmd_theme       	"Settings: Set Theme"
     )
 
