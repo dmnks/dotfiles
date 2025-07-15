@@ -1,6 +1,7 @@
 set show-changes = false
 set show-untracked = false
 set main-view-id-display = yes
+set main-view-date-display = relative
 
 # BINDINGS
 bind generic <esc>s :quit
