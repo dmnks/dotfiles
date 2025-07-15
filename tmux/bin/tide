@@ -280,6 +280,22 @@ cmd_git_status() {
     TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
 }
 
+list_commits() {
+    git log --format="${C_DIM}%h${C_RES} %s"
+}
+
+cmd_git_find() {
+    line=$(list_commits | \
+    fzf --prompt "  " --ansi \
+        --ghost "Find a commit" \
+    )
+    [ -z "$line" ] && return
+    ref=$(echo "$line" | awk '{print $1}')
+    full=$(git rev-parse $ref)
+    tmux new-window -n " $ref" \
+        bash -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
+}
+
 cmd_theme() {
     set-theme
 }
@@ -295,6 +311,7 @@ cmd_palette() {
         cmd_checkout		"Git: Checkout"
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
         cmd_clone_redhat    	"Git: Clone RHEL Repo"
+        cmd_git_find    	"Git: Find Commit"
         cmd_checkout_gh		"GitHub: Checkout Pull Request"
         cmd_theme       	"Settings: Set Theme"
     )
