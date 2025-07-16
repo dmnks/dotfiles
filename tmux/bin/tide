@@ -274,7 +274,7 @@ cmd_refresh() {
 }
 
 cmd_git_status() {
-    local num=$(git diff --staged --stat | wc -l)
+    local num=$(git diff --staged --stat --diff-filter=u | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
     TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
@@ -287,7 +287,7 @@ list_commits() {
 
 cmd_git_find() {
     line=$(list_commits | \
-    fzf --prompt "  " --ansi \
+    fzf --prompt "  " --ansi -n2.. \
         --ghost "Find a commit" \
     )
     [ -z "$line" ] && return
