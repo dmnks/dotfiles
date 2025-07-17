@@ -266,6 +266,7 @@ cmd_reload() {
 
 cmd_status() {
     local cmd=$1
+    local pane_command=$2
     shift
 
     print_branch() {
@@ -273,9 +274,17 @@ cmd_status() {
         printf "󰘬 $(git -C $1 rev-parse --abbrev-ref HEAD)"
     }
 
+    print_toolbox() {
+        [ "$pane_command" == "toolbox" ] || return 0
+        printf "#[fg=#d3869b]󰆧#[default]  "
+    }
+
     case $cmd in
         left)
             print_branch "$@"
+        ;;
+        right)
+            print_toolbox "$@"
         ;;
     esac
 }
