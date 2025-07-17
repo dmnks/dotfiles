@@ -101,7 +101,7 @@ cmd_open_all () {
 
     line=$(list_repos | \
     fzf --prompt "  " --ansi -n1,3 \
-        --ghost "Open a worktree (global)" \
+        --ghost "Open a global worktree" \
     )
 
     [ -z "$line" ] && return
@@ -276,7 +276,7 @@ cmd_status() {
 
     print_toolbox() {
         [ "$pane_command" == "toolbox" ] || return 0
-        printf "#[fg=#d3869b]󰆧#[default]  "
+        printf "󰆧 toolbx  "
     }
 
     case $cmd in
@@ -332,13 +332,13 @@ cmd_palette() {
 
     cmds=(
         cmd_open        	"Git: Open Worktree"
-        cmd_open_all        	"Git: Open Worktree (Global)"
+        cmd_open_all        	"Git: Open Global Worktree"
         cmd_worktree_add        "Git: Add Worktree"
         cmd_worktree_rm         "Git: Remove Worktree"
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
         cmd_clone_redhat    	"Git: Clone RHEL Repo"
         cmd_checkout		"Git: Checkout"
-        cmd_checkout_gh		"Git: Checkout PR"
+        cmd_checkout_gh		"Git: Checkout Pull Request"
         cmd_git_find    	"Git: Find Commit"
         cmd_theme       	"Settings: Set Theme"
     )
