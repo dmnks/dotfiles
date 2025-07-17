@@ -170,11 +170,15 @@ command -nargs=+ G exec "silent grep! <args>" | copen | redraw
 
 nmap <silent> <leader>gg :exec "G <cword>"<CR>
 nmap <silent> <leader>gl :call
-\   system('tmux popup -E -yS -w 80% -h 80% ' .
+\   system('tmux new-window -n " ' . expand('%:t') . ':' . line('.') . '" ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig -L' .
 \          line('.') . ',+1:' . expand('%') . '"')<CR>
+nmap <silent> <leader>gL :call
+\   system('tmux new-window -n " ' . expand('%:t') . '" ' .
+\          'sh -c "TIG_SCRIPT=<(echo :enter) tig --follow ' .
+\          expand('%') . '"')<CR>
 nmap <silent> <leader>gb :call
-\   system('tmux popup -E -yS -w 80% -h 80% ' .
+\   system('tmux new-window -n " ' . expand('%:t') . '" ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig blame +' .
 \          line('.') . ' ' . expand('%') . '"')<CR>
 nmap <silent> <leader>c :call system('git ctags')<CR>
