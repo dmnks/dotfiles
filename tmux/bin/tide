@@ -362,7 +362,7 @@ cmd_palette() {
 
     cmd=$(printf "%s\n" "${list[@]}" | \
     fzf --prompt "  " \
-        --ghost "Choose a command to run" \
+        --ghost "Perform an action" \
         --bind 'alt-w:close' \
     )
 
