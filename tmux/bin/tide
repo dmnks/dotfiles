@@ -287,7 +287,7 @@ list_commits() {
 
 cmd_git_find() {
     line=$(list_commits | \
-    fzf --prompt "  " --ansi -n2.. \
+    fzf --prompt "  " --ansi -n2.. --no-hscroll \
         --ghost "Find a commit" \
     )
     [ -z "$line" ] && return
