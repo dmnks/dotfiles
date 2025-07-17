@@ -76,6 +76,26 @@ confirm() {
     fi
 }
 
+open() {
+    local path=$1
+    local name=$2
+    if ! tmux has-session -t="$name" 2>/dev/null; then
+        tmux new-session -ds "$name" -n " Code" \
+                         "sleep 0.1; while true; do $EDITOR -c GFiles; done"
+        tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
+        tmux new-window -t "$name" -n " Build"
+        tmux select-window -t "${name}:+1"
+        tmux set @repo $(echo "${path%%/*}")
+        tmux set @path $(echo "${path#*/}")
+    fi
+
+    if [ -z "$TMUX" ]; then
+        tmux attach -t "$name"
+    else
+        tmux switch-client -t "$name"
+    fi
+}
+
 cmd_open() {
     local hint ghost_loc ghost_all line path name
     hint="press CTRL-G to show"
@@ -95,21 +115,7 @@ cmd_open() {
     name=$(echo "$path" | sed 's/\./-/g')
     cd "$ROOTDIR/$path"
 
-    if ! tmux has-session -t="$name" 2>/dev/null; then
-        tmux new-session -ds "$name" -n " Code" \
-                         "sleep 0.1; while true; do $EDITOR -c GFiles; done"
-        tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
-        tmux new-window -t "$name" -n " Build"
-        tmux select-window -t "${name}:+1"
-        tmux set @repo $(echo "${path%%/*}")
-        tmux set @path $(echo "${path#*/}")
-    fi
-
-    if [ -z "$TMUX" ]; then
-        tmux attach -t "$name"
-    else
-        tmux switch-client -t "$name"
-    fi
+    open $path $name
 }
 
 list_branches() {
