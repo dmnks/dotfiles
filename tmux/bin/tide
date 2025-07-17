@@ -96,18 +96,28 @@ open() {
     fi
 }
 
+cmd_open_all () {
+    local line path name
+
+    line=$(list_repos | \
+    fzf --prompt "  " --ansi -n1,3 \
+        --ghost "Open a worktree (global)" \
+    )
+
+    [ -z "$line" ] && return
+    path=$(echo "$line" | awk '{print $1}')
+    name=$(echo "$path" | sed 's/\./-/g')
+    cd "$ROOTDIR/$path"
+
+    open $path $name
+}
+
 cmd_open() {
-    local hint ghost_loc ghost_all line path name
-    hint="press CTRL-G to show"
-    ghost_loc="Switch to a worktree ($hint global)"
-    ghost_all="Switch to a worktree ($hint local)"
+    local line path name
 
     line=$(list_worktrees | \
     fzf --prompt "  " --ansi -n1,3 \
-        --ghost "$ghost_loc" \
-        --bind "ctrl-g:transform:[[ \$FZF_GHOST == '$ghost_loc' ]] &&
-                echo 'change-ghost($ghost_all)+reload(tide reload --all)' ||
-                echo 'change-ghost($ghost_loc)+reload(tide reload)'" \
+        --ghost "Open a worktree" \
     )
 
     [ -z "$line" ] && return
@@ -312,7 +322,8 @@ cmd_palette() {
     declare -A menu
 
     cmds=(
-        cmd_open        	"Git: Switch Worktree"
+        cmd_open        	"Git: Open Worktree"
+        cmd_open_all        	"Git: Open Worktree (Global)"
         cmd_worktree_add        "Git: Add Worktree"
         cmd_worktree_rm         "Git: Remove Worktree"
         cmd_clone_fedora    	"Git: Clone Fedora Repo"
