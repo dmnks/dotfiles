@@ -342,14 +342,14 @@ cmd_palette() {
     cmds=(
         cmd_open        	"Git Worktree: Open"
         cmd_open_all        	"Git Worktree: Open Global"
-        cmd_worktree_add        "Git Worktree: Add For Branch/Tag"
+        cmd_worktree_add        "Git Worktree: Add"
         cmd_worktree_rm         "Git Worktree: Remove"
         cmd_clone_fedora    	"Git Clone: Fedora"
         cmd_clone_redhat    	"Git Clone: RHEL"
-        cmd_checkout		"Git Checkout: Branch/Tag"
+        cmd_checkout		"Git Checkout"
         cmd_git_find    	"Git Log: Find Commit"
-        cmd_checkout_gh		"GitHub Pull Request: Checkout Assigned"
-        cmd_checkout_gh_all     "GitHub Pull Request: Checkout"
+        cmd_checkout_gh		"GitHub Pull Request: Checkout"
+        cmd_checkout_gh_all     "GitHub Pull Request: Checkout Global"
         cmd_theme       	"Settings: Set Theme"
     )
 
