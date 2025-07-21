@@ -136,6 +136,7 @@ set shiftwidth=4
 set expandtab
 set ttimeoutlen=10
 set mouse=
+set splitkeep=screen
 
 nmap <silent> <leader>e :windo e<CR>
 nmap <silent> <leader>s :set spell!<CR>
