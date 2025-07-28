@@ -64,6 +64,10 @@ require('treesitter-context').setup {
   enabled = true,
   max_lines = 1,
   trim_scope = 'inner',
+  multiwindow = true,
+}
+require("gruvbox").setup {
+  bold = false,
 }
 EOF
 
