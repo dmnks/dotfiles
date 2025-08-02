@@ -78,8 +78,21 @@ open() {
     local path=$1
     local name=$2
     if ! tmux has-session -t="$name" 2>/dev/null; then
-        ACCENT_FG="#fb4934"
-        ACCENT_BG="#9d0006"
+        forge=$(echo "${path#*/}" | xargs dirname)
+        case "$forge" in
+            rhpkg)
+                ACCENT_FG="#fb4934"
+                ACCENT_BG="#9d0006"
+                ;;
+            fedpkg)
+                ACCENT_FG="#83a598"
+                ACCENT_BG="#076678"
+                ;;
+            *)
+                ACCENT_FG="#d3869b"
+                ACCENT_BG="#8f3f71"
+                ;;
+        esac
 
         tmux new-session -ds "$name" -n " Code" \
             -e ACCENT_FG="$ACCENT_FG" \
