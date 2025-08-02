@@ -80,6 +80,7 @@ open() {
     if ! tmux has-session -t="$name" 2>/dev/null; then
         ACCENT_FG="#fb4934"
         ACCENT_BG="#9d0006"
+
         tmux new-session -ds "$name" -n " Code" \
             -e ACCENT_FG="$ACCENT_FG" \
             -e ACCENT_BG="$ACCENT_BG" \
