@@ -4,7 +4,7 @@ PROGRAM=$(basename $0)
 CMD=$1; shift
 REPO=$(dirname $PWD | xargs basename)
 
-source ~/.theme/bashrc
+source ~/.theme/env
 
 get_conf() {
     awk -F "=" "/$1/ {print \$2}" $HOME/.config/tide/config.ini

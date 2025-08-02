@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/.theme/bashrc
+source ~/.theme/env
 
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --layout=reverse
