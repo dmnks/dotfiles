@@ -78,13 +78,21 @@ open() {
     local path=$1
     local name=$2
     if ! tmux has-session -t="$name" 2>/dev/null; then
+        ACCENT_FG="#fb4934"
+        ACCENT_BG="#9d0006"
         tmux new-session -ds "$name" -n " Code" \
-                         "sleep 0.1; while true; do $EDITOR -c GFiles; done"
-        tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
+            -e ACCENT_FG="$ACCENT_FG" \
+            -e ACCENT_BG="$ACCENT_BG" \
+            "sleep 0.1; while true; do $EDITOR -c GFiles; done"
+        tmux new-window -t "$name" -n "󰘬 Git" \
+            "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
         tmux new-window -t "$name" -n " Build"
         tmux select-window -t "${name}:+1"
+
         tmux set @repo $(echo "${path%%/*}")
         tmux set @path $(echo "${path#*/}")
+        tmux set @accent_fg "$ACCENT_FG"
+        tmux set @accent_bg "$ACCENT_BG"
     fi
 
     if [ -z "$TMUX" ]; then
@@ -298,7 +306,7 @@ cmd_status() {
 
 cmd_refresh() {
     tmux source-file ~/.tmux.conf
-    tmux display-message "  Config reloaded"
+    tmux display-message " Config reloaded"
 }
 
 cmd_git_status() {
