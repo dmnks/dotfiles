@@ -88,6 +88,10 @@ open() {
                 ACCENT_FG="#83a598"
                 ACCENT_BG="#076678"
                 ;;
+            github)
+                ACCENT_FG="#d3869b"
+                ACCENT_BG="#8f3f71"
+                ;;
             *)
                 ACCENT_FG="#d3869b"
                 ACCENT_BG="#8f3f71"
