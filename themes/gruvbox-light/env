@@ -1,9 +1,0 @@
-# Gruvbox Light
-
-export ACCENT_COLOR='#cc241d'
-export THEME_COLOR_ACTIVE_FG='#282828'
-export THEME_COLOR_ACTIVE_BG='#ebdbb2'
-export THEME_COLOR_DIM1='#928374'
-export THEME_COLOR_DIM2='#a89984'
-export THEME_COLOR_DIM3='#bdae93'
-export THEME_COLOR_DIM4='#d5c4a1'

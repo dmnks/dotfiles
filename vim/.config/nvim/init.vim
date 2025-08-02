@@ -69,12 +69,16 @@ require('treesitter-context').setup {
 require("gruvbox").setup {
   bold = false,
   italic = {
-      strings = false,
+    strings = false,
+  },
+  overrides = {
+    ColorColumn = {bg = "#282828"},
+    WinSeparator = {fg = "#171a1a", bg = "#282828"},
   },
 }
 EOF
 
-source ~/.theme/init.vim
+colorscheme gruvbox
 
 " FZF
 let g:fzf_layout = { 'tmux': '-yS --padding 1,2' }

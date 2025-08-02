@@ -4,8 +4,6 @@ PROGRAM=$(basename $0)
 CMD=$1; shift
 REPO=$(dirname $PWD | xargs basename)
 
-source ~/.theme/env
-
 get_conf() {
     awk -F "=" "/$1/ {print \$2}" $HOME/.config/tide/config.ini
 }
@@ -299,10 +297,6 @@ cmd_status() {
 }
 
 cmd_refresh() {
-    for var in ACCENT_COLOR; do
-        tmux set-environment    $var "${!var}"
-        tmux set-environment -g $var "${!var}"
-    done
     tmux source-file ~/.tmux.conf
     tmux display-message "  Config reloaded"
 }
@@ -331,10 +325,6 @@ cmd_git_find() {
         bash -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
 }
 
-cmd_theme() {
-    set-theme
-}
-
 cmd_palette() {
     local cmds menu list text cmd
     declare -A menu
@@ -350,7 +340,6 @@ cmd_palette() {
         cmd_git_find    	"Git Log: Find Commit"
         cmd_checkout_gh		"GitHub Pull Request: Checkout"
         cmd_checkout_gh_all     "GitHub Pull Request: Checkout Global"
-        cmd_theme       	"Settings: Set Theme"
     )
 
     list=()

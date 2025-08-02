@@ -18,6 +18,9 @@ bind diff e scroll-line-down
 bind diff y scroll-line-up
 
 # COLORS
+color title-blur            default     color237
+color title-focus           default     color239    bold
+color cursor                color15     color237
 color "Refs: "              default     default
 color "Author: "            default     default
 color "AuthorDate: "        default     default
@@ -38,5 +41,3 @@ color grep.file             color12     default
 color help-group            color12     default
 color diff-stat             color12     default
 color graph-commit          color12     default
-
-source ~/.theme/tigrc
