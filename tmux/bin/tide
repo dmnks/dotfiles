@@ -2,10 +2,9 @@
 
 PROGRAM=$(basename $0)
 CMD=$1; shift
-REPO=$(dirname $PWD | xargs basename)
 
-get_conf() {
-    awk -F "=" "/$1/ {print \$2}" $HOME/.config/tide/config.ini
+yq() {
+    command yq "$1" $HOME/.config/tide/tide.yml
 }
 
 set_color() {
@@ -15,7 +14,7 @@ set_color() {
     printf "\x1b[38;2;${rgb}m"
 }
 
-ROOTDIR=$(get_conf rootdir)
+ROOTDIR=$(yq ".rootdir")
 C_DIM=$(set_color $THEME_COLOR_DIM1)
 C_RES=$(printf "\x1b[0m")
 
@@ -23,17 +22,19 @@ cmd_usage() {
     echo "\
 Usage: $PROGRAM COMMAND [ARGS]
 
-A simple tmux(1)-based "IDE" with git-worktree(1) and toolbox(1) integration.
+A simple tmux(1)-based IDE with git-worktree(1) and toolbox(1) integration.
 
 Commands:
-    open                select worktree from menu
-    status [icon|line]  generate status bar (to use from ~/.tmux.conf)
+    palette                 show command palette 
+    status [left|right]     generate status bar (to use from ~/.tmux.conf)
+    git                     show interactive git status
+    refresh                 reload tmux config
 "
     exit 1
 }
 
 list_worktrees() {
-    local repo name
+    local repo name path label obj ref
     if [ $# == 0 ]; then
         repo=$PWD
         name=
@@ -50,83 +51,15 @@ list_worktrees() {
 }
 
 list_repos() {
+    local path
     find "$ROOTDIR" -maxdepth 4 -name .git -type d -printf '%h\n' | sort | \
     while read path; do
         list_worktrees $path
     done
 }
 
-press_key() {
-    echo
-    echo -n "Press ENTER to continue"
-    read
-    clear
-    [ "$1" == "-n" ] || exit 1
-}
-
-confirm() {
-    local prompt=$1; shift
-    read -p "${prompt} [y/N]? " -n1 -r
-    clear
-    if [ "$REPLY" = "y" ]; then
-        "$@"
-        return $?
-    fi
-}
-
-open() {
-    local path=$1
-    local name=$2
-    if ! tmux has-session -t="$name" 2>/dev/null; then
-        tmux new-session -ds "$name" -n " Code" \
-                         "sleep 0.1; while true; do $EDITOR -c GFiles; done"
-        tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
-        tmux new-window -t "$name" -n " Build"
-        tmux select-window -t "${name}:+1"
-        tmux set @repo $(echo "${path%%/*}")
-        tmux set @path $(echo "${path#*/}")
-    fi
-
-    if [ -z "$TMUX" ]; then
-        tmux attach -t "$name"
-    else
-        tmux switch-client -t "$name"
-    fi
-}
-
-cmd_open() {
-    local line path name
-
-    line=$(list_worktrees | \
-    fzf --prompt "  " --ansi -n1,3 \
-        --ghost "Open a worktree" \
-    )
-
-    [ -z "$line" ] && return
-    path=$(echo "$line" | awk '{print $1}')
-    name=$(echo "$path" | sed 's/\./-/g')
-    cd "$ROOTDIR/$path"
-
-    open $path $name
-}
-
-cmd_open_all () {
-    local line path name
-
-    line=$(list_repos | \
-    fzf --prompt "  " --ansi -n1,3 \
-        --ghost "Open a global worktree" \
-    )
-
-    [ -z "$line" ] && return
-    path=$(echo "$line" | awk '{print $1}')
-    name=$(echo "$path" | sed 's/\./-/g')
-    cd "$ROOTDIR/$path"
-
-    open $path $name
-}
-
 list_branches() {
+    local symbol name date
     format=(
         "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
         "%(refname:lstrip=-1)"
@@ -139,53 +72,8 @@ list_branches() {
     done
 }
 
-cmd_checkout() {
-    local line ref
-
-    line=$(list_branches | \
-    fzf --prompt "  " --ansi -n2,4 \
-        --ghost "Checkout a branch or tag" \
-    )
-
-    [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $2}')
-
-    git checkout $ref || press_key
-    git ctags
-    tmux refresh-client
-}
-
-cmd_worktree_add() {
-    local line ref
-
-    line=$(list_branches | \
-    fzf --prompt "  " --ansi -n2,4 \
-        --ghost "Add a worktree for a branch or tag" \
-    )
-
-    [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $2}')
-
-    [ -d ../$ref ] && return
-    git worktree add ../$ref || press_key
-}
-
-cmd_worktree_rm() {
-    local hint ghost_loc ghost_all line path name
-
-    line=$(list_worktrees | \
-    fzf --prompt "  " --ansi -n1,3 \
-        --ghost "Remove a worktree" \
-    )
-
-    [ -z "$line" ] && return
-    path=$(echo "$line" | awk '{print $1}')
-    name=$(echo "$path" | sed 's/\./-/g')
-    confirm "Remove worktree $ROOTDIR/$path" \
-    git worktree remove "$ROOTDIR/$path" || press_key
-}
-
 list_pr() {
+    local query template number author ref title
     if [ "$1" == "--all" ]; then
         query=
     else
@@ -195,6 +83,7 @@ list_pr() {
         '{{range .}}{{.number}} {{.author.login}} '
         '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
     )
+
     gh pr list --search "$query" \
                --json number,title,author,headRefName \
                --template "${template[*]}" | \
@@ -204,34 +93,154 @@ list_pr() {
     done
 }
 
+show_log() {
+    git log --date=relative \
+            --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
+}
+
+press_key() {
+    echo
+    echo -n "Press ENTER to continue"
+    read
+    clear
+    [ "$1" == "-n" ] || exit 1
+}
+
+confirm() {
+    local prompt
+    prompt=$1; shift
+    read -p "${prompt} [y/N]? " -n1 -r
+    clear
+    if [ "$REPLY" = "y" ]; then
+        "$@"
+        return $?
+    fi
+}
+
+open() {
+    local path name pattern url repo query colors
+    path=$1
+    name=$2
+
+    if ! tmux has-session -t="$name" 2>/dev/null; then
+        url=$(git config --get remote.origin.url)
+        repo=${url##*/}
+        repo=${repo%.git}
+
+        # Set accent colors
+        for pattern in $(yq '.accents.[].pattern'); do
+            [[ $url =~ $pattern ]] || continue
+            query=".accents.[] | select(.pattern == \"$pattern\").colors"
+            ACCENT_FG=$(yq "${query}.fg")
+            mapfile -t colors < <(colortool $(yq "${query}.bg") -0.2 -0.4 -0.5)
+            ACCENT_HI=${colors[0]}
+            ACCENT_LO=${colors[1]}
+            ACCENT_BG=${colors[2]}
+            break
+        done
+
+        # Construct session
+        tmux new-session -ds "$name" -n " Code" \
+            -e ACCENT_FG="$ACCENT_FG" \
+            -e ACCENT_HI="$ACCENT_HI" \
+            -e ACCENT_LO="$ACCENT_LO" \
+            -e ACCENT_BG="$ACCENT_BG" \
+            "sleep 0.1; while true; do $EDITOR -c GFiles; done"
+        tmux new-window -t "$name" -n "󰘬 Git" \
+            "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
+        tmux split-window -t "$name" -h -l35%
+        tmux new-window -t "$name" -n " Build"
+        tmux split-window -t "$name" -h -l35%
+        tmux split-window -t "$name" -v
+        tmux select-window -t "${name}:+1"
+
+        # Set user variables
+        tmux set @repo $repo
+        tmux set @path $path
+        tmux set @accent_fg "$ACCENT_FG"
+        tmux set @accent_hi "$ACCENT_HI"
+        tmux set @accent_lo "$ACCENT_LO"
+        tmux set @accent_bg "$ACCENT_BG"
+    fi
+
+    if [ -z "$TMUX" ]; then
+        tmux attach -t "$name"
+    else
+        tmux switch-client -t "$name"
+    fi
+}
+
+cmd_open() {
+    local func line path name
+    if [ "$1" == "--all" ]; then
+        func=list_repos
+    else
+        func=list_worktrees
+    fi
+
+    line=$($func | fzf --ansi -n1,3 --ghost "Open a worktree")
+    [ -z "$line" ] && return
+
+    path=$(echo "$line" | awk '{print $1}')
+    name=$(echo "$path" | sed 's/\./-/g')
+    cd "$ROOTDIR/$path"
+    open $path $name
+}
+
+cmd_open_all () {
+    cmd_open --all
+}
+
+cmd_checkout() {
+    local line ref
+
+    line=$(list_branches | fzf --ansi -n2,4 --ghost "Checkout a branch or tag")
+    [ -z "$line" ] && return
+
+    ref=$(echo "$line" | awk '{print $2}')
+    git checkout $ref || press_key
+    git ctags
+    tmux refresh-client
+}
+
+cmd_worktree_add() {
+    local line ref
+
+    line=$(list_branches | fzf --ansi -n2,4 \
+           --ghost "Add a worktree for a branch or tag")
+    [ -z "$line" ] && return
+
+    ref=$(echo "$line" | awk '{print $2}')
+    [ -d ../$ref ] && return
+    git worktree add ../$ref || press_key
+}
+
+cmd_worktree_rm() {
+    local line path name
+
+    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Remove a worktree")
+    [ -z "$line" ] && return
+
+    path=$(echo "$line" | awk '{print $1}')
+    name=$(echo "$path" | sed 's/\./-/g')
+    confirm "Remove worktree $ROOTDIR/$path" \
+    git worktree remove "$ROOTDIR/$path" || press_key
+}
+
 cmd_checkout_gh() {
     local line ref
-    line=$(list_pr | \
-    fzf --prompt "  " --ansi \
-        --ghost "Checkout an assigned Pull Request" \
-    )
 
+    line=$(list_pr $1 | fzf --ansi --ghost "Checkout a Pull Request")
     [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $1}')
 
+    ref=$(echo "$line" | awk '{print $1}')
     gh pr checkout $ref || press_key
     git ctags
     tmux refresh-client
 }
 
 cmd_checkout_gh_all() {
-    local line ref
-    line=$(list_pr --all | \
-    fzf --prompt "  " --ansi \
-        --ghost "Checkout a Pull Request" \
-    )
-
-    [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $1}')
-
-    gh pr checkout $ref || press_key
-    git ctags
-    tmux refresh-client
+    cmd_checkout_gh --all
 }
 
 cmd_clone() {
@@ -239,41 +248,22 @@ cmd_clone() {
     forge=$1
 
     line=$(cat ~/.config/tide/${forge}.txt | \
-    fzf --prompt "  " --ansi \
-        --ghost "Clone a repo with $forge" \
-    )
-
+           fzf --ansi --ghost "Clone a repo with $forge")
     [ -z "$line" ] && return
+
     path=$ROOTDIR/$line/$forge/main
     [ -d "$path" ] && return
     mkdir -p $path
-
     $forge clone $line $path
 }
 
 cmd_clone_fedora() { cmd_clone fedpkg; }
 cmd_clone_redhat() { cmd_clone rhpkg; }
 
-cmd_reload() {
-    case $1 in
-        --all)
-            list_repos
-        ;;
-        --pr)
-            list_pr
-        ;;
-        --pr-all)
-            list_pr --all
-        ;;
-        *)
-            list_worktrees
-        ;;
-    esac
-}
-
 cmd_status() {
-    local cmd=$1
-    local pane_command=$2
+    local section command
+    section=$1
+    command=$2
     shift
 
     print_branch() {
@@ -282,11 +272,11 @@ cmd_status() {
     }
 
     print_toolbox() {
-        [ "$pane_command" == "toolbox" ] || return 0
-        printf "󰆧 toolbx  "
+        [ "$command" == "toolbox" ] || return 0
+        printf "󰆧 Toolbx  "
     }
 
-    case $cmd in
+    case $section in
         left)
             print_branch "$@"
         ;;
@@ -301,28 +291,24 @@ cmd_refresh() {
     tmux display-message "  Config reloaded"
 }
 
-cmd_git_status() {
-    local num=$(git diff --staged --stat --diff-filter=u | wc -l)
+cmd_git() {
+    local num
+    num=$(git diff --staged --stat --diff-filter=u | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
     TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
 }
 
-list_commits() {
-    git log --date=relative \
-            --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
-}
-
 cmd_git_find() {
-    line=$(list_commits | \
-    fzf --prompt "  " --ansi -n2.. --no-hscroll \
-        --ghost "Find a commit" \
-    )
+    local line name full
+
+    line=$(show_log | fzf --ansi -n2.. --no-hscroll --ghost "Find a commit")
     [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $1}')
-    full=$(git rev-parse $ref)
-    tmux new-window -n " $ref" \
-        bash -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
+
+    name=$(echo "$line" | awk '{print $1}')
+    full=$(git rev-parse $name)
+    tmux new-window -n " $name" \
+        sh -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
 }
 
 cmd_palette() {
@@ -330,16 +316,16 @@ cmd_palette() {
     declare -A menu
 
     cmds=(
-        cmd_open        	"Git Worktree: Open"
-        cmd_open_all        	"Git Worktree: Open Global"
-        cmd_worktree_add        "Git Worktree: Add"
-        cmd_worktree_rm         "Git Worktree: Remove"
-        cmd_clone_fedora    	"Git Clone: Fedora"
-        cmd_clone_redhat    	"Git Clone: RHEL"
-        cmd_checkout		"Git Checkout"
-        cmd_git_find    	"Git Log: Find Commit"
-        cmd_checkout_gh		"GitHub Pull Request: Checkout"
-        cmd_checkout_gh_all     "GitHub Pull Request: Checkout Global"
+        cmd_open        	"Worktree: Open"
+        cmd_open_all        	"Worktree: Open (Global)"
+        cmd_worktree_add        "Worktree: Add"
+        cmd_worktree_rm         "Worktree: Remove"
+        cmd_clone_fedora    	"Git: Clone (Fedora)"
+        cmd_clone_redhat    	"Git: Clone (RHEL)"
+        cmd_checkout		"Git: Checkout"
+        cmd_git_find    	"Git: Find Commit"
+        cmd_checkout_gh		"GitHub: Checkout PR (Assigned)"
+        cmd_checkout_gh_all     "GitHub: Checkout PR"
     )
 
     list=()
@@ -350,21 +336,16 @@ cmd_palette() {
     done
 
     cmd=$(printf "%s\n" "${list[@]}" | \
-    fzf --prompt "  " \
-        --ghost "Perform an action" \
-        --bind 'alt-w:close' \
-    )
-
+          fzf --ghost "Perform an action" --bind 'alt-w:close')
     [ -z "$cmd" ] && return
+
     ${menu[$cmd]}
 }
 
 case $CMD in
-    open)               cmd_open "$@" ;;
-    reload)             cmd_reload "$@" ;;
-    status)             cmd_status "$@" ;;
-    git-status)         cmd_git_status "$@" ;;
     palette)            cmd_palette "$@" ;;
+    status)             cmd_status "$@" ;;
+    git)                cmd_git "$@" ;;
     refresh)            cmd_refresh "$@" ;;
     *)                  cmd_usage ;;
 esac

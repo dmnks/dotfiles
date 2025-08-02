@@ -73,7 +73,9 @@ require("gruvbox").setup {
   },
   overrides = {
     ColorColumn = {bg = "#282828"},
-    WinSeparator = {fg = "#171a1a", bg = "#282828"},
+    TabLine = {fg = "#a89984"},
+    TabLineSel = {fg = "#fbf1c7", bg = "#3c3836"},
+    TabLineFill = {bg = "#282828"},
   },
 }
 EOF
@@ -81,7 +83,7 @@ EOF
 colorscheme gruvbox
 
 " FZF
-let g:fzf_layout = { 'tmux': '-yS --padding 1,2' }
+let g:fzf_layout = { 'tmux': '-y0 --padding 1,2' }
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
@@ -92,18 +94,18 @@ endfunction
 command! GFiles
 \   call fzf#run(fzf#wrap({
 \       'source':  'git ls-files',
-\       'options': '-m --prompt "  " --ghost "Open a file"',
+\       'options': '-m --ghost "Open a file"',
 \   }))
 command! Buffers
 \   call fzf#run(fzf#wrap({
 \       'source':  reverse(<sid>buflist()),
-\       'options': '+m --prompt "  " --ghost "Open a buffer"',
+\       'options': '+m --ghost "Open a buffer"',
 \   }))
 command! Tags
 \   if !empty(tagfiles()) | call fzf#run(fzf#wrap({
 \       'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
 \       'sink':    'tag',
-\       'options': '+m --prompt "  " --ghost "Find a symbol"',
+\       'options': '+m --ghost "Find a symbol"',
 \   })) | else | echoerr 'No tags found' | endif
 nmap <leader><leader> :Buffers<CR>
 nmap <leader>ff :GFiles<CR>

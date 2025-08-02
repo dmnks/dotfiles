@@ -1,33 +1,12 @@
 export EDITOR=nvim
 alias vim=nvim
 
-export ACCENT_COLOR='#fb4934'
 export THEME_COLOR_ACTIVE_FG='#fbf1c7'
 export THEME_COLOR_ACTIVE_BG='#3c3836'
 export THEME_COLOR_DIM1='#928374'
 export THEME_COLOR_DIM2='#7c6f64'
 export THEME_COLOR_DIM3='#665c54'
 export THEME_COLOR_DIM4='#504945'
-
-export FZF_DEFAULT_OPTS="
-    --layout=reverse
-    --color='pointer:$ACCENT_COLOR,prompt:$ACCENT_COLOR'
-    --color='marker:$ACCENT_COLOR,spinner:$ACCENT_COLOR'
-    --color='hl+:$ACCENT_COLOR'
-    --color='hl:$THEME_COLOR_DIM1,fg+:$THEME_COLOR_ACTIVE_FG'
-    --color='bg+:$THEME_COLOR_ACTIVE_BG,header:$THEME_COLOR_DIM2'
-    --color='scrollbar:$THEME_COLOR_DIM4,info:$THEME_COLOR_DIM2,gutter:-1'
-    --no-bold
-    --info=inline-right
-    --scrollbar=█
-    --pointer=▎
-    --header=''
-    --border=none
-    --padding=0,1
-    --no-separator
-    --highlight-line
-    --no-mouse
-"
 
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
