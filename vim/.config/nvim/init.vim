@@ -91,18 +91,18 @@ endfunction
 command! GFiles
 \   call fzf#run(fzf#wrap({
 \       'source':  'git ls-files',
-\       'options': '-m --prompt "  " --ghost "Open a file"',
+\       'options': '-m --ghost "Open a file"',
 \   }))
 command! Buffers
 \   call fzf#run(fzf#wrap({
 \       'source':  reverse(<sid>buflist()),
-\       'options': '+m --prompt "  " --ghost "Open a buffer"',
+\       'options': '+m --ghost "Open a buffer"',
 \   }))
 command! Tags
 \   if !empty(tagfiles()) | call fzf#run(fzf#wrap({
 \       'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
 \       'sink':    'tag',
-\       'options': '+m --prompt "  " --ghost "Find a symbol"',
+\       'options': '+m --ghost "Find a symbol"',
 \   })) | else | echoerr 'No tags found' | endif
 nmap <leader><leader> :Buffers<CR>
 nmap <leader>ff :GFiles<CR>

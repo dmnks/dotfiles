@@ -98,7 +98,7 @@ open() {
                 ;;
         esac
 
-        tmux new-session -ds "$name" -n " Code" \
+        tmux new-session -ds "$name" -n " Code" \
             -e ACCENT_FG="$ACCENT_FG" \
             -e ACCENT_BG="$ACCENT_BG" \
             "sleep 0.1; while true; do $EDITOR -c GFiles; done"
@@ -124,7 +124,7 @@ cmd_open() {
     local line path name
 
     line=$(list_worktrees | \
-    fzf --prompt "  " --ansi -n1,3 \
+    fzf --ansi -n1,3 \
         --ghost "Open a worktree" \
     )
 
@@ -140,7 +140,7 @@ cmd_open_all () {
     local line path name
 
     line=$(list_repos | \
-    fzf --prompt "  " --ansi -n1,3 \
+    fzf --ansi -n1,3 \
         --ghost "Open a global worktree" \
     )
 
@@ -169,7 +169,7 @@ cmd_checkout() {
     local line ref
 
     line=$(list_branches | \
-    fzf --prompt "  " --ansi -n2,4 \
+    fzf --ansi -n2,4 \
         --ghost "Checkout a branch or tag" \
     )
 
@@ -185,7 +185,7 @@ cmd_worktree_add() {
     local line ref
 
     line=$(list_branches | \
-    fzf --prompt "  " --ansi -n2,4 \
+    fzf --ansi -n2,4 \
         --ghost "Add a worktree for a branch or tag" \
     )
 
@@ -200,7 +200,7 @@ cmd_worktree_rm() {
     local hint ghost_loc ghost_all line path name
 
     line=$(list_worktrees | \
-    fzf --prompt "  " --ansi -n1,3 \
+    fzf --ansi -n1,3 \
         --ghost "Remove a worktree" \
     )
 
@@ -233,7 +233,7 @@ list_pr() {
 cmd_checkout_gh() {
     local line ref
     line=$(list_pr | \
-    fzf --prompt "  " --ansi \
+    fzf --ansi \
         --ghost "Checkout an assigned Pull Request" \
     )
 
@@ -248,7 +248,7 @@ cmd_checkout_gh() {
 cmd_checkout_gh_all() {
     local line ref
     line=$(list_pr --all | \
-    fzf --prompt "  " --ansi \
+    fzf --ansi \
         --ghost "Checkout a Pull Request" \
     )
 
@@ -265,7 +265,7 @@ cmd_clone() {
     forge=$1
 
     line=$(cat ~/.config/tide/${forge}.txt | \
-    fzf --prompt "  " --ansi \
+    fzf --ansi \
         --ghost "Clone a repo with $forge" \
     )
 
@@ -309,7 +309,7 @@ cmd_status() {
 
     print_toolbox() {
         [ "$pane_command" == "toolbox" ] || return 0
-        printf "󰆧 toolbx  "
+        printf "󰆧 Toolbx  "
     }
 
     case $cmd in
@@ -341,7 +341,7 @@ list_commits() {
 
 cmd_git_find() {
     line=$(list_commits | \
-    fzf --prompt "  " --ansi -n2.. --no-hscroll \
+    fzf --ansi -n2.. --no-hscroll \
         --ghost "Find a commit" \
     )
     [ -z "$line" ] && return
@@ -376,8 +376,7 @@ cmd_palette() {
     done
 
     cmd=$(printf "%s\n" "${list[@]}" | \
-    fzf --prompt "  " \
-        --ghost "Perform an action" \
+    fzf --ghost "Perform an action" \
         --bind 'alt-w:close' \
     )
 

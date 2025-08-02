@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+    --prompt='  '
     --layout=reverse
     --color='pointer:$ACCENT_FG,prompt:$ACCENT_FG'
     --color='marker:$ACCENT_FG,spinner:$ACCENT_FG'
