@@ -73,6 +73,7 @@ require("gruvbox").setup {
   },
   overrides = {
     ColorColumn = {bg = "#282828"},
+    WinSeparator = {fg = "#171a1a"},
   },
 }
 EOF
