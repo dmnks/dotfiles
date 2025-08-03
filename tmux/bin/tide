@@ -2,7 +2,6 @@
 
 PROGRAM=$(basename $0)
 CMD=$1; shift
-REPO=$(dirname $PWD | xargs basename)
 
 get_conf() {
     awk -F "=" "/$1/ {print \$2}" $HOME/.config/tide/config.ini
@@ -23,17 +22,19 @@ cmd_usage() {
     echo "\
 Usage: $PROGRAM COMMAND [ARGS]
 
-A simple tmux(1)-based "IDE" with git-worktree(1) and toolbox(1) integration.
+A simple tmux(1)-based IDE with git-worktree(1) and toolbox(1) integration.
 
 Commands:
-    open                select worktree from menu
-    status [icon|line]  generate status bar (to use from ~/.tmux.conf)
+    palette                 show command palette 
+    status [left|right]     generate status bar (to use from ~/.tmux.conf)
+    git                     show interactive git status
+    refresh                 reload tmux config
 "
     exit 1
 }
 
 list_worktrees() {
-    local repo name
+    local repo name path label obj ref
     if [ $# == 0 ]; then
         repo=$PWD
         name=
@@ -50,6 +51,7 @@ list_worktrees() {
 }
 
 list_repos() {
+    local path
     find "$ROOTDIR" -maxdepth 4 -name .git -type d -printf '%h\n' | sort | \
     while read path; do
         list_worktrees $path
@@ -65,7 +67,8 @@ press_key() {
 }
 
 confirm() {
-    local prompt=$1; shift
+    local prompt
+    prompt=$1; shift
     read -p "${prompt} [y/N]? " -n1 -r
     clear
     if [ "$REPLY" = "y" ]; then
@@ -75,8 +78,10 @@ confirm() {
 }
 
 open() {
-    local path=$1
-    local name=$2
+    local path name
+    path=$1
+    name=$2
+
     if ! tmux has-session -t="$name" 2>/dev/null; then
         forge=$(echo "${path#*/}" | xargs dirname)
         # ACCENT_HI = 80% ACCENT_BG
@@ -123,38 +128,28 @@ open() {
 }
 
 cmd_open() {
-    local line path name
+    local func line path name
+    if [ "$1" == "--all" ]; then
+        func=list_repos
+    else
+        func=list_worktrees
+    fi
 
-    line=$(list_worktrees | \
-    fzf --ansi -n1,3 \
-        --ghost "Open a worktree" \
-    )
-
+    line=$($func | fzf --ansi -n1,3 --ghost "Open a worktree")
     [ -z "$line" ] && return
+
     path=$(echo "$line" | awk '{print $1}')
     name=$(echo "$path" | sed 's/\./-/g')
     cd "$ROOTDIR/$path"
-
     open $path $name
 }
 
 cmd_open_all () {
-    local line path name
-
-    line=$(list_repos | \
-    fzf --ansi -n1,3 \
-        --ghost "Open a global worktree" \
-    )
-
-    [ -z "$line" ] && return
-    path=$(echo "$line" | awk '{print $1}')
-    name=$(echo "$path" | sed 's/\./-/g')
-    cd "$ROOTDIR/$path"
-
-    open $path $name
+    cmd_open --all
 }
 
 list_branches() {
+    local symbol name date
     format=(
         "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
         "%(refname:lstrip=-1)"
@@ -170,14 +165,10 @@ list_branches() {
 cmd_checkout() {
     local line ref
 
-    line=$(list_branches | \
-    fzf --ansi -n2,4 \
-        --ghost "Checkout a branch or tag" \
-    )
-
+    line=$(list_branches | fzf --ansi -n2,4 --ghost "Checkout a branch or tag")
     [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $2}')
 
+    ref=$(echo "$line" | awk '{print $2}')
     git checkout $ref || press_key
     git ctags
     tmux refresh-client
@@ -186,27 +177,22 @@ cmd_checkout() {
 cmd_worktree_add() {
     local line ref
 
-    line=$(list_branches | \
-    fzf --ansi -n2,4 \
-        --ghost "Add a worktree for a branch or tag" \
-    )
-
+    line=$(list_branches | fzf --ansi -n2,4 \
+           --ghost "Add a worktree for a branch or tag")
     [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $2}')
 
+    ref=$(echo "$line" | awk '{print $2}')
     [ -d ../$ref ] && return
     git worktree add ../$ref || press_key
 }
 
 cmd_worktree_rm() {
-    local hint ghost_loc ghost_all line path name
+    local line path name
 
-    line=$(list_worktrees | \
-    fzf --ansi -n1,3 \
-        --ghost "Remove a worktree" \
-    )
-
+    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Remove a worktree")
     [ -z "$line" ] && return
+
+    # TODO refactor
     path=$(echo "$line" | awk '{print $1}')
     name=$(echo "$path" | sed 's/\./-/g')
     confirm "Remove worktree $ROOTDIR/$path" \
@@ -214,6 +200,7 @@ cmd_worktree_rm() {
 }
 
 list_pr() {
+    local query template number author ref title
     if [ "$1" == "--all" ]; then
         query=
     else
@@ -223,6 +210,7 @@ list_pr() {
         '{{range .}}{{.number}} {{.author.login}} '
         '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
     )
+
     gh pr list --search "$query" \
                --json number,title,author,headRefName \
                --template "${template[*]}" | \
@@ -234,32 +222,18 @@ list_pr() {
 
 cmd_checkout_gh() {
     local line ref
-    line=$(list_pr | \
-    fzf --ansi \
-        --ghost "Checkout an assigned Pull Request" \
-    )
 
+    line=$(list_pr $1 | fzf --ansi --ghost "Checkout a Pull Request")
     [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $1}')
 
+    ref=$(echo "$line" | awk '{print $1}')
     gh pr checkout $ref || press_key
     git ctags
     tmux refresh-client
 }
 
 cmd_checkout_gh_all() {
-    local line ref
-    line=$(list_pr --all | \
-    fzf --ansi \
-        --ghost "Checkout a Pull Request" \
-    )
-
-    [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $1}')
-
-    gh pr checkout $ref || press_key
-    git ctags
-    tmux refresh-client
+    cmd_checkout_gh --all
 }
 
 cmd_clone() {
@@ -267,41 +241,22 @@ cmd_clone() {
     forge=$1
 
     line=$(cat ~/.config/tide/${forge}.txt | \
-    fzf --ansi \
-        --ghost "Clone a repo with $forge" \
-    )
-
+           fzf --ansi --ghost "Clone a repo with $forge")
     [ -z "$line" ] && return
+
     path=$ROOTDIR/$line/$forge/main
     [ -d "$path" ] && return
     mkdir -p $path
-
     $forge clone $line $path
 }
 
 cmd_clone_fedora() { cmd_clone fedpkg; }
 cmd_clone_redhat() { cmd_clone rhpkg; }
 
-cmd_reload() {
-    case $1 in
-        --all)
-            list_repos
-        ;;
-        --pr)
-            list_pr
-        ;;
-        --pr-all)
-            list_pr --all
-        ;;
-        *)
-            list_worktrees
-        ;;
-    esac
-}
-
 cmd_status() {
-    local cmd=$1
-    local pane_command=$2
+    local section command
+    section=$1
+    command=$2
     shift
 
     print_branch() {
@@ -310,11 +265,11 @@ cmd_status() {
     }
 
     print_toolbox() {
-        [ "$pane_command" == "toolbox" ] || return 0
+        [ "$command" == "toolbox" ] || return 0
         printf "󰆧 Toolbx  "
     }
 
-    case $cmd in
+    case $section in
         left)
             print_branch "$@"
         ;;
@@ -329,28 +284,29 @@ cmd_refresh() {
     tmux display-message " Config reloaded"
 }
 
-cmd_git_status() {
-    local num=$(git diff --staged --stat --diff-filter=u | wc -l)
+cmd_git() {
+    local num
+    num=$(git diff --staged --stat --diff-filter=u | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
     TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
 }
 
-list_commits() {
+show_log() {
     git log --date=relative \
             --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
 }
 
 cmd_git_find() {
-    line=$(list_commits | \
-    fzf --ansi -n2.. --no-hscroll \
-        --ghost "Find a commit" \
-    )
+    local line name full
+
+    line=$(show_log | fzf --ansi -n2.. --no-hscroll --ghost "Find a commit")
     [ -z "$line" ] && return
-    ref=$(echo "$line" | awk '{print $1}')
-    full=$(git rev-parse $ref)
-    tmux new-window -n " $ref" \
-        bash -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
+
+    name=$(echo "$line" | awk '{print $1}')
+    full=$(git rev-parse $name)
+    tmux new-window -n " $name" \
+        sh -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
 }
 
 cmd_palette() {
@@ -378,20 +334,16 @@ cmd_palette() {
     done
 
     cmd=$(printf "%s\n" "${list[@]}" | \
-    fzf --ghost "Perform an action" \
-        --bind 'alt-w:close' \
-    )
-
+          fzf --ghost "Perform an action" --bind 'alt-w:close')
     [ -z "$cmd" ] && return
+
     ${menu[$cmd]}
 }
 
 case $CMD in
-    open)               cmd_open "$@" ;;
-    reload)             cmd_reload "$@" ;;
-    status)             cmd_status "$@" ;;
-    git-status)         cmd_git_status "$@" ;;
     palette)            cmd_palette "$@" ;;
+    status)             cmd_status "$@" ;;
+    git)                cmd_git "$@" ;;
     refresh)            cmd_refresh "$@" ;;
     *)                  cmd_usage ;;
 esac
