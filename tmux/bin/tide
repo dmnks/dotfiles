@@ -90,7 +90,8 @@ open() {
                 ;;
             github)
                 ACCENT_FG="#d3869b"
-                ACCENT_BG="#8f3f71"
+                ACCENT_HI="#72325a"
+                ACCENT_BG="#471f38"
                 ;;
             *)
                 ACCENT_FG="#d3869b"
@@ -110,6 +111,7 @@ open() {
         tmux set @repo $(echo "${path%%/*}")
         tmux set @path $(echo "${path#*/}")
         tmux set @accent_fg "$ACCENT_FG"
+        tmux set @accent_hi "$ACCENT_HI"
         tmux set @accent_bg "$ACCENT_BG"
     fi
 
