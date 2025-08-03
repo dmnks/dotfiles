@@ -79,14 +79,18 @@ open() {
     local name=$2
     if ! tmux has-session -t="$name" 2>/dev/null; then
         forge=$(echo "${path#*/}" | xargs dirname)
+        # ACCENT_HI = 80% ACCENT_BG
+        # ACCENT_BG = 50% ACCENT_BG
         case "$forge" in
             rhpkg)
                 ACCENT_FG="#fb4934"
-                ACCENT_BG="#9d0006"
+                ACCENT_HI="#7e0005"
+                ACCENT_BG="#4e0003"
                 ;;
             fedpkg)
                 ACCENT_FG="#83a598"
-                ACCENT_BG="#076678"
+                ACCENT_HI="#065260"
+                ACCENT_BG="#04333c"
                 ;;
             github)
                 ACCENT_FG="#d3869b"
@@ -94,8 +98,6 @@ open() {
                 ACCENT_BG="#471f38"
                 ;;
             *)
-                ACCENT_FG="#d3869b"
-                ACCENT_BG="#8f3f71"
                 ;;
         esac
 
