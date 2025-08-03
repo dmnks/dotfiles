@@ -1,7 +1,6 @@
 export EDITOR=nvim
 alias vim=nvim
 
-#export ACCENT_FG='#fb4934'
 export THEME_COLOR_ACTIVE_FG='#fbf1c7'
 export THEME_COLOR_ACTIVE_BG='#3c3836'
 export THEME_COLOR_DIM1='#928374'

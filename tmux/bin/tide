@@ -3,8 +3,8 @@
 PROGRAM=$(basename $0)
 CMD=$1; shift
 
-get_conf() {
-    awk -F "=" "/$1/ {print \$2}" $HOME/.config/tide/config.ini
+yq() {
+    command yq "$1" $HOME/.config/tide/tide.yml
 }
 
 set_color() {
@@ -14,7 +14,7 @@ set_color() {
     printf "\x1b[38;2;${rgb}m"
 }
 
-ROOTDIR=$(get_conf rootdir)
+ROOTDIR=$(yq ".rootdir")
 C_DIM=$(set_color $THEME_COLOR_DIM1)
 C_RES=$(printf "\x1b[0m")
 
@@ -118,31 +118,20 @@ confirm() {
 }
 
 open() {
-    local path name
+    local path name pattern url query
     path=$1
     name=$2
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
-        forge=$(echo "${path#*/}" | xargs dirname)
-        # ACCENT_HI = 80% ACCENT_BG
-        # ACCENT_BG = 50% ACCENT_BG
-        case "$forge" in
-            rhpkg)
-                ACCENT_FG="#fb4934"
-                ACCENT_HI="#7e0005"
-                ACCENT_BG="#4e0003"
-                ;;
-            fedpkg)
-                ACCENT_FG="#83a598"
-                ACCENT_HI="#065260"
-                ACCENT_BG="#04333c"
-                ;;
-            *)
-                ACCENT_FG="#d3869b"
-                ACCENT_HI="#72325a"
-                ACCENT_BG="#471f38"
-                ;;
-        esac
+        for pattern in $(yq '.accents.[].pattern'); do
+            url=$(git config --get remote.origin.url)
+            [[ $url =~ $pattern ]] || continue
+            query=".accents.[] | select(.pattern == \"$pattern\").colors"
+            ACCENT_FG=$(yq "${query}.fg")
+            ACCENT_HI=$(yq "${query}.hi")
+            ACCENT_BG=$(yq "${query}.bg")
+            break
+        done
 
         tmux new-session -ds "$name" -n " Code" \
             -e ACCENT_FG="$ACCENT_FG" \
@@ -218,7 +207,6 @@ cmd_worktree_rm() {
     line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Remove a worktree")
     [ -z "$line" ] && return
 
-    # TODO refactor
     path=$(echo "$line" | awk '{print $1}')
     name=$(echo "$path" | sed 's/\./-/g')
     confirm "Remove worktree $ROOTDIR/$path" \
