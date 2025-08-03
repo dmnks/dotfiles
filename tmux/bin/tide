@@ -58,6 +58,46 @@ list_repos() {
     done
 }
 
+list_branches() {
+    local symbol name date
+    format=(
+        "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
+        "%(refname:lstrip=-1)"
+        "%(creatordate:relative)"
+    )
+    git for-each-ref --sort '-creatordate' --format="${format[*]}" \
+        | grep -v HEAD | awk '!seen[$2]++' | \
+    while read symbol name date; do
+        printf "${symbol} ${name} ${C_DIM}${date}${C_RES}\n"
+    done
+}
+
+list_pr() {
+    local query template number author ref title
+    if [ "$1" == "--all" ]; then
+        query=
+    else
+        query="user-review-requested:@me"
+    fi
+    template=(
+        '{{range .}}{{.number}} {{.author.login}} '
+        '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
+    )
+
+    gh pr list --search "$query" \
+               --json number,title,author,headRefName \
+               --template "${template[*]}" | \
+    while read number author ref title; do
+        printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s 󰘬 %s${C_RES}\n" \
+               "$number" "$title" "$author" "$ref"
+    done
+}
+
+show_log() {
+    git log --date=relative \
+            --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
+}
+
 press_key() {
     echo
     echo -n "Press ENTER to continue"
@@ -148,20 +188,6 @@ cmd_open_all () {
     cmd_open --all
 }
 
-list_branches() {
-    local symbol name date
-    format=(
-        "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
-        "%(refname:lstrip=-1)"
-        "%(creatordate:relative)"
-    )
-    git for-each-ref --sort '-creatordate' --format="${format[*]}" \
-        | grep -v HEAD | awk '!seen[$2]++' | \
-    while read symbol name date; do
-        printf "${symbol} ${name} ${C_DIM}${date}${C_RES}\n"
-    done
-}
-
 cmd_checkout() {
     local line ref
 
@@ -197,27 +223,6 @@ cmd_worktree_rm() {
     name=$(echo "$path" | sed 's/\./-/g')
     confirm "Remove worktree $ROOTDIR/$path" \
     git worktree remove "$ROOTDIR/$path" || press_key
-}
-
-list_pr() {
-    local query template number author ref title
-    if [ "$1" == "--all" ]; then
-        query=
-    else
-        query="user-review-requested:@me"
-    fi
-    template=(
-        '{{range .}}{{.number}} {{.author.login}} '
-        '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
-    )
-
-    gh pr list --search "$query" \
-               --json number,title,author,headRefName \
-               --template "${template[*]}" | \
-    while read number author ref title; do
-        printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s 󰘬 %s${C_RES}\n" \
-               "$number" "$title" "$author" "$ref"
-    done
 }
 
 cmd_checkout_gh() {
@@ -290,11 +295,6 @@ cmd_git() {
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
     TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
-}
-
-show_log() {
-    git log --date=relative \
-            --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
 }
 
 cmd_git_find() {
