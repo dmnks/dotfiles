@@ -130,6 +130,7 @@ open() {
             query=".accents.[] | select(.pattern == \"$pattern\").colors"
             ACCENT_FG=$(yq "${query}.fg")
             ACCENT_HI=$(yq "${query}.hi")
+            ACCENT_LO=$(yq "${query}.lo")
             ACCENT_BG=$(yq "${query}.bg")
             break
         done
@@ -138,10 +139,11 @@ open() {
         tmux new-session -ds "$name" -n " Code" \
             -e ACCENT_FG="$ACCENT_FG" \
             -e ACCENT_HI="$ACCENT_HI" \
+            -e ACCENT_LO="$ACCENT_LO" \
             -e ACCENT_BG="$ACCENT_BG" \
-            "while true; do $EDITOR -c GFiles; done"
+            "sleep 0.1; while true; do $EDITOR -c GFiles; done"
         tmux new-window -t "$name" -n "󰘬 Git" \
-            "while true; do TIG_SCRIPT=<(echo :enter) tig; done"
+            "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
         tmux new-window -t "$name" -n " Build"
         tmux select-window -t "${name}:+1"
 
@@ -150,6 +152,7 @@ open() {
         tmux set @path $(echo "${path#*/}")
         tmux set @accent_fg "$ACCENT_FG"
         tmux set @accent_hi "$ACCENT_HI"
+        tmux set @accent_lo "$ACCENT_LO"
         tmux set @accent_bg "$ACCENT_BG"
     fi
 
