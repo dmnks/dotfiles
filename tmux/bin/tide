@@ -118,14 +118,17 @@ confirm() {
 }
 
 open() {
-    local path name pattern url query
+    local path name pattern url repo query
     path=$1
     name=$2
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
+        url=$(git config --get remote.origin.url)
+        repo=${url##*/}
+        repo=${repo%.git}
+
         # Set accent colors
         for pattern in $(yq '.accents.[].pattern'); do
-            url=$(git config --get remote.origin.url)
             [[ $url =~ $pattern ]] || continue
             query=".accents.[] | select(.pattern == \"$pattern\").colors"
             ACCENT_FG=$(yq "${query}.fg")
@@ -148,7 +151,7 @@ open() {
         tmux select-window -t "${name}:+1"
 
         # Set user variables
-        tmux set @repo $(echo "${path%%/*}")
+        tmux set @repo $repo
         tmux set @path $(echo "${path#*/}")
         tmux set @accent_fg "$ACCENT_FG"
         tmux set @accent_hi "$ACCENT_HI"
