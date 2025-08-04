@@ -152,7 +152,7 @@ open() {
 
         # Set user variables
         tmux set @repo $repo
-        tmux set @path $(echo "${path#*/}")
+        tmux set @path $path
         tmux set @accent_fg "$ACCENT_FG"
         tmux set @accent_hi "$ACCENT_HI"
         tmux set @accent_lo "$ACCENT_LO"
@@ -284,7 +284,7 @@ cmd_status() {
 
 cmd_refresh() {
     tmux source-file ~/.tmux.conf
-    tmux display-message " Config reloaded"
+    tmux display-message "  Config reloaded"
 }
 
 cmd_git() {
