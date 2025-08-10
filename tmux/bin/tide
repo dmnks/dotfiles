@@ -132,9 +132,10 @@ open() {
             [[ $url =~ $pattern ]] || continue
             query=".accents.[] | select(.pattern == \"$pattern\").colors"
             ACCENT_FG=$(yq "${query}.fg")
-            ACCENT_HI=$(yq "${query}.hi")
-            ACCENT_LO=$(yq "${query}.lo")
-            ACCENT_BG=$(yq "${query}.bg")
+            ACCENT_DK=$(yq "${query}.dk")
+            ACCENT_HI=$(colortool $ACCENT_DK 0.8)
+            ACCENT_LO=$(colortool $ACCENT_DK 0.6)
+            ACCENT_BG=$(colortool $ACCENT_DK 0.5)
             break
         done
 
