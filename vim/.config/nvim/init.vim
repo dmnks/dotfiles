@@ -73,6 +73,9 @@ require("gruvbox").setup {
   },
   overrides = {
     ColorColumn = {bg = "#282828"},
+    TabLine = {fg = "#a89984"},
+    TabLineSel = {fg = "#fbf1c7", bg = "#3c3836"},
+    TabLineFill = {bg = "#282828"},
   },
 }
 EOF
