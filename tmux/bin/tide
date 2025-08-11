@@ -313,16 +313,16 @@ cmd_palette() {
     declare -A menu
 
     cmds=(
-        cmd_open        	"Git Worktree: Open"
-        cmd_open_all        	"Git Worktree: Open Global"
-        cmd_worktree_add        "Git Worktree: Add"
-        cmd_worktree_rm         "Git Worktree: Remove"
-        cmd_clone_fedora    	"Git Clone: Fedora"
-        cmd_clone_redhat    	"Git Clone: RHEL"
-        cmd_checkout		"Git Checkout"
-        cmd_git_find    	"Git Log: Find Commit"
-        cmd_checkout_gh		"GitHub Pull Request: Checkout"
-        cmd_checkout_gh_all     "GitHub Pull Request: Checkout Global"
+        cmd_open        	"Worktree: Open"
+        cmd_open_all        	"Worktree: Open (Global)"
+        cmd_worktree_add        "Worktree: Add"
+        cmd_worktree_rm         "Worktree: Remove"
+        cmd_clone_fedora    	"Git: Clone (Fedora)"
+        cmd_clone_redhat    	"Git: Clone (RHEL)"
+        cmd_checkout		"Git: Checkout"
+        cmd_git_find    	"Git: Find Commit"
+        cmd_checkout_gh		"GitHub: Checkout PR (Assigned)"
+        cmd_checkout_gh_all     "GitHub: Checkout PR"
     )
 
     list=()
