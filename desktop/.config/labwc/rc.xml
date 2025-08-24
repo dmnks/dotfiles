@@ -137,4 +137,13 @@
             <name>Bar</name>
         </names>
     </desktops>
+
+    <snapping>
+        <overlay>
+            <delay>
+                <inner>20ms</inner>
+                <outer>20ms</outer>
+            </delay>
+        </overlay>
+    </snapping>
 </labwc_config>
