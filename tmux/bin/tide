@@ -132,7 +132,7 @@ open() {
             [[ $url =~ $pattern ]] || continue
             query=".accents.[] | select(.pattern == \"$pattern\").colors"
             ACCENT_FG=$(yq "${query}.fg")
-            mapfile -t colors < <(colortool $(yq "${query}.bg") -0.2 -0.4 -0.5)
+            mapfile -t colors < <(colortool $(yq "${query}.bg") -0.1 -0.2 -0.3)
             ACCENT_HI=${colors[0]}
             ACCENT_LO=${colors[1]}
             ACCENT_BG=${colors[2]}

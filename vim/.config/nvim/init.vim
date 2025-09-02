@@ -72,6 +72,7 @@ require("gruvbox").setup {
     strings = false,
   },
   overrides = {
+    WinSeparator = {fg = "#171a1a"},
     ColorColumn = {bg = "#282828"},
     TabLine = {fg = "#a89984"},
     TabLineSel = {fg = "#fbf1c7", bg = "#3c3836"},
@@ -83,7 +84,7 @@ EOF
 colorscheme gruvbox
 
 " FZF
-let g:fzf_layout = { 'tmux': '-y0 --padding 1,2' }
+let g:fzf_layout = { 'tmux': '-yS --padding 1,2' }
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
