@@ -21,6 +21,7 @@ bind diff y scroll-line-up
 color title-blur            default     color237
 color title-focus           default     color239    bold
 color cursor                color15     color237
+color cursor-blur           color15     color237
 color "Refs: "              default     default
 color "Author: "            default     default
 color "AuthorDate: "        default     default
