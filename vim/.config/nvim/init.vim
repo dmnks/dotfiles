@@ -15,10 +15,27 @@ let mapleader = ' '
 " # Plugin setup
 " #############################################################################
 
+let g:fzf_colors = {
+\   'fg':           ['fg', 'Normal'],
+\   'bg':           ['bg', 'CursorLine'],
+\   'border':       ['bg', 'CursorLine'],
+\   'query':        ['fg', 'Normal'],
+\   'hl':           ['fg', 'Comment'],
+\   'fg+':          ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+\   'bg+':          ['bg', 'StatusLine'],
+\   'hl+':          ['fg', 'Statement'],
+\   'prompt':       ['fg', 'Conditional'],
+\   'pointer':      ['fg', 'Exception'],
+\   'marker':       ['fg', 'Keyword'],
+\   'ghost':        ['fg', 'Comment'],
+\   'scrollbar':    ['fg', 'WinSeparator'],
+\   }
+
+
 call plug#begin()
 " Plug 'nvim-tree/nvim-web-devicons'
 " Plug 'nvim-tree/nvim-tree.lua'
-" Plug 'nvim-lualine/lualine.nvim'
+Plug 'nvim-lualine/lualine.nvim'
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-context'
@@ -39,14 +56,14 @@ call plug#end()
 " EOF
 " nmap <leader>t :NvimTreeToggle<CR>
 
-" " Lualine
-" lua << EOF
-" require('lualine').setup {
-"   options = {
-"     globalstatus = true,
-"   },
-" }
-" EOF
+" Lualine
+lua << EOF
+require('lualine').setup {
+  options = {
+    globalstatus = true,
+  },
+}
+EOF
 
 " Treesitter
 lua << EOF
@@ -71,19 +88,15 @@ require("gruvbox").setup {
   italic = {
     strings = false,
   },
-  overrides = {
-    ColorColumn = {bg = "#282828"},
-    TabLine = {fg = "#a89984"},
-    TabLineSel = {fg = "#fbf1c7", bg = "#3c3836"},
-    TabLineFill = {bg = "#282828"},
-  },
 }
 EOF
+
 
 colorscheme gruvbox
 
 " FZF
-let g:fzf_layout = { 'tmux': '-y0 --padding 1,2' }
+let g:fzf_layout = {
+\   'window': { 'width': 0.5, 'height': 0.5, 'border': 'sharp', 'yoffset': 0 }}
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
@@ -131,7 +144,6 @@ set number
 set numberwidth=6
 set nowrap
 set cursorline
-set colorcolumn=80
 set scrolloff=0
 set laststatus=3
 
@@ -208,3 +220,57 @@ nmap <silent> <leader>c :call system('git ctags')<CR>
 for f in split(glob('~/.vimrc.d/*.vim'), '\n')
     exec 'source' f
 endfor
+
+lua << EOF
+-- Function to open tig in a floating terminal
+function OpenTermPopup(cmd)
+  local width = math.floor(vim.o.columns * 0.8)
+  local height = math.floor(vim.o.lines * 0.8)
+  local col = math.floor((vim.o.columns - width) / 2)
+  local row = 0
+
+  -- Create a scratch buffer
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Open a floating window
+  vim.api.nvim_open_win(buf, true, {
+    title = "Git Status",
+    title_pos = "center",
+    relative = "editor",
+    width = width,
+    height = height,
+    col = col,
+    row = 0,
+    style = "minimal",
+    border = "solid",
+  })
+
+  vim.fn.termopen(cmd, {
+    on_exit = function()
+        vim.api.nvim_buf_delete(buf, { force = true })
+    end,
+  })
+
+  vim.cmd("startinsert") -- start in insert mode for terminal input
+end
+
+-- Optional keymap, e.g. <leader>g
+vim.keymap.set("n", "<M-s>", function() OpenTermPopup("tide git") end, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>gl", function()
+    local line = vim.fn.line(".")
+    local file = vim.fn.expand("%")
+    local cmd = string.format("tig -L%d,+1:%s", line, file)
+    OpenTermPopup(string.format("sh -c 'TIG_SCRIPT=<(echo :enter) %s'", cmd))
+end, { noremap = true, silent = true })
+
+-- vim.opt.statusline = "%!v:lua.MyStatusLine()"
+-- 
+-- function _G.MyStatusLine()
+--   if vim.bo.buftype == "terminal" then
+--     return ""  -- empty statusline for terminal buffers
+--   end
+--   return "%f %h%m%r%=%-14.(%l,%c%V%) %P"  -- default-ish statusline
+-- end
+
+EOF
+set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,t:block-blink0-TermCursor
