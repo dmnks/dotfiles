@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Mutt
+GenericName=Mutt
+Exec=ptyxis --gapplication-app-id=dmnks.mutt --title Mutt -- mutt
+Terminal=false
+Type=Application
+Keywords=shell;prompt;command;commandline;
+Icon=org.gnome.Geary
+Categories=GNOME;GTK;Network;Email;
+Actions=new-window;new-window-ro;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=ptyxis --gapplication-app-id=dmnks.mutt --title Mutt -- mutt
+
+[Desktop Action new-window-ro]
+Name=New Window (Read-Only)
+Exec=ptyxis --gapplication-app-id=dmnks.mutt --title "Mutt (Read-Only)" -- mutt -R
