@@ -1,13 +1,6 @@
 export EDITOR=nvim
 alias vim=nvim
 
-export THEME_COLOR_ACTIVE_FG='#fbf1c7'
-export THEME_COLOR_ACTIVE_BG='#3c3836'
-export THEME_COLOR_DIM1='#928374'
-export THEME_COLOR_DIM2='#7c6f64'
-export THEME_COLOR_DIM3='#665c54'
-export THEME_COLOR_DIM4='#504945'
-
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
     GIT_PS1_SHOWDIRTYSTATE=1

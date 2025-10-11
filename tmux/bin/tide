@@ -132,13 +132,44 @@ blah() {
 }
 
 cmd_update() {
-    variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+    local variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+
     if [ "$variant" == "default" ]; then
-        accent=$(blah 1)
+        ACCENT_FG=$(blah 1)
+        THEME_COLOR_ACTIVE_FG='#282828'
+        THEME_COLOR_ACTIVE_BG='#ebdbb2'
+        THEME_COLOR_DIM0='#ebdbb2'
+        THEME_COLOR_DIM1='#928374'
+        THEME_COLOR_DIM2='#a89984'
+        THEME_COLOR_DIM3='#bdae93'
+        THEME_COLOR_DIM4='#d5c4a1'
+        THEME_COLOR_DIM5='#f2e5bc'
+        killall -s SIGUSR2 foot
     else
-        accent=$(blah 2)
+        ACCENT_FG=$(blah 2)
+        THEME_COLOR_ACTIVE_FG='#fbf1c7'
+        THEME_COLOR_ACTIVE_BG='#3c3836'
+        THEME_COLOR_DIM0='#bdae93'
+        THEME_COLOR_DIM1='#928374'
+        THEME_COLOR_DIM2='#7c6f64'
+        THEME_COLOR_DIM3='#665c54'
+        THEME_COLOR_DIM4='#504945'
+        THEME_COLOR_DIM5='#32302f'
+        killall -s SIGUSR1 foot
     fi
-    tmux set-environment ACCENT_FG $accent
+
+    for var in ACCENT_FG \
+               THEME_COLOR_ACTIVE_FG \
+               THEME_COLOR_ACTIVE_BG \
+               THEME_COLOR_DIM0 \
+               THEME_COLOR_DIM1 \
+               THEME_COLOR_DIM2 \
+               THEME_COLOR_DIM3 \
+               THEME_COLOR_DIM4 \
+               THEME_COLOR_DIM5; do
+        tmux set-environment -g $var "${!var}"
+    done
+
     tmux refresh-client
 }
 
