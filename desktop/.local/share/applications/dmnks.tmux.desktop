@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Tmux
+GenericName=Tmux
+Exec=ptyxis --gapplication-app-id=dmnks.tmux -- systemd-run --quiet --scope --user tide
+Terminal=false
+Type=Application
+Keywords=shell;prompt;command;commandline;
+Icon=org.gnome.Terminal
+Categories=System;TerminalEmulator;
+Actions=new-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=ptyxis --gapplication-app-id=dmnks.tmux -- systemd-run --quiet --scope --user tide
