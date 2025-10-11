@@ -1,0 +1,28 @@
+#!/bin/bash
+
+CMD=$1
+shift
+
+case $CMD in
+    monitor)
+        gsettings monitor org.gnome.desktop.interface | \
+        while read key; do
+            [[ $key =~ ^(color-scheme) ]] || continue
+            val=$(echo "$key" | awk '{print $2}' | tr -d \')
+            if [ "$val" == "prefer-dark" ]; then
+                killall -s SIGUSR1 foot
+            else
+                killall -s SIGUSR2 foot
+            fi
+        done
+        ;;
+    launch)
+        val=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+        if [ "$val" == "prefer-dark" ]; then
+            theme=dark
+        else
+            theme=light
+        fi
+        exec foot -o main.initial-color-theme=$theme "$@"
+        ;;
+esac

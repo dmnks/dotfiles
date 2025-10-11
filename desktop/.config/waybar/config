@@ -1,0 +1,105 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 38,
+    "spacing": 2,
+    "output": ["!ScreenCasting", "*"],
+
+    "modules-left": ["custom/os", "ext/workspaces"],
+    "modules-right": [
+        "custom/theme", "keyboard-state", "pulseaudio", "bluetooth",
+        "network#vpn", "network#default", "battery", "clock"
+    ],
+
+    "custom/os": {
+        "format": "<span font='22px'></span>",
+        "cursor": false,
+        "tooltip": false
+    },
+
+    "ext/workspaces": {
+        "format": "{name}",
+        "on-click": "activate",
+        "sort-by-number": true,
+        "cursor": false
+    },
+
+    "keyboard-state": {
+        "numlock": true,
+        "format": "<span font='18px'>{icon}</span> ",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+
+    "custom/theme": {
+        "format": "<span font='18px'>{text}</span>",
+        "interval": "once",
+        "exec": "~/bin/wbr theme status",
+        "on-click": "sleep 0.1; ~/bin/wbr theme toggle",
+        "cursor": false,
+        "signal": 8
+    },
+
+    "bluetooth": {
+        "format-connected": "<span font='18px'></span>  {device_battery_percentage}%",
+        "format-device-preference": ["APW Mesa ANC"],
+        "format-on": "",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t {device_address}\t {device_battery_percentage}%",
+        "cursor": false
+    },
+
+    "pulseaudio": {
+        "format": "<span font='18px'>{icon}</span>   {volume}%",
+        "format-icons": {
+            "headphone": "󰋋",
+            "headset": "󰋋",
+            "raop_sink.Sonos.SonosZP.lan.7000": "󱀞",
+            "default": ["\uf027", "\uf028"]
+        },
+        "scroll-step": 1,
+        "on-click": "flatpak run com.saivert.pwvucontrol",
+        "on-click-right": "amixer sset Master toggle",
+        "cursor": false
+    },
+
+    "network#default": {
+        "format-ethernet": "<span font='18px'>󰈀</span> ",
+        "format-wifi": "<span font='18px'>{icon}</span>   {signalStrength}% ",
+        "format-disconnected": "<span font='18px'>󰈀</span> ",
+        "format-icons": ["\udb82\udd2f", "\udb82\udd1f", "\udb82\udd22", "\udb82\udd25", "\udb82\udd28"],
+        "tooltip-format-wifi": "{essid} ({ipaddr}) [{signalStrength}%]",
+        "tooltip-format-ethernet": "{ifname} ({ipaddr})",
+        "tooltip-format-disconnected": "Disconnected",
+        "on-click": "~/bin/wbr nmtui",
+        "cursor": false
+    },
+
+    "network#vpn": {
+        "interface": "tun0",
+        "format-ethernet": "<span font='18px'></span> ",
+        "format-off": "",
+        "tooltip-format": "VPN connected ({ipaddr})",
+        "tooltip-format-disconnected": "VPN disconnected",
+        "cursor": false
+    },
+
+    "battery": {
+        "bat": "BAT0",
+        "interval": 60,
+        "format": "<span font='18px'>{icon}</span>   {capacity}% ",
+        "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"],
+        "format-plugged": "<span font='18px'></span> "
+    },
+
+    "clock": {
+        "format": "{:%a %b %d  %H:%M }",
+        "min-length": 14,
+        "on-click": "gnome-calendar",
+        "cursor": false,
+        "tooltip": false
+    }
+}

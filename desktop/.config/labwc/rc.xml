@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<labwc_config>
+    <core>
+        <gap>10</gap>
+    </core>
+
+    <theme>
+        <name>default</name>
+        <cornerRadius>10</cornerRadius>
+        <keepBorder>yes</keepBorder>
+        <dropShadows>yes</dropShadows>
+        <dropShadowsOnTiled>yes</dropShadowsOnTiled>
+        <font>
+            <name>Adwaita Sans</name>
+            <size>12</size>
+            <slant>normal</slant>
+            <weight>normal</weight>
+        </font>
+        <font place="ActiveWindow">
+            <weight>semibold</weight>
+        </font>
+        <font place="InactiveWindow">
+            <weight>semibold</weight>
+        </font>
+        <font place="OnScreenDisplay">
+            <name>Adwaita Sans</name>
+            <size>13</size>
+            <slant>normal</slant>
+            <weight>normal</weight>
+        </font>
+        <titlebar>
+            <layout>close,iconify,max:</layout>
+        </titlebar>
+    </theme>
+
+    <libinput>
+        <device category="default">
+            <pointerSpeed>0.0</pointerSpeed>
+        </device>
+        <device category="touchpad">
+            <naturalScroll>yes</naturalScroll>
+        </device>
+    </libinput>
+
+    <mouse>
+        <default />
+        <context name="Root">
+            <mousebind button="Left" action="Press">
+                <action name="None" />
+            </mousebind>
+            <mousebind direction="Up" action="Scroll">
+                <action name="None" />
+            </mousebind>
+            <mousebind direction="Down" action="Scroll">
+                <action name="None" />
+            </mousebind>
+        </context>
+        <context name="Frame">
+            <mousebind button="W-Left" action="Drag">
+                <action name="None" />
+            </mousebind>
+            <mousebind button="W-Right" action="Drag">
+                <action name="None" />
+            </mousebind>
+            <mousebind button="A-Left" action="Drag">
+                <action name="Move" />
+            </mousebind>
+            <mousebind button="A-Right" action="Drag">
+                <action name="Resize" />
+            </mousebind>
+        </context>
+    </mouse>
+
+    <keyboard>
+        <repeatDelay>300</repeatDelay>
+        <repeatRate>30</repeatRate>
+        <numLock>on</numLock>
+
+        <!-- Window control -->
+        <keybind key="A-Tab">
+            <action name="NextWindow" />
+        </keybind>
+        <keybind key="A-S-Tab">
+            <action name="PreviousWindow" />
+        </keybind>
+        <keybind key="A-Return">
+            <action name="Execute" command="footwrap launch -a Terminal" />
+        </keybind>
+        <keybind key="A-F4">
+            <action name="Close" />
+        </keybind>
+        <keybind key="A-KP_0">
+            <action name="AutoPlace" policy="center" />
+        </keybind>
+        <keybind key="W-Up">
+            <action name="SnapToEdge" direction="center" />
+        </keybind>
+        <keybind key="W-Down">
+            <action name="UnSnap" />
+        </keybind>
+        <keybind key="W-Left">
+            <action name="SnapToEdge" direction="left" />
+        </keybind>
+        <keybind key="W-Right">
+            <action name="SnapToEdge" direction="right" />
+        </keybind>
+        <keybind key="A-Up">
+            <action name="MoveToEdge" direction="up" />
+        </keybind>
+        <keybind key="A-Down">
+            <action name="MoveToEdge" direction="down" />
+        </keybind>
+        <keybind key="A-Left">
+            <action name="MoveToEdge" direction="left" />
+        </keybind>
+        <keybind key="A-Right">
+            <action name="MoveToEdge" direction="right" />
+        </keybind>
+        <keybind key="S-A-Up">
+            <action name="ShrinkToEdge" direction="up" />
+        </keybind>
+        <keybind key="S-A-Down">
+            <action name="GrowToEdge" direction="down" />
+        </keybind>
+        <keybind key="S-A-Left">
+            <action name="ShrinkToEdge" direction="left" />
+        </keybind>
+        <keybind key="S-A-Right">
+            <action name="GrowToEdge" direction="right" />
+        </keybind>
+        <keybind key="A-Space">
+            <action name="ShowMenu" menu="client-menu" />
+        </keybind>
+
+        <!-- Workspace control -->
+        <keybind key="A-9">
+            <action name="GoToDesktop" to="left" wrap="no" />
+        </keybind>
+        <keybind key="A-0">
+            <action name="GoToDesktop" to="right" wrap="no" />
+        </keybind>
+
+        <!-- Desktop control -->
+        <keybind key="W-Return">
+            <action name="Execute" command="fuzzel" />
+        </keybind>
+        <keybind key="W-L">
+            <action name="Execute" command="swaylock -f" />
+        </keybind>
+        <keybind key="W-F9" allowWhenLocked="yes">
+            <action name="Execute" command="lwc suspend" />
+        </keybind>
+        <keybind key="W-N">
+            <action name="Execute" command="set-theme toggle" />
+        </keybind>
+        <keybind key="W-E">
+            <action name="Reconfigure" />
+        </keybind>
+
+        <!-- Media control -->
+        <keybind key="XF86_AudioLowerVolume">
+            <action name="Execute" command="amixer sset Master 5%-" />
+        </keybind>
+        <keybind key="XF86_AudioRaiseVolume">
+            <action name="Execute" command="amixer sset Master 5%+" />
+        </keybind>
+        <keybind key="XF86_AudioMute">
+            <action name="Execute" command="amixer sset Master toggle" />
+        </keybind>
+        <keybind key="XF86_MonBrightnessUp">
+            <action name="Execute" command="brightnessctl set +10%" />
+        </keybind>
+        <keybind key="XF86_MonBrightnessDown">
+            <action name="Execute" command="brightnessctl set 10%-" />
+        </keybind>
+        <keybind key="XF86_AudioPlay">
+            <action name="Execute" command="playerctl play-pause" />
+        </keybind>
+        <keybind key="XF86_AudioNext">
+            <action name="Execute" command="playerctl next" />
+        </keybind>
+        <keybind key="XF86_AudioPrev">
+            <action name="Execute" command="playerctl previous" />
+        </keybind>
+        <keybind key="XF86_Calculator">
+            <action name="Execute" command="gnome-calculator" />
+        </keybind>
+    </keyboard>
+
+    <desktops number="3">
+        <names>
+            <name>Code</name>
+            <name>Prod</name>
+            <name>Misc</name>
+        </names>
+        <popupTime>0</popupTime>
+    </desktops>
+
+    <regions>
+        <region name="zoom" x="15%" y="0%" width="70%" height="100%" />
+    </regions>
+
+    <snapping>
+        <overlay>
+            <delay>
+                <inner>20ms</inner>
+                <outer>20ms</outer>
+            </delay>
+        </overlay>
+        <notifyClient>never</notifyClient>
+    </snapping>
+</labwc_config>

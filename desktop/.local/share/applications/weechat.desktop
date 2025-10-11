@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=footwrap launch -a WeeChat --title WeeChat weechat
+Icon=org.gnome.Polari
+Terminal=false
+Categories=System;Chat;
+Keywords=shell;prompt;command;commandline;
+Name=WeeChat
+GenericName=WeeChat
+Comment=Portable, fast, light and extensible IRC client

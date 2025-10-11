@@ -20,8 +20,6 @@ call plug#begin()
 " Plug 'nvim-tree/nvim-tree.lua'
 " Plug 'nvim-lualine/lualine.nvim'
 Plug 'ellisonleao/gruvbox.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'tpope/vim-commentary'
 call plug#end()
 
@@ -48,42 +46,30 @@ call plug#end()
 " }
 " EOF
 
-" Treesitter
 lua << EOF
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "c", "cpp", "bash", "lua", "vim", "vimdoc", "query",
-                       "cmake", "markdown", "markdown_inline" },
-  sync_install = false,
-  auto_install = false,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-}
-require('treesitter-context').setup {
-  enabled = true,
-  max_lines = 1,
-  trim_scope = 'inner',
-  multiwindow = true,
-}
 require("gruvbox").setup {
   bold = false,
   italic = {
     strings = false,
   },
-  overrides = {
-    ColorColumn = {bg = "#282828"},
-    TabLine = {fg = "#a89984"},
-    TabLineSel = {fg = "#fbf1c7", bg = "#3c3836"},
-    TabLineFill = {bg = "#282828"},
-  },
 }
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "background",
+  callback = function(args)
+    local new_bg = vim.o.background
+    if new_bg == "dark" then
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#282828" })
+    else
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#fbf1c7" })
+    end
+  end,
+})
 EOF
 
 colorscheme gruvbox
 
 " FZF
-let g:fzf_layout = { 'tmux': '-y0 --padding 1,2' }
+let g:fzf_layout = { 'tmux': '-y0' }
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
@@ -152,7 +138,6 @@ set shiftwidth=4
 set expandtab
 set ttimeoutlen=10
 set mouse=
-set splitkeep=screen
 
 nmap <silent> <leader>e :windo e<CR>
 nmap <silent> <leader>s :set spell!<CR>
@@ -187,11 +172,11 @@ command -nargs=+ G exec "silent grep! <args>" | copen | redraw
 
 nmap <silent> <leader>gg :exec "G <cword>"<CR>
 nmap <silent> <leader>gl :call
-\   system('tmux new-window -n " ' . expand('%:t') . ':' . line('.') . '" ' .
+\   system('tmux new-window -n "󰘬 ' . expand('%:t') . ':' . line('.') . '" ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig -L' .
 \          line('.') . ',+1:' . expand('%') . '"')<CR>
 nmap <silent> <leader>gL :call
-\   system('tmux new-window -n " ' . expand('%:t') . '" ' .
+\   system('tmux new-window -n "󰘬 ' . expand('%:t') . '" ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig --follow ' .
 \          expand('%') . '"')<CR>
 nmap <silent> <leader>gb :call

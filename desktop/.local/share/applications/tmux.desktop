@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=footwrap launch -W 179x48 "-o main.pad=0x0 center" -a Tmux systemd-run --quiet --scope --user tide
+Icon=org.gnome.Terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;
+Name=Tmux
+GenericName=Tmux
+Comment=A terminal multiplexer

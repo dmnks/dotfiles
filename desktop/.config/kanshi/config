@@ -1,0 +1,24 @@
+profile {
+    output "Lenovo * P27h-20 *" enable
+    output "Lenovo * P27q-20 *" disable
+    output eDP-1 disable
+}
+
+profile {
+    output "Lenovo * P27h-20 *" enable
+    output eDP-1 disable
+}
+
+profile {
+    output "Lenovo * P27q-20 *" enable
+    output eDP-1 disable
+}
+
+profile {
+    output "* DELL G2410 *" enable
+    output eDP-1 disable
+}
+
+profile {
+    output eDP-1 enable
+}

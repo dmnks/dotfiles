@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=footwrap launch -a Mutt --title Mutt mutt
+Icon=org.gnome.Geary
+Terminal=false
+Categories=System;Email;
+Keywords=shell;prompt;command;commandline;
+Name=Mutt
+GenericName=Mutt
+Comment=A text mode mail user agent
