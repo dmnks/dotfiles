@@ -71,13 +71,20 @@ require("gruvbox").setup {
   italic = {
     strings = false,
   },
-  overrides = {
-    ColorColumn = {bg = "#282828"},
-    TabLine = {fg = "#a89984"},
-    TabLineSel = {fg = "#fbf1c7", bg = "#3c3836"},
-    TabLineFill = {bg = "#282828"},
-  },
 }
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "background",
+  callback = function(args)
+    local new_bg = vim.o.background
+    if new_bg == "dark" then
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#101212" })
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#282828" })
+    else
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#ebd798" })
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#fbf1c7" })
+    end
+  end,
+})
 EOF
 
 colorscheme gruvbox
@@ -187,11 +194,11 @@ command -nargs=+ G exec "silent grep! <args>" | copen | redraw
 
 nmap <silent> <leader>gg :exec "G <cword>"<CR>
 nmap <silent> <leader>gl :call
-\   system('tmux new-window -n " ' . expand('%:t') . ':' . line('.') . '" ' .
+\   system('tmux new-window -n "󰘬 ' . expand('%:t') . ':' . line('.') . '" ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig -L' .
 \          line('.') . ',+1:' . expand('%') . '"')<CR>
 nmap <silent> <leader>gL :call
-\   system('tmux new-window -n " ' . expand('%:t') . '" ' .
+\   system('tmux new-window -n "󰘬 ' . expand('%:t') . '" ' .
 \          'sh -c "TIG_SCRIPT=<(echo :enter) tig --follow ' .
 \          expand('%') . '"')<CR>
 nmap <silent> <leader>gb :call
