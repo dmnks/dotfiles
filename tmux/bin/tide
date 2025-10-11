@@ -117,8 +117,33 @@ confirm() {
     fi
 }
 
+blah() {
+    which dconf &>/dev/null || return $ACCENT_COLOR
+    case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
+        blue)   echo '#458588 #83a598' ;;
+        teal)   echo '#689d6a #8ec07c' ;;
+        green)  echo '#98971a #b8bb26' ;;
+        yellow) echo '#d79921 #fabd2f' ;;
+        orange) echo '#d65d0e #fe8019' ;;
+        red)    echo '#cc241d #fb4934' ;;
+        purple) echo '#b16286 #d3869b' ;;
+        slate)  echo '#a89984 #ebdbb2' ;;
+    esac | cut -d' ' -f$1
+}
+
+cmd_update() {
+    variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+    if [ "$variant" == "default" ]; then
+        accent=$(blah 1)
+    else
+        accent=$(blah 2)
+    fi
+    tmux set-environment ACCENT_FG $accent
+    tmux refresh-client
+}
+
 open() {
-    local path name pattern url repo query colors
+    local path name url repo
     path=$1
     name=$2
 
@@ -127,29 +152,13 @@ open() {
         repo=${url##*/}
         repo=${repo%.git}
 
-        # Set accent colors
-        for pattern in $(yq '.accents.[].pattern'); do
-            [[ $url =~ $pattern ]] || continue
-            query=".accents.[] | select(.pattern == \"$pattern\").colors"
-            ACCENT_FG=$(yq "${query}.fg")
-            mapfile -t colors < <(colortool $(yq "${query}.bg") -0.2 -0.4 -0.5)
-            ACCENT_HI=${colors[0]}
-            ACCENT_LO=${colors[1]}
-            ACCENT_BG=${colors[2]}
-            break
-        done
-
         # Construct session
-        tmux new-session -ds "$name" -n " Code" \
-            -e ACCENT_FG="$ACCENT_FG" \
-            -e ACCENT_HI="$ACCENT_HI" \
-            -e ACCENT_LO="$ACCENT_LO" \
-            -e ACCENT_BG="$ACCENT_BG" \
+        tmux new-session -ds "$name" -n "Code" \
             "sleep 0.1; while true; do $EDITOR -c GFiles; done"
-        tmux new-window -t "$name" -n "󰘬 Git" \
+        tmux new-window -t "$name" -n "Git" \
             "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
         tmux split-window -t "$name" -h -l35%
-        tmux new-window -t "$name" -n " Build"
+        tmux new-window -t "$name" -n "Build"
         tmux split-window -t "$name" -h -l35%
         tmux split-window -t "$name" -v
         tmux select-window -t "${name}:+1"
@@ -157,10 +166,8 @@ open() {
         # Set user variables
         tmux set @repo $repo
         tmux set @path $path
-        tmux set @accent_fg "$ACCENT_FG"
-        tmux set @accent_hi "$ACCENT_HI"
-        tmux set @accent_lo "$ACCENT_LO"
-        tmux set @accent_bg "$ACCENT_BG"
+
+        cmd_update
     fi
 
     if [ -z "$TMUX" ]; then
@@ -347,5 +354,6 @@ case $CMD in
     status)             cmd_status "$@" ;;
     git)                cmd_git "$@" ;;
     refresh)            cmd_refresh "$@" ;;
+    update)             cmd_update "$@" ;;
     *)                  cmd_usage ;;
 esac
