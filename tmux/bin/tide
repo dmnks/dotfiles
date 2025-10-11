@@ -117,7 +117,7 @@ confirm() {
     fi
 }
 
-blah() {
+accent() {
     which dconf &>/dev/null || return $ACCENT_COLOR
     case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
         blue)   echo '#458588 #83a598' ;;
@@ -136,7 +136,7 @@ cmd_update() {
     local variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
 
     if [ "$variant" == "default" ]; then
-        ACCENT_FG=$(blah 1)
+        ACCENT_FG=$(accent 1)
         THEME_COLOR_ACTIVE_FG='#282828'
         THEME_COLOR_ACTIVE_BG='#ebdbb2'
         THEME_COLOR_DIM0='#ebdbb2'
@@ -147,7 +147,7 @@ cmd_update() {
         THEME_COLOR_DIM5='#f2e5bc'
         killall -s SIGUSR2 foot
     else
-        ACCENT_FG=$(blah 2)
+        ACCENT_FG=$(accent 2)
         THEME_COLOR_ACTIVE_FG='#fbf1c7'
         THEME_COLOR_ACTIVE_BG='#3c3836'
         THEME_COLOR_DIM0='#bdae93'
@@ -193,12 +193,12 @@ open() {
         repo=${repo%.git}
 
         # Construct session
-        tmux new-session -ds "$name" -n "Code" \
+        tmux new-session -ds "$name" -n " Code" \
             "sleep 0.1; while true; do $EDITOR -c GFiles; done"
-        tmux new-window -t "$name" -n "Git" \
+        tmux new-window -t "$name" -n "󰘬 Git" \
             "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
         tmux split-window -t "$name" -h -l35%
-        tmux new-window -t "$name" -n "Build"
+        tmux new-window -t "$name" -n " Build"
         tmux split-window -t "$name" -h -l35%
         tmux split-window -t "$name" -v
         tmux select-window -t "${name}:+1"
