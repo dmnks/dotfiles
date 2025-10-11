@@ -18,21 +18,6 @@ ROOTDIR=$(yq ".rootdir")
 C_DIM=$(set_color $THEME_COLOR_DIM1)
 C_RES=$(printf "\x1b[0m")
 
-cmd_usage() {
-    echo "\
-Usage: $PROGRAM COMMAND [ARGS]
-
-A simple tmux(1)-based IDE with git-worktree(1) and toolbox(1) integration.
-
-Commands:
-    palette                 show command palette 
-    status [left|right]     generate status bar (to use from ~/.tmux.conf)
-    git                     show interactive git status
-    refresh                 reload tmux config
-"
-    exit 1
-}
-
 list_worktrees() {
     local repo name path label obj ref
     if [ $# == 0 ]; then
@@ -117,8 +102,89 @@ confirm() {
     fi
 }
 
+accent() {
+    which dconf &>/dev/null || return $ACCENT_COLOR
+    case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
+        blue)   echo '#458588 #83a598 -0.3 0.5' ;;
+        teal)   echo '#689d6a #8ec07c -0.4 0.4' ;;
+        green)  echo '#98971a #b8bb26 -0.45 0.3' ;;
+        yellow) echo '#d79921 #fabd2f -0.5 0.1' ;;
+        orange) echo '#d65d0e #fe8019 -0.5 0.5' ;;
+        red)    echo '#cc241d #fb4934 -0.4 0.5' ;;
+        pink)   echo '#b16286 #d3869b -0.4 0.4' ;;
+        purple) echo '#b16286 #d3869b -0.4 0.4' ;;
+        slate)  echo '#a89984 #ebdbb2 -0.5 -0.1' ;;
+    esac | cut -d' ' -f$1
+}
+
+cmd_update() {
+    local variant
+    if [ $# != 0 ]; then
+        variant=$1
+    else
+        variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+    fi
+
+    if [ "$variant" == "prefer-dark" ]; then
+        ACCENT_FG=$(accent 2)
+        ACCENT_BG=$(accent 1)
+        ACCENT_BG0=$(colortool $ACCENT_BG $(accent 3))
+        THEME_COLOR_BG0='#32302f'
+        THEME_COLOR_BG1=$(colortool $THEME_COLOR_BG0 -0.4)
+        THEME_COLOR_BG='#282828'
+        THEME_COLOR_ACTIVE_FG='#fbf1c7'
+        THEME_COLOR_ACTIVE_BG='#3c3836'
+        THEME_COLOR_ACTIVE_BG0='#504945'
+        THEME_COLOR_DIM0='#bdae93'
+        THEME_COLOR_DIM1='#928374'
+        THEME_COLOR_DIM2='#7c6f64'
+        THEME_COLOR_DIM3='#665c54'
+        THEME_COLOR_DIM4='#504945'
+        THEME_COLOR_DIM5='#3c3836'
+        THEME_COLOR_DIM6='#d5c4a1'
+    else
+        ACCENT_FG=$(accent 1)
+        ACCENT_BG=$(accent 2)
+        ACCENT_BG0=$(colortool $ACCENT_BG $(accent 4))
+        THEME_COLOR_BG0='#f2e5bc'
+        THEME_COLOR_BG1=$(colortool $THEME_COLOR_BG0 -0.4)
+        THEME_COLOR_BG='#fbf1c7'
+        THEME_COLOR_ACTIVE_FG='#282828'
+        THEME_COLOR_ACTIVE_BG='#ebdbb2'
+        THEME_COLOR_ACTIVE_BG0='#d5c4a1'
+        THEME_COLOR_DIM0='#ebdbb2'
+        THEME_COLOR_DIM1='#928374'
+        THEME_COLOR_DIM2='#a89984'
+        THEME_COLOR_DIM3='#bdae93'
+        THEME_COLOR_DIM4='#d5c4a1'
+        THEME_COLOR_DIM5='#ebdbb2'
+        THEME_COLOR_DIM6='#504945'
+    fi
+
+    for var in ACCENT_FG \
+               ACCENT_BG \
+               ACCENT_BG0 \
+               THEME_COLOR_BG0 \
+               THEME_COLOR_BG1 \
+               THEME_COLOR_BG \
+               THEME_COLOR_ACTIVE_FG \
+               THEME_COLOR_ACTIVE_BG \
+               THEME_COLOR_ACTIVE_BG0 \
+               THEME_COLOR_DIM0 \
+               THEME_COLOR_DIM1 \
+               THEME_COLOR_DIM2 \
+               THEME_COLOR_DIM3 \
+               THEME_COLOR_DIM4 \
+               THEME_COLOR_DIM5 \
+               THEME_COLOR_DIM6; do
+        tmux set-environment -g $var "${!var}"
+    done
+
+    tmux source-file ~/.tmux.conf
+}
+
 open() {
-    local path name pattern url repo query colors
+    local path name url repo
     path=$1
     name=$2
 
@@ -127,40 +193,27 @@ open() {
         repo=${url##*/}
         repo=${repo%.git}
 
-        # Set accent colors
-        for pattern in $(yq '.accents.[].pattern'); do
-            [[ $url =~ $pattern ]] || continue
-            query=".accents.[] | select(.pattern == \"$pattern\").colors"
-            ACCENT_FG=$(yq "${query}.fg")
-            mapfile -t colors < <(colortool $(yq "${query}.bg") -0.2 -0.4 -0.5)
-            ACCENT_HI=${colors[0]}
-            ACCENT_LO=${colors[1]}
-            ACCENT_BG=${colors[2]}
-            break
-        done
-
         # Construct session
-        tmux new-session -ds "$name" -n " Code" \
-            -e ACCENT_FG="$ACCENT_FG" \
-            -e ACCENT_HI="$ACCENT_HI" \
-            -e ACCENT_LO="$ACCENT_LO" \
-            -e ACCENT_BG="$ACCENT_BG" \
-            "sleep 0.1; while true; do $EDITOR -c GFiles; done"
-        tmux new-window -t "$name" -n "󰘬 Git" \
-            "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
-        tmux split-window -t "$name" -h -l35%
+
+        tmux new-session -ds "$name" -n " Code" "sleep 0.3; $EDITOR -c GFiles"
+        tmux set-option -p remain-on-exit on
+        tmux set-hook -p pane-died "respawn-pane"
+
+        tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.3; tig"
+        tmux set-option -p remain-on-exit on
+        tmux set-hook -p pane-died "respawn-pane"
+
         tmux new-window -t "$name" -n " Build"
-        tmux split-window -t "$name" -h -l35%
-        tmux split-window -t "$name" -v
+        tmux set-option -p remain-on-exit on
+        tmux set-hook -p pane-died "respawn-pane"
+
         tmux select-window -t "${name}:+1"
 
         # Set user variables
         tmux set @repo $repo
         tmux set @path $path
-        tmux set @accent_fg "$ACCENT_FG"
-        tmux set @accent_hi "$ACCENT_HI"
-        tmux set @accent_lo "$ACCENT_LO"
-        tmux set @accent_bg "$ACCENT_BG"
+
+        cmd_update
     fi
 
     if [ -z "$TMUX" ]; then
@@ -191,6 +244,13 @@ cmd_open_all () {
     cmd_open --all
 }
 
+cmd_worktree_reload() {
+    local path=$(tmux display -p '#S')
+    tmux kill-session
+    cd "$ROOTDIR/$path"
+    open $path $path
+}
+
 cmd_checkout() {
     local line ref
 
@@ -207,7 +267,7 @@ cmd_worktree_add() {
     local line ref
 
     line=$(list_branches | fzf --ansi -n2,4 \
-           --ghost "Add a worktree for a branch or tag")
+           --ghost "Create a worktree for a branch or tag")
     [ -z "$line" ] && return
 
     ref=$(echo "$line" | awk '{print $2}')
@@ -218,12 +278,12 @@ cmd_worktree_add() {
 cmd_worktree_rm() {
     local line path name
 
-    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Remove a worktree")
+    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Delete a worktree")
     [ -z "$line" ] && return
 
     path=$(echo "$line" | awk '{print $1}')
     name=$(echo "$path" | sed 's/\./-/g')
-    confirm "Remove worktree $ROOTDIR/$path" \
+    confirm "Delete worktree $ROOTDIR/$path" \
     git worktree remove "$ROOTDIR/$path" || press_key
 }
 
@@ -288,7 +348,7 @@ cmd_status() {
 
 cmd_refresh() {
     tmux source-file ~/.tmux.conf
-    tmux display-message "  Config reloaded"
+    tmux display-message " Config reloaded"
 }
 
 cmd_git() {
@@ -296,7 +356,7 @@ cmd_git() {
     num=$(git diff --staged --stat --diff-filter=u | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
-    TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
+    TIG_SCRIPT=<(echo -e ":set split-view-width = 100\n:set vertical-split = true\n:${num}\n:enter") tig status
 }
 
 cmd_git_find() {
@@ -318,8 +378,9 @@ cmd_palette() {
     cmds=(
         cmd_open        	"Worktree: Open"
         cmd_open_all        	"Worktree: Open (Global)"
-        cmd_worktree_add        "Worktree: Add"
-        cmd_worktree_rm         "Worktree: Remove"
+        cmd_worktree_reload     "Worktree: Reload"
+        cmd_worktree_add        "Worktree: Create"
+        cmd_worktree_rm         "Worktree: Delete"
         cmd_clone_fedora    	"Git: Clone (Fedora)"
         cmd_clone_redhat    	"Git: Clone (RHEL)"
         cmd_checkout		"Git: Checkout"
@@ -336,10 +397,16 @@ cmd_palette() {
     done
 
     cmd=$(printf "%s\n" "${list[@]}" | \
-          fzf --ghost "Perform an action" --bind 'alt-w:close')
+          fzf --ghost "Execute an action" --bind 'alt-w:close')
     [ -z "$cmd" ] && return
 
     ${menu[$cmd]}
+}
+
+cmd_default() {
+    local path=dotfiles/github/main
+    cd "$ROOTDIR/$path"
+    open $path $path
 }
 
 case $CMD in
@@ -347,5 +414,6 @@ case $CMD in
     status)             cmd_status "$@" ;;
     git)                cmd_git "$@" ;;
     refresh)            cmd_refresh "$@" ;;
-    *)                  cmd_usage ;;
+    update)             cmd_update "$@" ;;
+    *)                  cmd_default "$@" ;;
 esac

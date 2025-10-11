@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=foot
+Exec=footwrap launch
 Icon=org.gnome.Terminal
 Terminal=false
 Categories=System;TerminalEmulator;
@@ -8,4 +8,3 @@ Keywords=shell;prompt;command;commandline;
 Name=Terminal
 GenericName=Terminal
 Comment=A wayland native terminal emulator
-StartupWMClass=foot
