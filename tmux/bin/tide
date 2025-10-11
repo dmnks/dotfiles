@@ -126,6 +126,7 @@ blah() {
         yellow) echo '#d79921 #fabd2f' ;;
         orange) echo '#d65d0e #fe8019' ;;
         red)    echo '#cc241d #fb4934' ;;
+        pink)   echo '#b16286 #d3869b' ;;
         purple) echo '#b16286 #d3869b' ;;
         slate)  echo '#a89984 #ebdbb2' ;;
     esac | cut -d' ' -f$1
@@ -171,6 +172,14 @@ cmd_update() {
     done
 
     tmux refresh-client
+}
+
+cmd_monitor() {
+    gsettings monitor org.gnome.desktop.interface | \
+    while read key; do
+        [[ $key =~ ^(color-scheme|accent-color) ]] || continue
+        cmd_update
+    done
 }
 
 open() {
@@ -326,7 +335,7 @@ cmd_status() {
 
 cmd_refresh() {
     tmux source-file ~/.tmux.conf
-    tmux display-message "  Config reloaded"
+    tmux display-message "Config reloaded"
 }
 
 cmd_git() {
@@ -386,5 +395,6 @@ case $CMD in
     git)                cmd_git "$@" ;;
     refresh)            cmd_refresh "$@" ;;
     update)             cmd_update "$@" ;;
+    monitor)            cmd_monitor "$@" ;;
     *)                  cmd_usage ;;
 esac

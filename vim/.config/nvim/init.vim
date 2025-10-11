@@ -71,12 +71,6 @@ require("gruvbox").setup {
   italic = {
     strings = false,
   },
-  overrides = {
-    ColorColumn = {bg = "#282828"},
-    TabLine = {fg = "#a89984"},
-    TabLineSel = {fg = "#fbf1c7", bg = "#3c3836"},
-    TabLineFill = {bg = "#282828"},
-  },
 }
 EOF
 
@@ -131,7 +125,6 @@ set number
 set numberwidth=6
 set nowrap
 set cursorline
-set colorcolumn=80
 set scrolloff=0
 set laststatus=3
 
