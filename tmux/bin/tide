@@ -171,7 +171,10 @@ cmd_update() {
         tmux set-environment -g $var "${!var}"
     done
 
-    tmux refresh-client
+    tmux list-clients -F '#{client_tty}' | \
+    while read tty; do
+        tmux refresh-client -t "$tty"
+    done
 }
 
 cmd_monitor() {
