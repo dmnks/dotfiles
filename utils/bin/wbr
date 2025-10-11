@@ -1,0 +1,52 @@
+#!/bin/bash
+
+CMD=$1
+shift
+
+showtui() {
+    foot -c ~/.config/foot/xterm.ini --title "$@"
+}
+
+case $CMD in
+    theme)
+        case $1 in
+            status)
+                name=$(gsettings get org.gnome.desktop.interface color-scheme)
+                if [ "$name" == "'default'" ]; then
+                    echo ""
+                    echo "Light mode"
+                else
+                    echo ""
+                    echo "Dark mode"
+                fi
+                ;;
+            toggle)
+                ~/bin/set-theme
+                ;;
+        esac
+        ;;
+    nmtui)
+        showtui 'NetworkManager TUI' nmtui
+        ;;
+    casting)
+        case $1 in
+            status)
+                wlr-randr | grep -q ScreenCasting || exit
+                echo "󰀟"
+                echo "Virtual Output enabled"
+                echo "enabled"
+                ;;
+            view)
+                wlrctl toplevel focus at.yrlf.wl_mirror || \
+                wl-mirror ScreenCasting
+                ;;
+            start)
+                pkill -RTMIN+9 waybar
+                wlr-randr --output ScreenCasting --custom-mode 1920x1080
+                ;;
+            stop)
+                pkill -RTMIN+9 waybar
+                ;;
+        esac
+        ;;
+esac

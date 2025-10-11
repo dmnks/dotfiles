@@ -1,0 +1,4 @@
+@define-color foreground white;
+@define-color background alpha(black, 0.3);
+@define-color highlight alpha(white, 0.15);
+@define-color disabled alpha(white, 0.3);

@@ -1,13 +1,6 @@
 export EDITOR=nvim
 alias vim=nvim
 
-export THEME_COLOR_ACTIVE_FG='#fbf1c7'
-export THEME_COLOR_ACTIVE_BG='#3c3836'
-export THEME_COLOR_DIM1='#928374'
-export THEME_COLOR_DIM2='#7c6f64'
-export THEME_COLOR_DIM3='#665c54'
-export THEME_COLOR_DIM4='#504945'
-
 if which git &>/dev/null; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
     GIT_PS1_SHOWDIRTYSTATE=1
@@ -51,3 +44,20 @@ setup_ps1() {
 }
 
 setup_ps1
+
+osc7_cwd() {
+    local strlen=${#PWD}
+    local encoded=""
+    local pos c o
+    for (( pos=0; pos<strlen; pos++ )); do
+        c=${PWD:$pos:1}
+        case "$c" in
+            [-/:_.!\'\(\)~[:alnum:]] ) o="${c}" ;;
+            * ) printf -v o '%%%02X' "'${c}" ;;
+        esac
+        encoded+="${o}"
+    done
+    printf '\e]7;file://%s%s\e\\' "${HOSTNAME}" "${encoded}"
+}
+
+PROMPT_COMMAND=${PROMPT_COMMAND:+${PROMPT_COMMAND%;}; }osc7_cwd
