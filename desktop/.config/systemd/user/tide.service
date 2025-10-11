@@ -1,0 +1,8 @@
+[Unit]
+Description=TIDE theme switcher
+
+[Service]
+ExecStart=%h/bin/tide monitor
+
+[Install]
+WantedBy=default.target
