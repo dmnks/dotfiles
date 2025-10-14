@@ -202,12 +202,12 @@ open() {
         repo=${repo%.git}
 
         # Construct session
-        tmux new-session -ds "$name" -n " Code" \
+        tmux new-session -ds "$name" -n "CODE" \
             "sleep 0.1; while true; do $EDITOR -c GFiles; done"
-        tmux new-window -t "$name" -n "󰘬 Git" \
+        tmux new-window -t "$name" -n "GIT" \
             "sleep 0.1; while true; do TIG_SCRIPT=<(echo :enter) tig; done"
         tmux split-window -t "$name" -h -l35%
-        tmux new-window -t "$name" -n " Build"
+        tmux new-window -t "$name" -n "BUILD"
         tmux split-window -t "$name" -h -l35%
         tmux split-window -t "$name" -v
         tmux select-window -t "${name}:+1"
