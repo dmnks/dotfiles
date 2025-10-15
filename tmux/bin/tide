@@ -168,13 +168,13 @@ cmd_update() {
                THEME_COLOR_DIM3 \
                THEME_COLOR_DIM4 \
                THEME_COLOR_DIM5; do
-        tmux set-environment -g $var "${!var}"
+        tmux -L default set-environment -g $var "${!var}"
         tmux -L tide set-environment -g $var "${!var}"
     done
 
-    tmux list-clients -F '#{client_tty}' | \
+    tmux -L default list-clients -F '#{client_tty}' | \
     while read tty; do
-        tmux refresh-client -t "$tty"
+        tmux -L default refresh-client -t "$tty"
     done
 
     tmux -L tide list-clients -F '#{client_tty}' | \
