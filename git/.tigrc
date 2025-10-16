@@ -20,8 +20,8 @@ bind diff y scroll-line-up
 # COLORS
 color title-blur            default     default
 color title-focus           default     default    bold
-color cursor                color0      color7
-color cursor-blur           color0      color7
+color cursor                color0      color8
+color cursor-blur           color0      color8
 color "Refs: "              default     default
 color "Author: "            default     default
 color "AuthorDate: "        default     default
