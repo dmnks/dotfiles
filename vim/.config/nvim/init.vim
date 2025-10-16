@@ -89,6 +89,17 @@ require("gruvbox").setup {
     strings = false,
   },
 }
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "background",
+  callback = function(args)
+    local new_bg = vim.o.background
+    if new_bg == "dark" then
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#282828" })
+    else
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#fbf1c7" })
+    end
+  end,
+})
 EOF
 
 
@@ -144,6 +155,7 @@ set number
 set numberwidth=6
 set nowrap
 set cursorline
+set colorcolumn=80
 set scrolloff=0
 set laststatus=3
 
