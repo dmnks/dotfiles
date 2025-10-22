@@ -158,6 +158,7 @@ set cursorline
 set colorcolumn=80
 set scrolloff=0
 set laststatus=3
+set noshowmode
 
 let c_no_curly_error = 1
 
