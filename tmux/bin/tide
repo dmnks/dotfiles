@@ -163,6 +163,7 @@ cmd_update() {
         THEME_COLOR_DIM4='#d5c4a1'
         THEME_COLOR_DIM5='#f9f5d7'
         killall -s SIGUSR2 foot
+        dconf write /org/gnome/desktop/interface/color-scheme "'prefer-light'"
     fi
 
     for var in ACCENT_FG \
