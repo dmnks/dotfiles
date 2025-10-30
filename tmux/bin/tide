@@ -155,15 +155,14 @@ cmd_update() {
         THEME_COLOR_BG0='#f2e5bc'
         THEME_COLOR_BG='#fbf1c7'
         THEME_COLOR_ACTIVE_FG='#282828'
-        THEME_COLOR_ACTIVE_BG='#ebdbb2'
+        THEME_COLOR_ACTIVE_BG='#d5c4a1'
         THEME_COLOR_DIM0='#ebdbb2'
         THEME_COLOR_DIM1='#928374'
         THEME_COLOR_DIM2='#a89984'
         THEME_COLOR_DIM3='#bdae93'
         THEME_COLOR_DIM4='#d5c4a1'
-        THEME_COLOR_DIM5='#f9f5d7'
+        THEME_COLOR_DIM5='#ebdbb2'
         killall -s SIGUSR2 foot
-        dconf write /org/gnome/desktop/interface/color-scheme "'prefer-light'"
     fi
 
     for var in ACCENT_FG \
@@ -353,7 +352,7 @@ cmd_git() {
     num=$(git diff --staged --stat --diff-filter=u | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
-    TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
+    TIG_SCRIPT=<(echo -e ":set split-view-width = 100\n:set vertical-split = true\n:${num}\n:enter") tig status
 }
 
 cmd_git_find() {
