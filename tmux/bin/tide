@@ -133,7 +133,12 @@ accent() {
 }
 
 cmd_update() {
-    local variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+    local variant
+    if [ $# != 0 ]; then
+        variant=$1
+    else
+        variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+    fi
 
     if [ "$variant" == "prefer-dark" ]; then
         ACCENT_FG=$(accent 2)
@@ -187,7 +192,7 @@ cmd_monitor() {
     gsettings monitor org.gnome.desktop.interface | \
     while read key; do
         [[ $key =~ ^(color-scheme|accent-color) ]] || continue
-        cmd_update
+        cmd_update $(awk '{print $2}' $key | tr -d \')
     done
 }
 
