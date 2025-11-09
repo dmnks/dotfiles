@@ -147,6 +147,7 @@ cmd_update() {
         THEME_COLOR_BG='#282828'
         THEME_COLOR_ACTIVE_FG='#fbf1c7'
         THEME_COLOR_ACTIVE_BG='#3c3836'
+        THEME_COLOR_ACTIVE_BG0='#3c3836'
         THEME_COLOR_DIM0='#bdae93'
         THEME_COLOR_DIM1='#928374'
         THEME_COLOR_DIM2='#7c6f64'
@@ -160,7 +161,8 @@ cmd_update() {
         THEME_COLOR_BG0='#f2e5bc'
         THEME_COLOR_BG='#fbf1c7'
         THEME_COLOR_ACTIVE_FG='#282828'
-        THEME_COLOR_ACTIVE_BG='#d5c4a1'
+        THEME_COLOR_ACTIVE_BG='#ebdbb2'
+        THEME_COLOR_ACTIVE_BG0='#d5c4a1'
         THEME_COLOR_DIM0='#ebdbb2'
         THEME_COLOR_DIM1='#928374'
         THEME_COLOR_DIM2='#a89984'
@@ -176,6 +178,7 @@ cmd_update() {
                THEME_COLOR_BG \
                THEME_COLOR_ACTIVE_FG \
                THEME_COLOR_ACTIVE_BG \
+               THEME_COLOR_ACTIVE_BG0 \
                THEME_COLOR_DIM0 \
                THEME_COLOR_DIM1 \
                THEME_COLOR_DIM2 \
