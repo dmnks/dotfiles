@@ -154,6 +154,7 @@ cmd_update() {
         THEME_COLOR_DIM3='#665c54'
         THEME_COLOR_DIM4='#504945'
         THEME_COLOR_DIM5='#32302f'
+        THEME_COLOR_DIM6='#d5c4a1'
         killall -s SIGUSR1 foot
     else
         ACCENT_FG=$(accent 1)
@@ -169,6 +170,7 @@ cmd_update() {
         THEME_COLOR_DIM3='#bdae93'
         THEME_COLOR_DIM4='#d5c4a1'
         THEME_COLOR_DIM5='#ebdbb2'
+        THEME_COLOR_DIM6='#504945'
         killall -s SIGUSR2 foot
     fi
 
@@ -184,7 +186,8 @@ cmd_update() {
                THEME_COLOR_DIM2 \
                THEME_COLOR_DIM3 \
                THEME_COLOR_DIM4 \
-               THEME_COLOR_DIM5; do
+               THEME_COLOR_DIM5 \
+               THEME_COLOR_DIM6; do
         tmux set-environment -g $var "${!var}"
     done
 
