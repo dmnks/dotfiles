@@ -14,7 +14,7 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --info=inline-right
     --scrollbar=█
     --pointer=' '
-    --no-header
+    --header=''
     --border=none
     --padding=0
     --no-separator
