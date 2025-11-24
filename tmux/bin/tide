@@ -217,11 +217,11 @@ open() {
 
         # Construct session
 
-        tmux new-session -ds "$name" -n " Code" "sleep 0.1; $EDITOR -c GFiles"
+        tmux new-session -ds "$name" -n " Code" "sleep 0.3; $EDITOR -c GFiles"
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
-        tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.1; tig"
+        tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.3; tig"
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
