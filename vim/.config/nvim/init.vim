@@ -149,7 +149,6 @@ nmap <silent> <leader>r :source ~/.config/nvim/init.vim<CR>
 " #############################################################################
 
 autocmd BufRead,BufNewfile */.tmux.conf setlocal formatoptions-=t
-autocmd VimResized,TabEnter * wincmd =
 
 set textwidth=79
 set softtabstop=4
