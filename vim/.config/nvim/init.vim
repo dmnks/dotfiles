@@ -77,8 +77,10 @@ vim.api.nvim_create_autocmd("OptionSet", {
   callback = function(args)
     local new_bg = vim.o.background
     if new_bg == "dark" then
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#060607" })
       vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#282828" })
     else
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#d5c4a1" })
       vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#fbf1c7" })
     end
   end,
