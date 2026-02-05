@@ -227,11 +227,13 @@ open() {
         tmux new-window -t "$name" -n "󰘬 Git" "sleep 0.3; tig"
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
+        tmux split-window -t "$name" -h -l50%
 
-        tmux split-window -t "$name" -h -l35%
         tmux new-window -t "$name" -n " Build"
-        tmux split-window -t "$name" -h -l35%
-        tmux split-window -t "$name" -v
+        tmux set-option -p remain-on-exit on
+        tmux set-hook -p pane-died "respawn-pane"
+        tmux split-window -t "$name" -h -l50%
+
         tmux select-window -t "${name}:+1"
 
         # Set user variables
