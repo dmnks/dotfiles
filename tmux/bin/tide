@@ -219,6 +219,11 @@ open() {
         tmux set-hook -p pane-died "respawn-pane"
         tmux split-window -t "$name" -h -l50%
 
+        tmux new-window -t "$name" -n " Docs"
+        tmux set-option -p remain-on-exit on
+        tmux set-hook -p pane-died "respawn-pane"
+        tmux split-window -t "$name" -h -l50%
+
         tmux select-window -t "${name}:+1"
 
         # Set user variables
