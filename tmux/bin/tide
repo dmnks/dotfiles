@@ -18,21 +18,6 @@ ROOTDIR=$(yq ".rootdir")
 C_DIM=$(set_color $THEME_COLOR_DIM1)
 C_RES=$(printf "\x1b[0m")
 
-cmd_usage() {
-    echo "\
-Usage: $PROGRAM COMMAND [ARGS]
-
-A simple tmux(1)-based IDE with git-worktree(1) and toolbox(1) integration.
-
-Commands:
-    palette                 show command palette 
-    status [left|right]     generate status bar (to use from ~/.tmux.conf)
-    git                     show interactive git status
-    refresh                 reload tmux config
-"
-    exit 1
-}
-
 list_worktrees() {
     local repo name path label obj ref
     if [ $# == 0 ]; then
@@ -422,6 +407,13 @@ cmd_palette() {
     ${menu[$cmd]}
 }
 
+cmd_default() {
+    local path=dotfiles/github/main
+    cd "$ROOTDIR/$path"
+    sleep 0.3
+    open $path $path
+}
+
 case $CMD in
     palette)            cmd_palette "$@" ;;
     status)             cmd_status "$@" ;;
@@ -429,5 +421,5 @@ case $CMD in
     refresh)            cmd_refresh "$@" ;;
     update)             cmd_update "$@" ;;
     monitor)            cmd_monitor "$@" ;;
-    *)                  cmd_usage ;;
+    *)                  cmd_default "$@" ;;
 esac
