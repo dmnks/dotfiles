@@ -3,6 +3,7 @@ Description=TIDE theme switcher
 
 [Service]
 ExecStart=%h/bin/tide monitor
+Restart=always
 
 [Install]
 WantedBy=default.target

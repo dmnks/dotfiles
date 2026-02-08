@@ -1,0 +1,10 @@
+#!/bin/bash
+
+variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+if [ "$variant" == "prefer-dark" ]; then
+    initial=1
+else
+    initial=2
+fi
+
+exec footclient -o main.initial-color-theme=$initial "$@"

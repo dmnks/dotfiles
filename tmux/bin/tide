@@ -142,7 +142,6 @@ cmd_update() {
         THEME_COLOR_DIM4='#504945'
         THEME_COLOR_DIM5='#3c3836'
         THEME_COLOR_DIM6='#d5c4a1'
-        killall -s SIGUSR1 foot
     else
         ACCENT_FG=$(accent 1)
         ACCENT_BG=$(accent 2)
@@ -160,7 +159,6 @@ cmd_update() {
         THEME_COLOR_DIM4='#d5c4a1'
         THEME_COLOR_DIM5='#ebdbb2'
         THEME_COLOR_DIM6='#504945'
-        killall -s SIGUSR2 foot
     fi
 
     for var in ACCENT_FG \
@@ -188,8 +186,13 @@ cmd_update() {
 cmd_monitor() {
     gsettings monitor org.gnome.desktop.interface | \
     while read key; do
-        [[ $key =~ ^(color-scheme|accent-color) ]] || continue
-        cmd_update $(awk '{print $2}' $key | tr -d \')
+        [[ $key =~ ^color-scheme ]] || continue
+        variant=$(echo "$key" | awk '{print $2}' | tr -d \')
+        if [ "$variant" == "prefer-dark" ]; then
+            killall -s SIGUSR1 foot
+        else
+            killall -s SIGUSR2 foot
+        fi
     done
 }
 
