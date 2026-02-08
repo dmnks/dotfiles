@@ -415,7 +415,6 @@ cmd_palette() {
 cmd_default() {
     local path=dotfiles/github/main
     cd "$ROOTDIR/$path"
-    sleep 0.3
     open $path $path
 }
 
