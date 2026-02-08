@@ -183,19 +183,6 @@ cmd_update() {
     tmux source-file ~/.tmux.conf
 }
 
-cmd_monitor() {
-    gsettings monitor org.gnome.desktop.interface | \
-    while read key; do
-        [[ $key =~ ^color-scheme ]] || continue
-        variant=$(echo "$key" | awk '{print $2}' | tr -d \')
-        if [ "$variant" == "prefer-dark" ]; then
-            killall -s SIGUSR1 foot
-        else
-            killall -s SIGUSR2 foot
-        fi
-    done
-}
-
 open() {
     local path name url repo
     path=$1
@@ -427,6 +414,5 @@ case $CMD in
     git)                cmd_git "$@" ;;
     refresh)            cmd_refresh "$@" ;;
     update)             cmd_update "$@" ;;
-    monitor)            cmd_monitor "$@" ;;
     *)                  cmd_default "$@" ;;
 esac

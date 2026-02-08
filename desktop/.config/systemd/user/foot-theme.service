@@ -1,8 +1,8 @@
 [Unit]
-Description=TIDE theme switcher
+Description=Foot theme switcher
 
 [Service]
-ExecStart=%h/bin/tide monitor
+ExecStart=%h/bin/footwrap monitor
 Restart=always
 
 [Install]

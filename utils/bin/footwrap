@@ -1,10 +1,28 @@
 #!/bin/bash
 
-variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
-if [ "$variant" == "prefer-dark" ]; then
-    initial=1
-else
-    initial=2
-fi
+CMD=$1
+shift
 
-exec footclient -o main.initial-color-theme=$initial "$@"
+case $CMD in
+    monitor)
+        gsettings monitor org.gnome.desktop.interface | \
+        while read key; do
+            [[ $key =~ ^(color-scheme) ]] || continue
+            val=$(echo "$key" | awk '{print $2}' | tr -d \')
+            if [ "$val" == "prefer-dark" ]; then
+                killall -s SIGUSR1 foot
+            else
+                killall -s SIGUSR2 foot
+            fi
+        done
+        ;;
+    launch)
+        val=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+        if [ "$val" == "prefer-dark" ]; then
+            theme=1
+        else
+            theme=2
+        fi
+        exec foot -o main.initial-color-theme=$theme "$@"
+        ;;
+esac
