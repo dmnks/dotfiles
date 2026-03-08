@@ -129,7 +129,7 @@ cmd_update() {
         ACCENT_FG=$(accent 2)
         ACCENT_BG=$(accent 1)
         ACCENT_BG0=$(colortool $ACCENT_BG $(accent 3))
-        THEME_COLOR_BG0='#1d2021'
+        THEME_COLOR_BG0='#32302f'
         THEME_COLOR_BG1=$(colortool $THEME_COLOR_BG0 -0.4)
         THEME_COLOR_BG='#282828'
         THEME_COLOR_ACTIVE_FG='#fbf1c7'
@@ -147,7 +147,7 @@ cmd_update() {
         ACCENT_BG=$(accent 2)
         ACCENT_BG0=$(colortool $ACCENT_BG $(accent 4))
         THEME_COLOR_BG0='#f2e5bc'
-        THEME_COLOR_BG1='#ebdbb2'
+        THEME_COLOR_BG1=$(colortool $THEME_COLOR_BG0 -0.4)
         THEME_COLOR_BG='#fbf1c7'
         THEME_COLOR_ACTIVE_FG='#282828'
         THEME_COLOR_ACTIVE_BG='#ebdbb2'
@@ -348,7 +348,7 @@ cmd_status() {
 
 cmd_refresh() {
     tmux source-file ~/.tmux.conf
-    tmux display-message "Config reloaded"
+    tmux display-message " Config reloaded"
 }
 
 cmd_git() {
