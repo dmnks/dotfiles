@@ -19,9 +19,9 @@ case $CMD in
     launch)
         val=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
         if [ "$val" == "prefer-dark" ]; then
-            theme=1
+            theme=dark
         else
-            theme=2
+            theme=light
         fi
         exec foot -o main.initial-color-theme=$theme "$@"
         ;;

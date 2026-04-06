@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<labwc_config>
+    <core>
+        <gap>10</gap>
+    </core>
+
+    <theme>
+        <name>default</name>
+        <cornerRadius>10</cornerRadius>
+        <keepBorder>yes</keepBorder>
+        <dropShadows>yes</dropShadows>
+        <dropShadowsOnTiled>yes</dropShadowsOnTiled>
+        <font>
+            <name>Adwaita Sans</name>
+            <size>12</size>
+            <slant>normal</slant>
+            <weight>normal</weight>
+        </font>
+        <font place="ActiveWindow">
+            <weight>semibold</weight>
+        </font>
+        <font place="InactiveWindow">
+            <weight>semibold</weight>
+        </font>
+        <font place="OnScreenDisplay">
+            <name>Adwaita Sans</name>
+            <size>14</size>
+        </font>
+        <titlebar>
+            <layout>close,iconify,max:</layout>
+        </titlebar>
+    </theme>
+
+    <libinput>
+        <device category="default">
+            <pointerSpeed>0.0</pointerSpeed>
+        </device>
+        <device category="touchpad">
+            <naturalScroll>yes</naturalScroll>
+        </device>
+    </libinput>
+
+    <mouse>
+        <default />
+        <context name="Root">
+            <mousebind button="Left" action="Press">
+                <action name="None" />
+            </mousebind>
+            <mousebind direction="Up" action="Scroll">
+                <action name="None" />
+            </mousebind>
+            <mousebind direction="Down" action="Scroll">
+                <action name="None" />
+            </mousebind>
+        </context>
+    </mouse>
+
+    <keyboard>
+        <repeatDelay>300</repeatDelay>
+        <repeatRate>30</repeatRate>
+
+        <!-- Window control -->
+        <keybind key="A-Tab">
+            <action name="NextWindow" />
+        </keybind>
+        <keybind key="A-S-Tab">
+            <action name="PreviousWindow" />
+        </keybind>
+        <keybind key="A-Return">
+            <action name="Execute" command="bash -lc 'footwrap launch'" />
+        </keybind>
+        <keybind key="A-F2">
+            <action name="Execute" command="fuzzel" />
+        </keybind>
+        <keybind key="A-F4">
+            <action name="Close" />
+        </keybind>
+        <keybind key="W-Up">
+            <action name="Maximize" />
+        </keybind>
+        <keybind key="W-Down">
+            <action name="UnSnap" />
+        </keybind>
+        <keybind key="W-Left">
+            <action name="SnapToEdge" direction="left" />
+        </keybind>
+        <keybind key="W-Right">
+            <action name="SnapToEdge" direction="right" />
+        </keybind>
+        <keybind key="W-KP_5">
+            <action name="AutoPlace" policy="center" />
+        </keybind>
+        <keybind key="A-Up">
+            <action name="MoveToEdge" direction="up" />
+        </keybind>
+        <keybind key="A-Down">
+            <action name="MoveToEdge" direction="down" />
+        </keybind>
+        <keybind key="A-Left">
+            <action name="MoveToEdge" direction="left" />
+        </keybind>
+        <keybind key="A-Right">
+            <action name="MoveToEdge" direction="right" />
+        </keybind>
+        <keybind key="S-A-Up">
+            <action name="ShrinkToEdge" direction="up" />
+        </keybind>
+        <keybind key="S-A-Down">
+            <action name="GrowToEdge" direction="down" />
+        </keybind>
+        <keybind key="S-A-Left">
+            <action name="ShrinkToEdge" direction="left" />
+        </keybind>
+        <keybind key="S-A-Right">
+            <action name="GrowToEdge" direction="right" />
+        </keybind>
+        <keybind key="A-Space">
+            <action name="ShowMenu" menu="client-menu" />
+        </keybind>
+
+        <!-- Desktop control -->
+        <keybind key="W-l">
+            <action name="Execute" command="swaylock -c 000000" />
+        </keybind>
+        <keybind key="W-F9">
+            <action name="Execute" command="sh -c 'sleep 0.5; systemctl suspend'" />
+        </keybind>
+        <keybind key="W-N">
+            <action name="Execute" command="bash -lc 'set-theme'" />
+        </keybind>
+        <keybind key="W-V">
+            <action name="VirtualOutputAdd" output_name="ScreenCasting"/>
+            <action name="Execute" command="bash -lc 'wbr casting start'" />
+        </keybind>
+        <keybind key="W-S-V">
+            <action name="VirtualOutputRemove"/>
+            <action name="Execute" command="bash -lc 'wbr casting stop'" />
+        </keybind>
+
+        <!-- Workspace control -->
+        <keybind key="W-i">
+            <action name="GoToDesktop" to="left" />
+        </keybind>
+        <keybind key="W-o">
+            <action name="GoToDesktop" to="right" />
+        </keybind>
+
+        <!-- Media control -->
+        <keybind key="XF86_AudioLowerVolume">
+            <action name="Execute" command="amixer sset Master 5%-" />
+        </keybind>
+        <keybind key="XF86_AudioRaiseVolume">
+            <action name="Execute" command="amixer sset Master 5%+" />
+        </keybind>
+        <keybind key="XF86_AudioMute">
+            <action name="Execute" command="amixer sset Master toggle" />
+        </keybind>
+        <keybind key="XF86_MonBrightnessUp">
+            <action name="Execute" command="brightnessctl set +10%" />
+        </keybind>
+        <keybind key="XF86_MonBrightnessDown">
+            <action name="Execute" command="brightnessctl set 10%-" />
+        </keybind>
+        <keybind key="XF86_AudioPlay">
+            <action name="Execute" command="playerctl play-pause" />
+        </keybind>
+        <keybind key="XF86_AudioNext">
+            <action name="Execute" command="playerctl next" />
+        </keybind>
+        <keybind key="XF86_AudioPrev">
+            <action name="Execute" command="playerctl previous" />
+        </keybind>
+        <keybind key="XF86_Calculator">
+            <action name="Execute" command="gnome-calculator" />
+        </keybind>
+    </keyboard>
+
+    <windowRules>
+        <windowRule identifier="at.yrlf.wl_mirror">
+            <action name="ResizeTo" width="1920" height="1080" />
+            <action name="AutoPlace" policy="center" />
+        </windowRule>
+    </windowRules>
+
+    <desktops number="3">
+        <names>
+            <name>Dev</name>
+            <name>Prod</name>
+            <name>Misc</name>
+        </names>
+        <popupTime>0</popupTime>
+    </desktops>
+
+    <regions>
+        <region name="zoom" x="15%" y="0%" width="70%" height="100%" />
+    </regions>
+
+    <snapping>
+        <overlay>
+            <delay>
+                <inner>20ms</inner>
+                <outer>20ms</outer>
+            </delay>
+        </overlay>
+        <notifyClient>never</notifyClient>
+    </snapping>
+</labwc_config>

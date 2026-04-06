@@ -1,0 +1,46 @@
+#!/bin/bash
+
+VARIANT=$1
+if [ $# == 0 ]; then
+    if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" == "'default'" ]; then
+        VARIANT=dark
+    else
+        VARIANT=light
+    fi
+fi
+
+SOURCE_DIR=$HOME/code/dotfiles/github/main/themes
+TARGET_DIR=$HOME/.themes/default
+BGIMAG_DIR=$HOME/Pictures
+
+mkdir -p $TARGET_DIR
+ln -sf $SOURCE_DIR/$VARIANT/openbox-3 $TARGET_DIR/
+
+mkdir -p ~/.config/fuzzel
+ln -sf $SOURCE_DIR/$VARIANT/fuzzel.ini ~/.config/fuzzel/
+
+mkdir -p ~/.config/mako
+ln -sf $SOURCE_DIR/$VARIANT/mako/config ~/.config/mako/
+
+mkdir -p ~/.config/swaylock
+ln -sf $SOURCE_DIR/$VARIANT/swaylock ~/.config/swaylock/config
+
+ln -sf $SOURCE_DIR/$VARIANT/waybar.css ~/.config/waybar/theme.css
+
+if [ $VARIANT == dark ]; then
+    SIGNAL=SIGUSR1
+    SCHEME=prefer-dark
+    BGIMAG=wp-dark.png
+else
+    SIGNAL=SIGUSR2
+    SCHEME=default
+    BGIMAG=wp-light.png
+fi
+
+gsettings set org.gnome.desktop.interface color-scheme $SCHEME
+labwc --reconfigure
+killall swaybg >/dev/null 2>&1
+swaybg -i $BGIMAG_DIR/$BGIMAG >/dev/null 2>&1 &
+killall mako >/dev/null 2>&1
+mako >/dev/null 2>&1 &
+killall -s SIGUSR2 waybar 2>&1
