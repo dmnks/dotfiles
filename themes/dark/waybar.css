@@ -1,0 +1,8 @@
+@define-color foreground #ffffff;
+@define-color background rgba(60, 56, 52, 0.4);
+@define-color highlight rgba(255, 255, 255, 0.15);
+@define-color disabled rgba(255, 255, 255, 0.4);
+
+* {
+    text-shadow: none;
+}

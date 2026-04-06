@@ -1,0 +1,90 @@
+@import url("theme.css");
+
+* {
+    font-family: Adwaita Sans;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+}
+
+#waybar {
+    color: @foreground;
+    background-color: @background;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+}
+
+*:hover {
+    box-shadow: inherit;
+    text-shadow: inherit;
+    background: inherit;
+}
+
+#workspaces button {
+    color: @foreground;
+}
+
+#workspaces button.active {
+    color: @foreground;
+    background-color: @highlight;
+    transition: none;
+}
+
+#workspaces button,
+#keyboard-state,
+#pulseaudio,
+#battery,
+#mpris,
+#network,
+#clock,
+#bluetooth,
+#custom-casting,
+#custom-krb,
+#custom-os,
+#custom-theme {
+    padding: 0 0.7em;
+}
+
+#workspaces button:hover,
+#pulseaudio:hover,
+#network.default:hover,
+#mpris:hover,
+#clock:hover,
+#custom-casting:hover,
+#bluetooth:hover,
+#custom-krb:hover,
+#custom-theme:hover {
+    background-color: @highlight;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: none;
+}
+
+#clock {
+    padding: 0 1em;
+}
+
+#keyboard-state label.numlock,
+#network.disconnected,
+#mpris.paused,
+#pulseaudio.muted,
+#bluetooth.on,
+#custom-casting.disabled,
+#custom-krb.invalid {
+    color: @disabled;
+    text-shadow: none;
+}
+
+#keyboard-state label.numlock.locked,
+#custom-krb.valid {
+    color: inherit;
+    text-shadow: inherit;
+}
+
+#custom-os {
+    padding: 0 1em;
+}
