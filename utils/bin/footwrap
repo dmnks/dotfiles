@@ -23,6 +23,6 @@ case $CMD in
         else
             theme=2
         fi
-        exec foot -o main.initial-color-theme=$theme "$@"
+        exec foot -a Terminal -o main.initial-color-theme=$theme "$@"
         ;;
 esac
