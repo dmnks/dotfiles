@@ -103,8 +103,7 @@ confirm() {
 }
 
 accent() {
-    which dconf &>/dev/null || return $ACCENT_COLOR
-    case $(dconf read /org/gnome/desktop/interface/accent-color | tr -d \') in
+    case $1 in
         blue)   echo '#458588 #83a598 -0.3 0.5' ;;
         teal)   echo '#689d6a #8ec07c -0.4 0.4' ;;
         green)  echo '#98971a #b8bb26 -0.45 0.3' ;;
@@ -114,7 +113,7 @@ accent() {
         pink)   echo '#b16286 #d3869b -0.4 0.4' ;;
         purple) echo '#b16286 #d3869b -0.4 0.4' ;;
         slate)  echo '#a89984 #ebdbb2 -0.5 -0.1' ;;
-    esac | cut -d' ' -f$1
+    esac | cut -d' ' -f$2
 }
 
 cmd_update() {
@@ -125,10 +124,23 @@ cmd_update() {
         variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
     fi
 
+    # Set accent colors
+    for pattern in $(yq '.accents.[].pattern'); do
+        [[ $url =~ $pattern ]] || continue
+        color=$(yq ".accents.[] | select(.pattern == \"$pattern\").color")
+        color=$(accent $color 1)
+        mapfile -t colors < <(colortool $color -0.2 -0.4 -0.5)
+        ACCENT_FG=$color
+        ACCENT_HI=${colors[0]}
+        ACCENT_LO=${colors[1]}
+        ACCENT_BG=${colors[2]}
+        break
+    done
+
     if [ "$variant" == "prefer-dark" ]; then
-        ACCENT_FG=$(accent 2)
-        ACCENT_BG=$(accent 1)
-        ACCENT_BG0=$(colortool $ACCENT_BG $(accent 3))
+        # ACCENT_FG=$(accent 2)
+        # ACCENT_BG=$(accent 1)
+        # ACCENT_BG0=$(colortool $ACCENT_BG $(accent 3))
         THEME_COLOR_BG0='#32302f'
         THEME_COLOR_BG1=$(colortool $THEME_COLOR_BG0 -0.4)
         THEME_COLOR_BG='#282828'
@@ -143,9 +155,9 @@ cmd_update() {
         THEME_COLOR_DIM5='#3c3836'
         THEME_COLOR_DIM6='#d5c4a1'
     else
-        ACCENT_FG=$(accent 1)
-        ACCENT_BG=$(accent 2)
-        ACCENT_BG0=$(colortool $ACCENT_BG $(accent 4))
+        # ACCENT_FG=$(accent 1)
+        # ACCENT_BG=$(accent 2)
+        # ACCENT_BG0=$(colortool $ACCENT_BG $(accent 4))
         THEME_COLOR_BG0='#f2e5bc'
         THEME_COLOR_BG1=$(colortool $THEME_COLOR_BG0 -0.4)
         THEME_COLOR_BG='#fbf1c7'
@@ -163,7 +175,8 @@ cmd_update() {
 
     for var in ACCENT_FG \
                ACCENT_BG \
-               ACCENT_BG0 \
+               ACCENT_HI \
+               ACCENT_LO \
                THEME_COLOR_BG0 \
                THEME_COLOR_BG1 \
                THEME_COLOR_BG \
