@@ -251,6 +251,13 @@ cmd_open_all () {
     cmd_open --all
 }
 
+cmd_worktree_reload() {
+    local path=$(tmux display -p '#S')
+    tmux kill-session
+    cd "$ROOTDIR/$path"
+    open $path $path
+}
+
 cmd_checkout() {
     local line ref
 
@@ -267,7 +274,7 @@ cmd_worktree_add() {
     local line ref
 
     line=$(list_branches | fzf --ansi -n2,4 \
-           --ghost "Add a worktree for a branch or tag")
+           --ghost "Create a worktree for a branch or tag")
     [ -z "$line" ] && return
 
     ref=$(echo "$line" | awk '{print $2}')
@@ -278,12 +285,12 @@ cmd_worktree_add() {
 cmd_worktree_rm() {
     local line path name
 
-    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Remove a worktree")
+    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Delete a worktree")
     [ -z "$line" ] && return
 
     path=$(echo "$line" | awk '{print $1}')
     name=$(echo "$path" | sed 's/\./-/g')
-    confirm "Remove worktree $ROOTDIR/$path" \
+    confirm "Delete worktree $ROOTDIR/$path" \
     git worktree remove "$ROOTDIR/$path" || press_key
 }
 
@@ -378,8 +385,9 @@ cmd_palette() {
     cmds=(
         cmd_open        	"Worktree: Open"
         cmd_open_all        	"Worktree: Open (Global)"
-        cmd_worktree_add        "Worktree: Add"
-        cmd_worktree_rm         "Worktree: Remove"
+        cmd_worktree_reload     "Worktree: Reload"
+        cmd_worktree_add        "Worktree: Create"
+        cmd_worktree_rm         "Worktree: Delete"
         cmd_clone_fedora    	"Git: Clone (Fedora)"
         cmd_clone_redhat    	"Git: Clone (RHEL)"
         cmd_checkout		"Git: Checkout"
