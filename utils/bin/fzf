@@ -9,8 +9,8 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --color='hl:$THEME_COLOR_DIM1,fg+:$THEME_COLOR_ACTIVE_FG'
     --color='bg+:$ACCENT_BG0,header:$THEME_COLOR_DIM2'
     --color='scrollbar:$THEME_COLOR_DIM4,info:$THEME_COLOR_DIM2'
-    --input-border=rounded
-    --list-border=rounded
+    --input-border=bold
+    --list-border=sharp
     --no-bold
     --info=inline-right
     --scrollbar=█
