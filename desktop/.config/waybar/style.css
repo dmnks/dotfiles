@@ -38,7 +38,6 @@ button {
 #keyboard-state,
 #pulseaudio,
 #battery,
-#mpris,
 #network,
 #clock,
 #bluetooth,
@@ -51,10 +50,8 @@ button {
 #workspaces button:hover,
 #pulseaudio:hover,
 #network.default:hover,
-#mpris:hover,
 #clock:hover,
 #custom-casting:hover,
-#bluetooth:hover,
 #custom-theme:hover {
     background-color: @highlight;
     margin: 5px 0;
@@ -67,7 +64,6 @@ button {
 }
 
 #network.disconnected,
-#mpris.paused,
 #pulseaudio.muted,
 #bluetooth.on,
 #custom-casting.disabled {

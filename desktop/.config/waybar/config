@@ -7,7 +7,7 @@
 
     "modules-left": ["custom/os", "ext/workspaces"],
     "modules-right": [
-        "custom/casting", "mpris", "custom/theme", "keyboard-state",
+        "custom/casting", "custom/theme", "keyboard-state",
         "pulseaudio", "bluetooth", "network#vpn", "network#default", "battery",
         "clock",
     ],
@@ -35,18 +35,6 @@
         "signal": 9,
     },
 
-    "mpris": {
-        "format": "{player_icon}",
-        "cursor": false,
-        "tooltip-format": "{artist} - {title} - {player} [{status}]",
-        "player-icons": {
-            "default": "<span font='20px'>󰝚</span> ",
-            "spotify": "<span font='20px'></span>",
-        },
-        "on-click": "~/bin/wbr toggle",
-        "on-click-right": "playerctl play-pause",
-    },
-
     "keyboard-state": {
         "numlock": true,
         "format": "<span font='18px'>{icon}</span> ",
@@ -71,8 +59,6 @@
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "~/bin/wbr bluetooth connect",
-        "on-click-right": "~/bin/wbr bluetooth disconnect",
         "cursor": false,
     },
 
@@ -103,7 +89,7 @@
 
     "network#vpn": {
         "interface": "tun0",
-        "format": "<span font='18px'>󰒙</span> ",
+        "format": "<span font='18px'></span> ",
         "tooltip-format": "VPN connected ({ipaddr})",
         "tooltip-format-disconnected": "VPN disconnected",
         "cursor": false,
