@@ -152,6 +152,9 @@ osd.button.focused.*.border.color: #928374
 osd.button.focused.box.color: #d4be98
 osd.button.pressed.box.color: #282828
 
+osd.window-switcher.style-classic.item.padding.x: 10
+osd.window-switcher.style-classic.item.padding.y: 5
+
 # Fonts
 window.active.label.text.font:shadow=n
 window.inactive.label.text.font:shadow=n

@@ -24,7 +24,7 @@
         </font>
         <font place="OnScreenDisplay">
             <name>Adwaita Sans</name>
-            <size>14</size>
+            <size>15</size>
         </font>
         <titlebar>
             <layout>close,iconify,max:</layout>
