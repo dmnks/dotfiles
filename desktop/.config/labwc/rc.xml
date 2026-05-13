@@ -140,10 +140,10 @@
         </keybind>
 
         <!-- Workspace control -->
-        <keybind key="W-i">
+        <keybind key="A-i">
             <action name="GoToDesktop" to="left" />
         </keybind>
-        <keybind key="W-o">
+        <keybind key="A-o">
             <action name="GoToDesktop" to="right" />
         </keybind>
 
