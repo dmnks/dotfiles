@@ -4,6 +4,5 @@ swayidle -w \
 kanshi >/dev/null 2>&1 &
 wlsunset -l 49.2 -L 16.6 >/dev/null 2>&1 &
 /usr/libexec/xdg-desktop-portal -r &
-bash -lc 'set-theme dark'
-waybar >/dev/null 2>&1 &
 /usr/libexec/xfce-polkit >/dev/null 2>&1 &
+bash -lc 'set-theme dark'

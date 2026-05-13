@@ -1,9 +1,14 @@
+@define-color foreground #ffffff;
+@define-color highlight rgba(255, 255, 255, 0.2);
+@define-color disabled rgba(255, 255, 255, 0.3);
+
 @import url("theme.css");
 
 * {
     font-family: Adwaita Sans;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 16px;
+    text-shadow: 1px 1px 2px #555555;
     padding: 0;
     margin: 0;
 }
@@ -57,6 +62,10 @@ button {
     margin: 5px 0;
     border-radius: 5px;
     transition: none;
+}
+
+#custom-os {
+    margin: 0 0.5em;
 }
 
 #clock {
