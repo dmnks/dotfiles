@@ -11,7 +11,9 @@ fi
 
 SOURCE_DIR=$HOME/code/dotfiles/github/main/themes
 TARGET_DIR=$HOME/.themes/default
-BGIMAG_DIR=/usr/share/backgrounds/gnome
+BGIMAG_DIR=$HOME/Pictures
+BGIMAG_PRE=gradients
+BGIMAX_SUF=png
 
 mkdir -p $TARGET_DIR
 ln -sf $SOURCE_DIR/$VARIANT/openbox-3 $TARGET_DIR/
@@ -30,11 +32,11 @@ ln -sf $SOURCE_DIR/$VARIANT/waybar.css ~/.config/waybar/theme.css
 if [ $VARIANT == dark ]; then
     SIGNAL=SIGUSR1
     SCHEME=prefer-dark
-    BGIMAG=curvy-d.jxl
+    BGIMAG=$BGIMAG_PRE-d.$BGIMAX_SUF
 else
     SIGNAL=SIGUSR2
     SCHEME=default
-    BGIMAG=curvy-l.jxl
+    BGIMAG=$BGIMAG_PRE-l.$BGIMAX_SUF
 fi
 
 gsettings set org.gnome.desktop.interface color-scheme $SCHEME
