@@ -11,7 +11,7 @@ fi
 
 SOURCE_DIR=$HOME/code/dotfiles/github/main/themes
 TARGET_DIR=$HOME/.themes/default
-BGIMAG_DIR=$HOME/Pictures
+BGIMAG_DIR=/usr/share/backgrounds/gnome
 
 mkdir -p $TARGET_DIR
 ln -sf $SOURCE_DIR/$VARIANT/openbox-3 $TARGET_DIR/
@@ -30,17 +30,17 @@ ln -sf $SOURCE_DIR/$VARIANT/waybar.css ~/.config/waybar/theme.css
 if [ $VARIANT == dark ]; then
     SIGNAL=SIGUSR1
     SCHEME=prefer-dark
-    BGIMAG=wp-dark.png
+    BGIMAG=curvy-d.jxl
 else
     SIGNAL=SIGUSR2
     SCHEME=default
-    BGIMAG=wp-light.png
+    BGIMAG=curvy-l.jxl
 fi
 
 gsettings set org.gnome.desktop.interface color-scheme $SCHEME
 labwc --reconfigure
 killall swaybg >/dev/null 2>&1
-swaybg -i $BGIMAG_DIR/$BGIMAG >/dev/null 2>&1 &
+swaybg -i $BGIMAG_DIR/$BGIMAG -m fill >/dev/null 2>&1 &
 killall mako >/dev/null 2>&1
 mako >/dev/null 2>&1 &
 killall waybar >/dev/null 2>&1

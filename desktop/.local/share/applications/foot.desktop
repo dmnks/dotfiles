@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=footwrap launch
+Exec=bash -lc 'footwrap launch'
 Icon=org.gnome.Terminal
 Terminal=false
 Categories=System;TerminalEmulator;
