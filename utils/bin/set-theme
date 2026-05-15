@@ -43,4 +43,5 @@ killall swaybg >/dev/null 2>&1
 swaybg -i $BGIMAG_DIR/$BGIMAG >/dev/null 2>&1 &
 killall mako >/dev/null 2>&1
 mako >/dev/null 2>&1 &
-killall -s SIGUSR2 waybar 2>&1
+killall waybar >/dev/null 2>&1
+waybar >/dev/null 2>&1 &
