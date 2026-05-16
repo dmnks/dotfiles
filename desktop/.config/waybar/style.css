@@ -63,10 +63,6 @@ button {
     margin: 0 0.5em;
 }
 
-#clock {
-    padding: 0 1em;
-}
-
 #network.disconnected,
 #pulseaudio.muted,
 #bluetooth.on,

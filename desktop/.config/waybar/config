@@ -105,6 +105,7 @@
 
     "clock": {
         "format": "{:%a %b %d  %H:%M }",
+        "min-length": 14,
         "on-click": "gnome-calendar",
         "cursor": false,
         "tooltip": false,
