@@ -69,7 +69,7 @@
             <action name="PreviousWindow" />
         </keybind>
         <keybind key="A-Return">
-            <action name="Execute" command="bash -lc 'footwrap launch'" />
+            <action name="Execute" command="bash -lc 'footwrap launch -a Terminal'" />
         </keybind>
         <keybind key="A-F2">
             <action name="Execute" command="fuzzel" />
