@@ -11,9 +11,8 @@ fi
 
 SOURCE_DIR=$HOME/code/dotfiles/github/main/themes
 TARGET_DIR=$HOME/.themes/default
-BGIMAG_DIR=$HOME/Pictures
-BGIMAG_PRE=gradients
-BGIMAX_SUF=png
+
+source $HOME/.config/wallpaper.conf
 
 mkdir -p $TARGET_DIR
 ln -sf $SOURCE_DIR/$VARIANT/openbox-3 $TARGET_DIR/
