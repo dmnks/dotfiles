@@ -24,7 +24,7 @@
         </font>
         <font place="OnScreenDisplay">
             <name>Adwaita Sans</name>
-            <size>14</size>
+            <size>13</size>
             <slant>normal</slant>
             <weight>normal</weight>
         </font>
@@ -190,7 +190,6 @@
             <name>Prod</name>
             <name>Misc</name>
         </names>
-        <popupTime>0</popupTime>
     </desktops>
 
     <regions>
