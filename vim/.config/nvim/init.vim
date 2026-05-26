@@ -20,8 +20,6 @@ call plug#begin()
 " Plug 'nvim-tree/nvim-tree.lua'
 " Plug 'nvim-lualine/lualine.nvim'
 Plug 'ellisonleao/gruvbox.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'tpope/vim-commentary'
 call plug#end()
 
@@ -48,24 +46,7 @@ call plug#end()
 " }
 " EOF
 
-" Treesitter
 lua << EOF
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "c", "cpp", "bash", "lua", "vim", "vimdoc", "query",
-                       "cmake", "markdown", "markdown_inline" },
-  sync_install = false,
-  auto_install = false,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-}
-require('treesitter-context').setup {
-  enabled = true,
-  max_lines = 1,
-  trim_scope = 'inner',
-  multiwindow = true,
-}
 require("gruvbox").setup {
   bold = false,
   italic = {
