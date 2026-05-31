@@ -55,7 +55,7 @@
 
     "bluetooth": {
         "format-connected": "<span font='18px'></span>  {device_battery_percentage}%",
-        "format-on": "<span font='18px'></span>",
+        "format-on": "",
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
@@ -90,7 +90,8 @@
 
     "network#vpn": {
         "interface": "tun0",
-        "format": "<span font='18px'></span> ",
+        "format-on": "<span font='18px'></span> ",
+        "format-off": "",
         "tooltip-format": "VPN connected ({ipaddr})",
         "tooltip-format-disconnected": "VPN disconnected",
         "cursor": false

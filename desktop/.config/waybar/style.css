@@ -4,6 +4,7 @@
     font-family: Adwaita Sans;
     font-weight: 600;
     font-size: 16px;
+    text-shadow: 1px 1px 3px #555555;
     padding: 0;
     margin: 0;
 }
@@ -64,9 +65,7 @@ button {
 }
 
 #network.disconnected,
-#pulseaudio.muted,
-#bluetooth.on,
-#custom-casting.disabled {
+#pulseaudio.muted {
     color: @disabled;
     text-shadow: none;
 }

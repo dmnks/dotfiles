@@ -10,6 +10,7 @@
         <keepBorder>yes</keepBorder>
         <dropShadows>yes</dropShadows>
         <dropShadowsOnTiled>yes</dropShadowsOnTiled>
+        <maximizedDecoration>none</maximizedDecoration>
         <font>
             <name>Adwaita Sans</name>
             <size>12</size>
@@ -71,13 +72,16 @@
         <keybind key="A-Return">
             <action name="Execute" command="bash -lc 'footwrap launch -a Terminal'" />
         </keybind>
-        <keybind key="A-F2">
+        <keybind key="C-Return">
             <action name="Execute" command="fuzzel" />
         </keybind>
         <keybind key="A-F4">
             <action name="Close" />
         </keybind>
         <keybind key="W-Up">
+            <action name="SnapToEdge" direction="center" />
+        </keybind>
+        <keybind key="W-S-Up">
             <action name="Maximize" />
         </keybind>
         <keybind key="W-Down">
@@ -138,12 +142,15 @@
             <action name="VirtualOutputRemove"/>
             <action name="Execute" command="bash -lc 'wbr casting stop'" />
         </keybind>
+        <keybind key="A-S-E">
+            <action name="Reconfigure" />
+        </keybind>
 
         <!-- Workspace control -->
-        <keybind key="A-i">
+        <keybind key="A-9">
             <action name="GoToDesktop" to="left" />
         </keybind>
-        <keybind key="A-o">
+        <keybind key="A-0">
             <action name="GoToDesktop" to="right" />
         </keybind>
 
@@ -186,7 +193,7 @@
 
     <desktops number="3">
         <names>
-            <name>Dev</name>
+            <name>Code</name>
             <name>Prod</name>
             <name>Misc</name>
         </names>
