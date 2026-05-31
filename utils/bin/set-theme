@@ -29,11 +29,9 @@ ln -sf $SOURCE_DIR/$VARIANT/swaylock ~/.config/swaylock/config
 ln -sf $SOURCE_DIR/$VARIANT/waybar.css ~/.config/waybar/theme.css
 
 if [ $VARIANT == dark ]; then
-    SIGNAL=SIGUSR1
     SCHEME=prefer-dark
     BGIMAG=$BGIMAG_PRE-d.$BGIMAX_SUF
 else
-    SIGNAL=SIGUSR2
     SCHEME=default
     BGIMAG=$BGIMAG_PRE-l.$BGIMAX_SUF
 fi
@@ -44,5 +42,10 @@ killall swaybg >/dev/null 2>&1
 swaybg -i $BGIMAG_DIR/$BGIMAG -m fill >/dev/null 2>&1 &
 killall mako >/dev/null 2>&1
 mako >/dev/null 2>&1 &
-killall waybar >/dev/null 2>&1
-waybar >/dev/null 2>&1 &
+
+if pgrep -x waybar; then
+    killall -s SIGUSR2 waybar >/dev/null 2>&1
+else
+    killall waybar >/dev/null 2>&1
+    waybar >/dev/null 2>&1 &
+fi
