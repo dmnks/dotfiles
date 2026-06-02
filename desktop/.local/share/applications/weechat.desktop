@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=bash -lc 'footwrap launch -a WeeChat --title WeeChat systemd-run --quiet --scope --user weechat'
+Icon=org.gnome.Polari
+Terminal=false
+Categories=System;Chat;
+Keywords=shell;prompt;command;commandline;
+Name=WeeChat
+GenericName=WeeChat
+Comment=Portable, fast, light and extensible IRC client
