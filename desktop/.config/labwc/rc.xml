@@ -56,6 +56,14 @@
                 <action name="None" />
             </mousebind>
         </context>
+        <context name="Frame">
+            <mousebind button="W-Left" action="Drag">
+                <action name="None" />
+            </mousebind>
+            <mousebind button="A-Left" action="Drag">
+                <action name="Move" />
+            </mousebind>
+        </context>
     </mouse>
 
     <keyboard>
@@ -78,22 +86,22 @@
         <keybind key="A-F4">
             <action name="Close" />
         </keybind>
-        <keybind key="W-Up">
+        <keybind key="A-KP_5">
             <action name="SnapToEdge" direction="center" />
         </keybind>
-        <keybind key="W-S-Up">
+        <keybind key="A-KP_8">
             <action name="Maximize" />
         </keybind>
-        <keybind key="W-Down">
+        <keybind key="A-KP_2">
             <action name="UnSnap" />
         </keybind>
-        <keybind key="W-Left">
+        <keybind key="A-KP_4">
             <action name="SnapToEdge" direction="left" />
         </keybind>
-        <keybind key="W-Right">
+        <keybind key="A-KP_6">
             <action name="SnapToEdge" direction="right" />
         </keybind>
-        <keybind key="W-KP_5">
+        <keybind key="A-KP_0">
             <action name="AutoPlace" policy="center" />
         </keybind>
         <keybind key="A-Up">
@@ -142,16 +150,19 @@
             <action name="VirtualOutputRemove"/>
             <action name="Execute" command="bash -lc 'wbr casting stop'" />
         </keybind>
-        <keybind key="A-S-E">
+        <keybind key="W-E">
             <action name="Reconfigure" />
         </keybind>
 
         <!-- Workspace control -->
-        <keybind key="A-9">
-            <action name="GoToDesktop" to="left" />
+        <keybind key="W-1">
+            <action name="GoToDesktop" to="1" />
         </keybind>
-        <keybind key="A-0">
-            <action name="GoToDesktop" to="right" />
+        <keybind key="W-2">
+            <action name="GoToDesktop" to="2" />
+        </keybind>
+        <keybind key="W-3">
+            <action name="GoToDesktop" to="3" />
         </keybind>
 
         <!-- Media control -->
