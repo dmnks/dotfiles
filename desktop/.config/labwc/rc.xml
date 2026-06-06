@@ -60,8 +60,14 @@
             <mousebind button="W-Left" action="Drag">
                 <action name="None" />
             </mousebind>
+            <mousebind button="W-Right" action="Drag">
+                <action name="None" />
+            </mousebind>
             <mousebind button="A-Left" action="Drag">
                 <action name="Move" />
+            </mousebind>
+            <mousebind button="A-Right" action="Drag">
+                <action name="Resize" />
             </mousebind>
         </context>
     </mouse>
@@ -80,7 +86,7 @@
         <keybind key="A-Return">
             <action name="Execute" command="bash -lc 'footwrap launch -a Terminal'" />
         </keybind>
-        <keybind key="A-m">
+        <keybind key="C-Return">
             <action name="Execute" command="fuzzel" />
         </keybind>
         <keybind key="A-F4">
