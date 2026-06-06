@@ -80,7 +80,7 @@
         <keybind key="A-Return">
             <action name="Execute" command="bash -lc 'footwrap launch -a Terminal'" />
         </keybind>
-        <keybind key="C-Return">
+        <keybind key="A-m">
             <action name="Execute" command="fuzzel" />
         </keybind>
         <keybind key="A-F4">
@@ -132,6 +132,14 @@
             <action name="ShowMenu" menu="client-menu" />
         </keybind>
 
+        <!-- Workspace control -->
+        <keybind key="A-9">
+            <action name="GoToDesktop" to="left" />
+        </keybind>
+        <keybind key="A-0">
+            <action name="GoToDesktop" to="right" />
+        </keybind>
+
         <!-- Desktop control -->
         <keybind key="W-l">
             <action name="Execute" command="swaylock -c 000000" />
@@ -152,17 +160,6 @@
         </keybind>
         <keybind key="W-E">
             <action name="Reconfigure" />
-        </keybind>
-
-        <!-- Workspace control -->
-        <keybind key="W-1">
-            <action name="GoToDesktop" to="1" />
-        </keybind>
-        <keybind key="W-2">
-            <action name="GoToDesktop" to="2" />
-        </keybind>
-        <keybind key="W-3">
-            <action name="GoToDesktop" to="3" />
         </keybind>
 
         <!-- Media control -->
