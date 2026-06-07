@@ -75,6 +75,7 @@
     <keyboard>
         <repeatDelay>300</repeatDelay>
         <repeatRate>30</repeatRate>
+        <numLock>on</numLock>
 
         <!-- Window control -->
         <keybind key="A-Tab">
