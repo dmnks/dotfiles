@@ -30,22 +30,16 @@ ln -sf $SOURCE_DIR/$VARIANT/waybar.css ~/.config/waybar/theme.css
 
 if [ $VARIANT == dark ]; then
     SCHEME=prefer-dark
-    BGIMAG=$BGIMAG_PRE-d.$BGIMAX_SUF
+    BGIMAG=$BGIMAG_D
 else
     SCHEME=default
-    BGIMAG=$BGIMAG_PRE-l.$BGIMAX_SUF
+    BGIMAG=$BGIMAG_L
 fi
 
 gsettings set org.gnome.desktop.interface color-scheme $SCHEME
 labwc --reconfigure
 killall swaybg >/dev/null 2>&1
-swaybg -i $BGIMAG_DIR/$BGIMAG -m fill >/dev/null 2>&1 &
+swaybg -i $BGIMAG -m fill >/dev/null 2>&1 &
 killall mako >/dev/null 2>&1
 mako >/dev/null 2>&1 &
-
-if pgrep -x waybar; then
-    killall -s SIGUSR2 waybar >/dev/null 2>&1
-else
-    killall waybar >/dev/null 2>&1
-    waybar >/dev/null 2>&1 &
-fi
+pkill -SIGRTMIN+8 waybar
