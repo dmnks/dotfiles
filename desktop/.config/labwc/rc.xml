@@ -155,7 +155,7 @@
             <action name="Execute" command="sh -c 'sleep 0.5; systemctl suspend'" />
         </keybind>
         <keybind key="W-N">
-            <action name="Execute" command="bash -lc 'set-theme'" />
+            <action name="Execute" command="bash -lc 'set-theme toggle'" />
         </keybind>
         <keybind key="W-V">
             <action name="VirtualOutputAdd" output_name="ScreenCasting"/>

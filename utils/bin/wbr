@@ -21,7 +21,7 @@ case $CMD in
                 fi
                 ;;
             toggle)
-                ~/bin/set-theme
+                ~/bin/set-theme toggle
                 ;;
         esac
         ;;
