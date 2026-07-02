@@ -141,10 +141,10 @@
 
         <!-- Workspace control -->
         <keybind key="A-9">
-            <action name="GoToDesktop" to="left" />
+            <action name="GoToDesktop" to="left" wrap="no" />
         </keybind>
         <keybind key="A-0">
-            <action name="GoToDesktop" to="right" />
+            <action name="GoToDesktop" to="right" wrap="no" />
         </keybind>
 
         <!-- Desktop control -->
@@ -212,6 +212,7 @@
             <name>Prod</name>
             <name>Misc</name>
         </names>
+        <popupTime>0</popupTime>
     </desktops>
 
     <regions>
