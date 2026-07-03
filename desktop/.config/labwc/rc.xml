@@ -87,9 +87,6 @@
         <keybind key="A-Return">
             <action name="Execute" command="bash -lc 'footwrap launch -a Terminal'" />
         </keybind>
-        <keybind key="C-Return">
-            <action name="Execute" command="fuzzel" />
-        </keybind>
         <keybind key="A-F4">
             <action name="Close" />
         </keybind>
@@ -148,6 +145,9 @@
         </keybind>
 
         <!-- Desktop control -->
+        <keybind key="W-Return">
+            <action name="Execute" command="fuzzel" />
+        </keybind>
         <keybind key="W-l">
             <action name="Execute" command="swaylock -c 000000" />
         </keybind>
