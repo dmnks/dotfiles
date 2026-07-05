@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=bash -lc 'footwrap launch -a WeeChat --title WeeChat systemd-run --quiet --scope --user weechat'
+Exec=footwrap launch -a WeeChat --title WeeChat weechat
 Icon=org.gnome.Polari
 Terminal=false
 Categories=System;Chat;

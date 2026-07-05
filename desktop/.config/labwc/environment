@@ -1,2 +1,4 @@
+PATH=$HOME/bin:$PATH
 XKB_DEFAULT_LAYOUT=us,cz(qwerty)
 XKB_DEFAULT_OPTIONS=grp:win_space_toggle,caps:ctrl_modifier
+QT_QPA_PLATFORMTHEME=qt6ct

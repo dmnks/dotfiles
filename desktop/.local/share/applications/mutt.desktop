@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=bash -lc 'footwrap launch -a Mutt --title Mutt systemd-run --quiet --scope --user mutt'
+Exec=footwrap launch -a Mutt --title Mutt mutt
 Icon=org.gnome.Geary
 Terminal=false
 Categories=System;Email;

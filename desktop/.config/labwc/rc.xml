@@ -37,6 +37,7 @@
     <libinput>
         <device category="default">
             <pointerSpeed>0.0</pointerSpeed>
+            <!-- <scrollFactor>1.2</scrollFactor> -->
         </device>
         <device category="touchpad">
             <naturalScroll>yes</naturalScroll>
@@ -85,7 +86,7 @@
             <action name="PreviousWindow" />
         </keybind>
         <keybind key="A-Return">
-            <action name="Execute" command="bash -lc 'footwrap launch -a Terminal'" />
+            <action name="Execute" command="footwrap launch -a Terminal" />
         </keybind>
         <keybind key="A-F4">
             <action name="Close" />
@@ -155,15 +156,15 @@
             <action name="Execute" command="sh -c 'sleep 0.5; systemctl suspend'" />
         </keybind>
         <keybind key="W-N">
-            <action name="Execute" command="bash -lc 'set-theme toggle'" />
+            <action name="Execute" command="set-theme toggle" />
         </keybind>
         <keybind key="W-V">
             <action name="VirtualOutputAdd" output_name="ScreenCasting"/>
-            <action name="Execute" command="bash -lc 'wbr casting start'" />
+            <action name="Execute" command="wbr casting start" />
         </keybind>
         <keybind key="W-S-V">
             <action name="VirtualOutputRemove"/>
-            <action name="Execute" command="bash -lc 'wbr casting stop'" />
+            <action name="Execute" command="wbr casting stop" />
         </keybind>
         <keybind key="W-E">
             <action name="Reconfigure" />

@@ -1,7 +1,7 @@
 <openbox_menu>
 <menu id="root-menu">
   <item label="Terminal">
-    <action name="Execute" command="bash -lc 'footwrap launch -a Terminal'" />
+    <action name="Execute" command="footwrap launch -a Terminal" />
   </item>
   <separator />
   <item label="Reconfigure">

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=bash -lc 'footwrap launch -W 179x48 "-o main.pad=0x0 center" -a Tmux systemd-run --quiet --scope --user tide'
+Exec=footwrap launch -W 179x48 "-o main.pad=0x0 center" -a Tmux systemd-run --quiet --scope --user tide
 Icon=org.gnome.Terminal
 Terminal=false
 Categories=System;TerminalEmulator;
