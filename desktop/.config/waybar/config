@@ -55,6 +55,7 @@
 
     "bluetooth": {
         "format-connected": "<span font='18px'></span>  {device_battery_percentage}%",
+        "format-device-preference": ["APW Mesa ANC"],
         "format-on": "",
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{device_enumerate}",
