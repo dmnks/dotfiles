@@ -4,6 +4,10 @@ CMD=$1
 shift
 
 case $CMD in
+    lock-grace)
+        pgrep -x swaylock && exit 0
+        chayang && swaylock -f
+        ;;
     suspend)
         if ! pgrep -x swaylock; then
             swaylock -f || exit 1
