@@ -1,0 +1,14 @@
+#!/bin/bash
+
+CMD=$1
+shift
+
+case $CMD in
+    suspend)
+        if ! pgrep -x swaylock; then
+            swaylock -f || exit 1
+        fi
+        sleep 0.5
+        systemctl suspend
+        ;;
+esac

@@ -1,6 +1,4 @@
-swayidle -w \
-    timeout 300 'swaylock -f' \
-    before-sleep 'swaylock -f' >/dev/null 2>&1 &
+swayidle -w timeout 300 'swaylock -f' >/dev/null 2>&1 &
 kanshi >/dev/null 2>&1 &
 wlsunset -l 49.2 -L 16.6 >/dev/null 2>&1 &
 /usr/libexec/xdg-desktop-portal -r &
