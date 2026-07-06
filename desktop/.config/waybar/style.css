@@ -71,3 +71,7 @@ button {
 #custom-os {
     padding: 0 1em;
 }
+
+tooltip label {
+    font-family: Adwaita Mono;
+}
