@@ -93,7 +93,7 @@
             <action name="AutoPlace" policy="center" />
         </keybind>
         <keybind key="W-Up">
-            <action name="Maximize" />
+            <action name="SnapToEdge" direction="center" />
         </keybind>
         <keybind key="W-Down">
             <action name="UnSnap" />
@@ -144,8 +144,8 @@
         <keybind key="W-Return">
             <action name="Execute" command="fuzzel" />
         </keybind>
-        <keybind key="W-l">
-            <action name="Execute" command="swaylock -c 000000" />
+        <keybind key="W-L">
+            <action name="Execute" command="swaylock" />
         </keybind>
         <keybind key="W-F9" allowWhenLocked="yes">
             <action name="Execute" command="sh -c 'sleep 0.5; systemctl suspend'" />
