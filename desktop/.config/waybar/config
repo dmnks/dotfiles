@@ -68,8 +68,8 @@
 
     "network#default": {
         "format-ethernet": "<span font='18px'>󰈀</span> ",
-        "format-wifi": "<span font='18px'>{icon}</span>   {signalStrength}%",
-        "format-disconnected": "<span font='18px'>󰈀</span>",
+        "format-wifi": "<span font='18px'>{icon}</span>   {signalStrength}% ",
+        "format-disconnected": "<span font='18px'>󰈀</span> ",
         "format-icons": ["\udb82\udd2f", "\udb82\udd1f", "\udb82\udd22", "\udb82\udd25", "\udb82\udd28"],
         "tooltip-format-wifi": "{essid} ({ipaddr}) [{signalStrength}%]",
         "tooltip-format-ethernet": "{ifname} ({ipaddr})",
@@ -90,7 +90,7 @@
     "battery": {
         "bat": "BAT0",
         "interval": 60,
-        "format": "{icon} {capacity}%",
+        "format": "<span font='18px'>{icon}</span>   {capacity}% ",
         "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"],
         "format-plugged": "<span font='18px'></span> "
     },
