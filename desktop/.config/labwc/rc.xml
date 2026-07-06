@@ -10,7 +10,6 @@
         <keepBorder>yes</keepBorder>
         <dropShadows>yes</dropShadows>
         <dropShadowsOnTiled>yes</dropShadowsOnTiled>
-        <maximizedDecoration>none</maximizedDecoration>
         <font>
             <name>Adwaita Sans</name>
             <size>12</size>
@@ -37,7 +36,6 @@
     <libinput>
         <device category="default">
             <pointerSpeed>0.0</pointerSpeed>
-            <!-- <scrollFactor>1.2</scrollFactor> -->
         </device>
         <device category="touchpad">
             <naturalScroll>yes</naturalScroll>
@@ -91,23 +89,20 @@
         <keybind key="A-F4">
             <action name="Close" />
         </keybind>
-        <keybind key="A-KP_5">
-            <action name="SnapToEdge" direction="center" />
-        </keybind>
-        <keybind key="A-KP_8">
-            <action name="Maximize" />
-        </keybind>
-        <keybind key="A-KP_2">
-            <action name="UnSnap" />
-        </keybind>
-        <keybind key="A-KP_4">
-            <action name="SnapToEdge" direction="left" />
-        </keybind>
-        <keybind key="A-KP_6">
-            <action name="SnapToEdge" direction="right" />
-        </keybind>
         <keybind key="A-KP_0">
             <action name="AutoPlace" policy="center" />
+        </keybind>
+        <keybind key="W-Up">
+            <action name="Maximize" />
+        </keybind>
+        <keybind key="W-Down">
+            <action name="UnSnap" />
+        </keybind>
+        <keybind key="W-Left">
+            <action name="SnapToEdge" direction="left" />
+        </keybind>
+        <keybind key="W-Right">
+            <action name="SnapToEdge" direction="right" />
         </keybind>
         <keybind key="A-Up">
             <action name="MoveToEdge" direction="up" />
@@ -158,14 +153,6 @@
         <keybind key="W-N">
             <action name="Execute" command="set-theme toggle" />
         </keybind>
-        <keybind key="W-V">
-            <action name="VirtualOutputAdd" output_name="ScreenCasting"/>
-            <action name="Execute" command="wbr casting start" />
-        </keybind>
-        <keybind key="W-S-V">
-            <action name="VirtualOutputRemove"/>
-            <action name="Execute" command="wbr casting stop" />
-        </keybind>
         <keybind key="W-E">
             <action name="Reconfigure" />
         </keybind>
@@ -199,13 +186,6 @@
             <action name="Execute" command="gnome-calculator" />
         </keybind>
     </keyboard>
-
-    <windowRules>
-        <windowRule identifier="at.yrlf.wl_mirror">
-            <action name="ResizeTo" width="1920" height="1080" />
-            <action name="AutoPlace" policy="center" />
-        </windowRule>
-    </windowRules>
 
     <desktops number="3">
         <names>

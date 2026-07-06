@@ -7,9 +7,8 @@
 
     "modules-left": ["custom/os", "ext/workspaces"],
     "modules-right": [
-        "custom/casting", "custom/theme", "keyboard-state",
-        "pulseaudio", "bluetooth", "network#vpn", "network#default", "battery",
-        "clock"
+        "custom/theme", "keyboard-state", "pulseaudio", "bluetooth",
+        "network#vpn", "network#default", "battery", "clock"
     ],
 
     "custom/os": {
@@ -23,16 +22,6 @@
         "on-click": "activate",
         "sort-by-number": true,
         "cursor": false
-    },
-
-    "custom/casting": {
-        "format": "<span font='18px'>{text}</span> ",
-        "hide-empty-text": true,
-        "interval": "once",
-        "exec": "~/bin/wbr casting status",
-        "on-click": "~/bin/wbr casting view",
-        "cursor": false,
-        "signal": 9
     },
 
     "keyboard-state": {

@@ -28,25 +28,4 @@ case $CMD in
     nmtui)
         showtui 'NetworkManager TUI' nmtui
         ;;
-    casting)
-        case $1 in
-            status)
-                wlr-randr | grep -q ScreenCasting || exit
-                echo "󰀟"
-                echo "Virtual Output enabled"
-                echo "enabled"
-                ;;
-            view)
-                wlrctl toplevel focus at.yrlf.wl_mirror || \
-                wl-mirror ScreenCasting
-                ;;
-            start)
-                pkill -RTMIN+9 waybar
-                wlr-randr --output ScreenCasting --custom-mode 1920x1080
-                ;;
-            stop)
-                pkill -RTMIN+9 waybar
-                ;;
-        esac
-        ;;
 esac

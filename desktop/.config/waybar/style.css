@@ -42,7 +42,6 @@ button {
 #network,
 #clock,
 #bluetooth,
-#custom-casting,
 #custom-os,
 #custom-theme {
     padding: 0 0.7em;
@@ -52,7 +51,6 @@ button {
 #pulseaudio:hover,
 #network.default:hover,
 #clock:hover,
-#custom-casting:hover,
 #custom-theme:hover {
     background-color: @highlight;
     margin: 5px 0;
