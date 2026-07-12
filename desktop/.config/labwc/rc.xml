@@ -84,7 +84,7 @@
             <action name="PreviousWindow" />
         </keybind>
         <keybind key="A-Return">
-            <action name="Execute" command="footwrap launch -a Terminal" />
+            <action name="Execute" command="footwrap launch" />
         </keybind>
         <keybind key="A-F4">
             <action name="Close" />

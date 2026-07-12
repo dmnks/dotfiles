@@ -182,7 +182,7 @@ cmd_update() {
 }
 
 open() {
-    local path name url repo
+    local path name url repo runterm
     path=$1
     name=$2
 
@@ -217,7 +217,8 @@ open() {
     if [ -z "$TMUX" ]; then
         tmux attach -t "$name"
     else
-        tmux switch-client -t "$name"
+        runterm=$(yq ".runterm")
+        tmux run-shell -b "setsid -f $runterm tmux attach -t '$name'"
     fi
 }
 
