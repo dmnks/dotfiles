@@ -1,0 +1,54 @@
+#!/bin/bash
+
+SOURCE_DIR=$HOME/code/dotfiles/github/main/themes
+TARGET_DIR=$HOME/.themes/default
+source $HOME/.config/wallpaper.conf
+
+if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" == "'default'" ]; then
+    VARIANT=light
+else
+    VARIANT=dark
+fi
+
+if [ "$1" == "toggle" ]; then
+    if [ $VARIANT == dark ]; then
+        VARIANT=light
+    else
+        VARIANT=dark
+    fi
+fi
+
+if [ $VARIANT == dark ]; then
+    SCHEME=prefer-dark
+    BGIMAG=$BGIMAG_D
+    killall -s SIGUSR1 foot
+else
+    SCHEME=default
+    BGIMAG=$BGIMAG_L
+    killall -s SIGUSR2 foot
+fi
+
+if [ "$1" == "toggle" ]; then
+    gsettings set org.gnome.desktop.interface color-scheme $SCHEME
+fi
+
+mkdir -p $TARGET_DIR
+ln -sf $SOURCE_DIR/$VARIANT/openbox-3 $TARGET_DIR/
+
+mkdir -p ~/.config/fuzzel
+ln -sf $SOURCE_DIR/$VARIANT/fuzzel.ini ~/.config/fuzzel/
+
+mkdir -p ~/.config/mako
+ln -sf $SOURCE_DIR/$VARIANT/mako/config ~/.config/mako/
+
+mkdir -p ~/.config/swaylock
+ln -sf $SOURCE_DIR/$VARIANT/swaylock ~/.config/swaylock/config
+
+ln -sf $SOURCE_DIR/$VARIANT/waybar.css ~/.config/waybar/theme.css
+
+labwc --reconfigure
+killall swaybg >/dev/null 2>&1
+swaybg -i $BGIMAG -m fill >/dev/null 2>&1 &
+killall mako >/dev/null 2>&1
+mako >/dev/null 2>&1 &
+pgrep waybar >/dev/null && pkill -SIGRTMIN+8 waybar

@@ -1,0 +1,9 @@
+swayidle -w timeout 300 'lwc lock-grace' >/dev/null 2>&1 &
+kanshi >/dev/null 2>&1 &
+wlsunset -l 49.2 -L 16.6 >/dev/null 2>&1 &
+/usr/libexec/xdg-desktop-portal -r &
+/usr/libexec/xfce-polkit >/dev/null 2>&1 &
+systemctl --user import-environment PATH
+systemctl --user --no-block start labwc-session.target
+waybar >/dev/null 2>&1 &
+set-theme
