@@ -1,0 +1,31 @@
+#!/bin/bash
+
+CMD=$1
+shift
+
+showtui() {
+    foot -c ~/.config/foot/xterm.ini --title "$@"
+}
+
+case $CMD in
+    theme)
+        case $1 in
+            status)
+                name=$(gsettings get org.gnome.desktop.interface color-scheme)
+                if [ "$name" == "'default'" ]; then
+                    echo ""
+                    echo "Light mode"
+                else
+                    echo ""
+                    echo "Dark mode"
+                fi
+                ;;
+            toggle)
+                ~/bin/set-theme toggle
+                ;;
+        esac
+        ;;
+    nmtui)
+        showtui 'NetworkManager TUI' nmtui
+        ;;
+esac

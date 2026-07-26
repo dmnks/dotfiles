@@ -1,0 +1,10 @@
+#!/bin/bash
+# A foot(1) shim that respects system theme
+
+THEME=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+if [ "$THEME" == "prefer-dark" ]; then
+    THEME=dark
+else
+    THEME=light
+fi
+exec /usr/bin/foot -o main.initial-color-theme=$THEME "$@"
