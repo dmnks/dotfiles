@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=footclient -W 54x38 -a Plan --title Plan sh -c "nvim +$ ~/plan/daily.plan"
+Icon=org.gnome.Contacts
+Terminal=false
+Categories=System;Email;
+Keywords=shell;prompt;command;commandline;
+Name=Plan
+GenericName=Plan

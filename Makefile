@@ -1,9 +1,10 @@
 PACKAGES = bash desktop git podman rpm tmux utils vim
 VIMPACK = ~/.vim/pack/git/start
+ICONDIR = icons/hicolor/scalable/apps
 
 .PHONY: all software install uninstall vim gnome
 
-all: software install vim gnome
+all: software install vim gnome icons
 
 software:
 	sudo dnf install -y \
@@ -22,7 +23,7 @@ software:
 		 tig \
 		 toolbox
 
-install:
+install: icons
 	stow --target ${HOME} -Rv --no-folding $(PACKAGES)
 	update-desktop-database ~/.local/share/applications/
 
@@ -36,3 +37,16 @@ vim:
 
 gnome:
 	dconf load /org/gnome/ < gnome.conf
+
+icons:
+	mkdir -p ${HOME}/.local/share/$(ICONDIR)
+	ln -sf /usr/share/$(ICONDIR)/org.gnome.Terminal.svg \
+	       ${HOME}/.local/share/$(ICONDIR)/Terminal.svg
+	ln -sf /usr/share/$(ICONDIR)/org.gnome.Terminal.svg \
+	       ${HOME}/.local/share/$(ICONDIR)/Tmux.svg
+	ln -sf /usr/share/$(ICONDIR)/org.gnome.Geary.svg \
+	       ${HOME}/.local/share/$(ICONDIR)/Mutt.svg
+	ln -sf /usr/share/$(ICONDIR)/org.gnome.Polari.svg \
+	       ${HOME}/.local/share/$(ICONDIR)/WeeChat.svg
+	ln -sf /usr/share/$(ICONDIR)/org.gnome.Contacts.svg \
+	       ${HOME}/.local/share/$(ICONDIR)/Plan.svg

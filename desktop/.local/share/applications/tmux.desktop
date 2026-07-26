@@ -1,11 +1,10 @@
 [Desktop Entry]
 Type=Application
-Exec=foot
+Exec=footclient -W 179x48 -a Tmux systemd-run --quiet --scope --user tide
 Icon=org.gnome.Terminal
 Terminal=false
 Categories=System;TerminalEmulator;
 Keywords=shell;prompt;command;commandline;
-Name=Terminal
-GenericName=Terminal
-Comment=A wayland native terminal emulator
-StartupWMClass=foot
+Name=Tmux
+GenericName=Tmux
+Comment=A terminal multiplexer
