@@ -1,0 +1,12 @@
+#!/bin/bash
+
+gsettings monitor org.gnome.desktop.interface | \
+while read key; do
+    [[ $key =~ ^(color-scheme) ]] || continue
+    val=$(echo "$key" | awk '{print $2}' | tr -d \')
+    if [ "$val" == "prefer-dark" ]; then
+        killall -s SIGUSR1 foot
+    else
+        killall -s SIGUSR2 foot
+    fi
+done

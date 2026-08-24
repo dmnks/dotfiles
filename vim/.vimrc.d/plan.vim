@@ -15,6 +15,10 @@ function! s:planCycle(list)
 endfunction
 
 function! s:planInit()
+    if &filetype !=# 'plan'
+        return
+    endif
+
     set colorcolumn=
     set nonumber
 
@@ -34,8 +38,7 @@ function! s:planInit()
     " Mappings
     nmap <buffer> <silent> <C-space>
     \   :call <sid>planCycle([' ', '*', '+', '-'])<CR>
-    nmap <buffer> <silent> <CR>         :call <sid>planNext()<CR>
-    nmap <silent> q :q<CR>
+    nmap <buffer> <silent> <CR> :call <sid>planNext()<CR>
 endfunction
 
 function! s:planNext()
@@ -59,3 +62,4 @@ endfunction
 autocmd BufNewFile,BufRead */plan/*.plan    set filetype=plan
 autocmd BufNewFile */plan/*.plan            0r ~/.vim/skeleton.plan | norm G
 autocmd FileType plan                       call <sid>planInit()
+autocmd ColorScheme *                       call <sid>planInit()

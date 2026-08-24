@@ -1,0 +1,9 @@
+[Unit]
+Description=Foot theme switcher
+
+[Service]
+ExecStart=%h/bin/foot-monitor
+Restart=always
+
+[Install]
+WantedBy=default.target

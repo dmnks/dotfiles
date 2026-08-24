@@ -1,22 +1,24 @@
 #!/bin/bash
 
+ACCENT_FG="${!ACCENT_FG}"
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --prompt='  '
     --layout=reverse
     --color='pointer:$ACCENT_FG,prompt:$ACCENT_FG'
     --color='marker:$ACCENT_FG,spinner:$ACCENT_FG'
-    --color='hl+:$ACCENT_FG'
+    --color='hl+:$ACCENT_FG,border:$THEME_COLOR_DIM2,input-border:$ACCENT_FG'
     --color='hl:$THEME_COLOR_DIM1,fg+:$THEME_COLOR_ACTIVE_FG'
     --color='bg+:$THEME_COLOR_ACTIVE_BG,header:$THEME_COLOR_DIM2'
-    --color='scrollbar:$THEME_COLOR_DIM4,info:$THEME_COLOR_DIM2,gutter:-1'
+    --color='scrollbar:$THEME_COLOR_DIM4,info:$THEME_COLOR_DIM2'
+    --input-border=rounded
+    --list-border=rounded
     --no-bold
     --info=inline-right
     --scrollbar=█
-    --pointer=▎
-    --header=''
+    --gutter=' '
+    --pointer=' '
     --border=none
-    --padding=0,1
-    --no-separator
+    --padding=0
     --highlight-line
     --no-mouse
 "
