@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=ptyxis --gapplication-app-id=dmnks.nvim -- nvim -c ':Projects'
+Icon=nvim
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;
+Name=Neovim
+GenericName=Neovim
+Comment=Vim-fork focused on extensibility and agility
