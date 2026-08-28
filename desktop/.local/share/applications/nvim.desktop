@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=footclient -W 179x48 "-o main.pad=0x0 center" -T Neovim -a Neovim nvim -c ':Projects'
+Icon=nvim
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;
+Name=Neovim
+GenericName=Neovim
+Comment=Vim-fork focused on extensibility and agility
