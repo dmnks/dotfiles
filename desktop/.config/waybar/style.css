@@ -16,7 +16,7 @@
 
 button {
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 *:hover {
@@ -27,11 +27,12 @@ button {
 
 #workspaces button {
     color: @foreground;
+    border: 2px solid transparent;
 }
 
 #workspaces button.active {
     color: @foreground;
-    background-color: @highlight;
+    border: 2px solid @contour;
     transition: none;
 }
 

@@ -133,16 +133,16 @@
         </keybind>
 
         <!-- Workspace control -->
-        <keybind key="W-1">
+        <keybind key="C-1">
             <action name="GoToDesktop" to="1" />
         </keybind>
-        <keybind key="W-2">
+        <keybind key="C-2">
             <action name="GoToDesktop" to="2" />
         </keybind>
-        <keybind key="W-3">
+        <keybind key="C-3">
             <action name="GoToDesktop" to="3" />
         </keybind>
-        <keybind key="W-4">
+        <keybind key="C-4">
             <action name="GoToDesktop" to="4" />
         </keybind>
         <keybind key="A-`">
