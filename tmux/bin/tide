@@ -369,7 +369,7 @@ cmd_git() {
     num=$(git diff --staged --stat --diff-filter=u | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
-    TIG_SCRIPT=<(echo -e ":set split-view-width = 100\n:set vertical-split = true\n:${num}\n:enter") tig status
+    TIG_SCRIPT=<(echo -e ":${num}\n:enter") tig status
 }
 
 cmd_git_find() {
