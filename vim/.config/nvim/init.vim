@@ -91,7 +91,7 @@ set_color_column()
 EOF
 
 " FZF
-let g:fzf_layout = { 'tmux': '-y0' }
+let g:fzf_layout = { 'tmux': '-y0 --padding=1,3' }
 function! s:buflist()
     " Return listed buffers that have a name
     let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')

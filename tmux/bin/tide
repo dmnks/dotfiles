@@ -140,14 +140,14 @@ cmd_update() {
         THEME_COLOR_DIM3='#665c54'
         THEME_COLOR_DIM4='#504945'
         THEME_COLOR_DIM5='#3c3836'
-        THEME_COLOR_DIM6='#d5c4a1'
+        THEME_COLOR_DIM6='#32302f'
     else
         # ACCENT_FG=$(accent 1)
         # ACCENT_BG=$(accent 2)
         # ACCENT_BG0=$(colortool $ACCENT_BG $(accent 4))
         THEME_VARIANT=light
         ACCENT_FG=ACCENT_FG_L
-        THEME_COLOR_BG0='#f2e5bc'
+        THEME_COLOR_BG0='#f9f5d7'
         THEME_COLOR_BG='#fbf1c7'
         THEME_COLOR_ACTIVE_FG='#282828'
         THEME_COLOR_ACTIVE_BG='#d5c4a1'
@@ -157,7 +157,7 @@ cmd_update() {
         THEME_COLOR_DIM3='#bdae93'
         THEME_COLOR_DIM4='#d5c4a1'
         THEME_COLOR_DIM5='#ebdbb2'
-        THEME_COLOR_DIM6='#504945'
+        THEME_COLOR_DIM6='#f2e5bc'
     fi
 
     for var in THEME_VARIANT \
@@ -201,7 +201,7 @@ open() {
 
         # Construct session
 
-        tmux new-session -ds "$name" -n " Edit" \
+        tmux new-session -ds "$name" -n "edit" \
             -e NVIM_SERVER=$PWD/.nvim.sock \
             -e TIG_EDITOR=edit \
             -e ACCENT_FG_L=$color_l \
@@ -210,11 +210,11 @@ open() {
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
-        tmux new-window -t "$name" -n " Repo" "sleep 0.3; tig"
+        tmux new-window -t "$name" -n "repo" "sleep 0.3; tig"
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
-        tmux new-window -t "$name" -n " Term"
+        tmux new-window -t "$name" -n "term"
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
@@ -341,7 +341,7 @@ cmd_status() {
 
     print_branch() {
         git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
-        printf "󰘬 $(git -C $1 rev-parse --abbrev-ref HEAD)"
+        printf "$(git -C $1 rev-parse --abbrev-ref HEAD)"
     }
 
     print_toolbox() {
