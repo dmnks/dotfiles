@@ -20,6 +20,8 @@ call plug#begin()
 " Plug 'nvim-tree/nvim-tree.lua'
 " Plug 'nvim-lualine/lualine.nvim'
 Plug 'ellisonleao/gruvbox.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'tpope/vim-commentary'
 call plug#end()
 
@@ -47,6 +49,21 @@ call plug#end()
 " EOF
 
 lua << EOF
+require('nvim-treesitter').install {
+    "c", "cpp", "bash", "lua", "vim", "vimdoc", "query", "cmake", "markdown",
+    "markdown_inline",
+}
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { "c", "cpp", "sh", "lua", "cmake", "markdown" },
+  callback = function() vim.treesitter.start() end,
+})
+require('treesitter-context').setup {
+  enabled = true,
+  max_lines = 1,
+  trim_scope = 'inner',
+  multiwindow = true,
+}
+
 require("gruvbox").setup {
   bold = false,
   italic = {
