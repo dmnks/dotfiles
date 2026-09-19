@@ -201,7 +201,7 @@ open() {
 
         # Construct session
 
-        tmux new-session -ds "$name" -n " Edit" \
+        tmux new-session -ds "$name" -n "edit" \
             -e NVIM_SERVER=$PWD/.nvim.sock \
             -e TIG_EDITOR=edit \
             -e ACCENT_FG_L=$color_l \
@@ -210,11 +210,11 @@ open() {
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
-        tmux new-window -t "$name" -n " Repo" "sleep 0.3; tig"
+        tmux new-window -t "$name" -n "repo" "sleep 0.3; tig"
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
-        tmux new-window -t "$name" -n " Term"
+        tmux new-window -t "$name" -n "term"
         tmux set-option -p remain-on-exit on
         tmux set-hook -p pane-died "respawn-pane"
 
