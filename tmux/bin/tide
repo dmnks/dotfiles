@@ -140,7 +140,7 @@ cmd_update() {
         THEME_COLOR_DIM3='#665c54'
         THEME_COLOR_DIM4='#504945'
         THEME_COLOR_DIM5='#3c3836'
-        THEME_COLOR_DIM6='#d5c4a1'
+        THEME_COLOR_DIM6='#32302f'
     else
         # ACCENT_FG=$(accent 1)
         # ACCENT_BG=$(accent 2)
@@ -157,7 +157,7 @@ cmd_update() {
         THEME_COLOR_DIM3='#bdae93'
         THEME_COLOR_DIM4='#d5c4a1'
         THEME_COLOR_DIM5='#ebdbb2'
-        THEME_COLOR_DIM6='#504945'
+        THEME_COLOR_DIM6='#f2e5bc'
     fi
 
     for var in THEME_VARIANT \
@@ -206,25 +206,19 @@ open() {
             -e TIG_EDITOR=edit \
             -e ACCENT_FG_L=$color_l \
             -e ACCENT_FG_D=$color_d \
+            -e TIDE_REPO=$repo \
             "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
-        tmux set-option -p remain-on-exit on
-        tmux set-hook -p pane-died "respawn-pane"
-
         tmux new-window -t "$name" -n " Repo" "sleep 0.3; tig"
-        tmux set-option -p remain-on-exit on
-        tmux set-hook -p pane-died "respawn-pane"
-
         tmux new-window -t "$name" -n " Term"
-        tmux set-option -p remain-on-exit on
-        tmux set-hook -p pane-died "respawn-pane"
+
+        tmux set-option -p -t $name:1.1 remain-on-exit on
+        tmux set-option -p -t $name:2.1 remain-on-exit on
+        tmux set-option -p -t $name:3.1 remain-on-exit on
+        tmux set-hook -p -t $name:1.1 pane-died "respawn-pane"
+        tmux set-hook -p -t $name:2.1 pane-died "respawn-pane"
+        tmux set-hook -p -t $name:3.1 pane-died "respawn-pane"
 
         tmux select-window -t "${name}:+1"
-
-        # Set user variables
-        tmux set @repo $repo
-        tmux set @path $path
-        tmux set @accent_fg_l $color_l
-        tmux set @accent_fg_d $color_d
 
         cmd_update
     fi
