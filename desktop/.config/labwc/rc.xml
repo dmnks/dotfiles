@@ -196,7 +196,13 @@
         </keybind>
     </keyboard>
 
-    <desktops number="4" />
+    <desktops>
+        <names>
+            <name>Dev</name>
+            <name>Org</name>
+            <name>Aux</name>
+        </names>
+    </desktops>
 
     <regions>
         <region name="zoom" x="15%" y="0%" width="70%" height="100%" />
