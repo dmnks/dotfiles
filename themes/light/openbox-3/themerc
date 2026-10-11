@@ -131,5 +131,6 @@ window.inactive.shadow.size: 100
 osd.window-switcher.preview.border.width: 3
 osd.window-switcher.preview.border.color: #3584e4
 snapping.overlay.edge.bg.color: #3584e480
+snapping.overlay.region.bg.color: #3584e480
 window.titlebar.padding.width: 6
 window.titlebar.padding.height: 6
