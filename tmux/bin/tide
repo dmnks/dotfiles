@@ -147,7 +147,7 @@ cmd_update() {
         # ACCENT_BG0=$(colortool $ACCENT_BG $(accent 4))
         THEME_VARIANT=light
         ACCENT_FG=ACCENT_FG_L
-        THEME_COLOR_BG0='#f2e5bc'
+        THEME_COLOR_BG0='#f9f5d7'
         THEME_COLOR_BG='#fbf1c7'
         THEME_COLOR_ACTIVE_FG='#282828'
         THEME_COLOR_ACTIVE_BG='#d5c4a1'
@@ -207,6 +207,7 @@ open() {
             -e ACCENT_FG_L=$color_l \
             -e ACCENT_FG_D=$color_d \
             -e TIDE_REPO=$repo \
+            -e TIDE_PATH=$path \
             "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
         tmux new-window -t "$name" -n " repo" "sleep 0.3; tig"
         tmux new-window -t "$name" -n " term"
