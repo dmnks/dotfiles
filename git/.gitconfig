@@ -39,6 +39,7 @@
     ra = rebase --abort
     cc = cherry-pick --continue
     cb = cherry-pick --abort
+    dd = "!f() { git range-diff \"$1^!\" \"$2^!\"; }; f"
 [merge]
     tool = vimdiff
 [pull]
