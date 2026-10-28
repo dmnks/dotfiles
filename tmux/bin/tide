@@ -31,7 +31,7 @@ list_worktrees() {
     while read label path; read label obj; read label ref; read; do
         path=${path##$ROOTDIR/}
         ref=${ref##*/}
-        printf "${path}${C_DIM} 󰘬 ${ref:-HEAD}  ${obj:0:10}${name}${C_RES}\n"
+        printf "${path}${C_DIM}  ${ref:-HEAD}  ${obj:0:10}${name}${C_RES}\n"
     done
 }
 
@@ -46,7 +46,7 @@ list_repos() {
 list_branches() {
     local symbol name date
     format=(
-        "%(if:equals=tag)%(objecttype)%(then)%(else)󰘬%(end)"
+        "%(if:equals=tag)%(objecttype)%(then)%(else)%(end)"
         "%(refname:lstrip=-1)"
         "%(creatordate:relative)"
     )
@@ -73,7 +73,7 @@ list_pr() {
                --json number,title,author,headRefName \
                --template "${template[*]}" | \
     while read number author ref title; do
-        printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s 󰘬 %s${C_RES}\n" \
+        printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s  %s${C_RES}\n" \
                "$number" "$title" "$author" "$ref"
     done
 }
@@ -201,15 +201,15 @@ open() {
 
         # Construct session
 
-        tmux new-session -ds "$name" -n " Edit" \
+        tmux new-session -ds "$name" -n " edit" \
             -e NVIM_SERVER=$PWD/.nvim.sock \
             -e TIG_EDITOR=edit \
             -e ACCENT_FG_L=$color_l \
             -e ACCENT_FG_D=$color_d \
             -e TIDE_REPO=$repo \
             "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
-        tmux new-window -t "$name" -n " Repo" "sleep 0.3; tig"
-        tmux new-window -t "$name" -n " Term"
+        tmux new-window -t "$name" -n " repo" "sleep 0.3; tig"
+        tmux new-window -t "$name" -n " term"
 
         tmux set-option -p -t $name:1.1 remain-on-exit on
         tmux set-option -p -t $name:2.1 remain-on-exit on
@@ -335,7 +335,7 @@ cmd_status() {
 
     print_branch() {
         git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
-        printf "󰘬 $(git -C $1 rev-parse --abbrev-ref HEAD)"
+        printf " $(git -C $1 rev-parse --abbrev-ref HEAD)"
     }
 
     print_toolbox() {
