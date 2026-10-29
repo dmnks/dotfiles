@@ -15,15 +15,12 @@ software:
 		 git \
 		 gnome-extensions-app \
 		 gnome-tweaks \
-		 jetbrains-mono-nl-fonts \
 		 neovim \
 		 pass \
-		 pavucontrol \
 		 podman \
 		 stow \
 		 tig \
-		 toolbox \
-		 vim
+		 toolbox
 
 install:
 	stow --target ${HOME} -Rv --no-folding $(PACKAGES)
