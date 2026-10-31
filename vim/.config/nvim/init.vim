@@ -2,51 +2,11 @@
 " # Startup
 " #############################################################################
 
-" " Eagerly disable netrw to avoid race conditions with nvim-tree
-" " (see :h nvim-tree for details)
-" lua << EOF
-" vim.g.loaded_netrw = 1
-" vim.g.loaded_netrwPlugin = 1
-" EOF
-
 let mapleader = ' '
 
 " #############################################################################
 " # Plugin setup
 " #############################################################################
-
-call plug#begin()
-" Plug 'nvim-tree/nvim-web-devicons'
-" Plug 'nvim-tree/nvim-tree.lua'
-" Plug 'nvim-lualine/lualine.nvim'
-Plug 'ellisonleao/gruvbox.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/nvim-treesitter-context'
-Plug 'tpope/vim-commentary'
-call plug#end()
-
-" " Nvim-tree
-" lua << EOF
-" require('nvim-tree').setup {
-"   actions = {
-"     open_file = {
-"       window_picker =  {
-"         enable = false,
-"       },
-"     },
-"   },
-" }
-" EOF
-" nmap <leader>t :NvimTreeToggle<CR>
-
-" " Lualine
-" lua << EOF
-" require('lualine').setup {
-"   options = {
-"     globalstatus = true,
-"   },
-" }
-" EOF
 
 lua << EOF
 require('nvim-treesitter').install {
@@ -57,6 +17,7 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = { "c", "cpp", "sh", "lua", "cmake", "markdown" },
   callback = function() vim.treesitter.start() end,
 })
+
 require('treesitter-context').setup {
   enabled = true,
   max_lines = 1,
