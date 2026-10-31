@@ -1,0 +1,428 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+CMD=$1; shift
+
+yq() {
+    command yq "$1" $HOME/.config/tide/tide.yml
+}
+
+set_color() {
+    [ $# == 0 ] && return
+    local hex=${1:1}
+    local rgb=$(printf "%d;%d;%d\n" 0x${hex:0:2} 0x${hex:2:2} 0x${hex:4:2})
+    printf "\x1b[38;2;${rgb}m"
+}
+
+ROOTDIR=$(yq ".rootdir")
+DEFAULT=$(yq ".default")
+C_DIM=$(set_color $THEME_COLOR_DIM1)
+C_RES=$(printf "\x1b[0m")
+
+list_worktrees() {
+    local repo name path label obj ref
+    if [ $# == 0 ]; then
+        repo=$PWD
+        name=
+    else
+        repo=$1
+        name="  ${repo##$ROOTDIR/}"
+    fi
+    git -C $repo worktree list --porcelain | \
+    while read label path; read label obj; read label ref; read; do
+        path=${path##$ROOTDIR/}
+        ref=${ref##*/}
+        printf "${path}${C_DIM}  ${ref:-HEAD}  ${obj:0:10}${name}${C_RES}\n"
+    done
+}
+
+list_repos() {
+    local path
+    find "$ROOTDIR" -maxdepth 4 -name .git -type d -printf '%h\n' | sort | \
+    while read path; do
+        list_worktrees $path
+    done
+}
+
+list_branches() {
+    local symbol name date
+    format=(
+        "%(if:equals=tag)%(objecttype)%(then)%(else)%(end)"
+        "%(refname:lstrip=-1)"
+        "%(creatordate:relative)"
+    )
+    git for-each-ref --sort '-creatordate' --format="${format[*]}" \
+        | grep -v HEAD | awk '!seen[$2]++' | \
+    while read symbol name date; do
+        printf "${symbol} ${name} ${C_DIM}${date}${C_RES}\n"
+    done
+}
+
+list_pr() {
+    local query template number author ref title
+    if [ "$1" == "--all" ]; then
+        query=
+    else
+        query="user-review-requested:@me"
+    fi
+    template=(
+        '{{range .}}{{.number}} {{.author.login}} '
+        '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
+    )
+
+    gh pr list --search "$query" \
+               --json number,title,author,headRefName \
+               --template "${template[*]}" | \
+    while read number author ref title; do
+        printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s  %s${C_RES}\n" \
+               "$number" "$title" "$author" "$ref"
+    done
+}
+
+show_log() {
+    git log --date=relative \
+            --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
+}
+
+press_key() {
+    echo
+    echo -n "Press ENTER to continue"
+    read
+    clear
+    [ "$1" == "-n" ] || exit 1
+}
+
+confirm() {
+    local prompt
+    prompt=$1; shift
+    read -p "${prompt} [y/N]? " -n1 -r
+    clear
+    if [ "$REPLY" = "y" ]; then
+        "$@"
+        return $?
+    fi
+}
+
+accent() {
+    case $1 in
+        blue)   echo '#458588 #83a598 -0.3 0.5' ;;
+        teal)   echo '#689d6a #8ec07c -0.4 0.4' ;;
+        green)  echo '#98971a #b8bb26 -0.45 0.3' ;;
+        yellow) echo '#d79921 #fabd2f -0.5 0.1' ;;
+        orange) echo '#d65d0e #fe8019 -0.5 0.5' ;;
+        red)    echo '#cc241d #fb4934 -0.4 0.5' ;;
+        pink)   echo '#b16286 #d3869b -0.4 0.4' ;;
+        purple) echo '#b16286 #d3869b -0.4 0.4' ;;
+        slate)  echo '#a89984 #ebdbb2 -0.5 -0.1' ;;
+    esac | cut -d' ' -f$2
+}
+
+cmd_update() {
+    local variant
+    if [ $# != 0 ]; then
+        variant=$1
+    else
+        variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
+    fi
+
+    if [ "$variant" == "prefer-dark" ]; then
+        # ACCENT_FG=$(accent 2)
+        # ACCENT_BG=$(accent 1)
+        # ACCENT_BG0=$(colortool $ACCENT_BG $(accent 3))
+        THEME_VARIANT=dark
+        ACCENT_FG=ACCENT_FG_D
+        THEME_COLOR_BG0='#1d2021'
+        THEME_COLOR_BG='#282828'
+        THEME_COLOR_ACTIVE_FG='#fbf1c7'
+        THEME_COLOR_ACTIVE_BG='#504945'
+        THEME_COLOR_DIM0='#bdae93'
+        THEME_COLOR_DIM1='#928374'
+        THEME_COLOR_DIM2='#7c6f64'
+        THEME_COLOR_DIM3='#665c54'
+        THEME_COLOR_DIM4='#504945'
+        THEME_COLOR_DIM5='#3c3836'
+        THEME_COLOR_DIM6='#32302f'
+    else
+        # ACCENT_FG=$(accent 1)
+        # ACCENT_BG=$(accent 2)
+        # ACCENT_BG0=$(colortool $ACCENT_BG $(accent 4))
+        THEME_VARIANT=light
+        ACCENT_FG=ACCENT_FG_L
+        THEME_COLOR_BG0='#f9f5d7'
+        THEME_COLOR_BG='#fbf1c7'
+        THEME_COLOR_ACTIVE_FG='#282828'
+        THEME_COLOR_ACTIVE_BG='#d5c4a1'
+        THEME_COLOR_DIM0='#ebdbb2'
+        THEME_COLOR_DIM1='#928374'
+        THEME_COLOR_DIM2='#a89984'
+        THEME_COLOR_DIM3='#bdae93'
+        THEME_COLOR_DIM4='#d5c4a1'
+        THEME_COLOR_DIM5='#ebdbb2'
+        THEME_COLOR_DIM6='#f2e5bc'
+    fi
+
+    for var in THEME_VARIANT \
+               ACCENT_FG \
+               THEME_COLOR_BG0 \
+               THEME_COLOR_BG \
+               THEME_COLOR_ACTIVE_FG \
+               THEME_COLOR_ACTIVE_BG \
+               THEME_COLOR_DIM0 \
+               THEME_COLOR_DIM1 \
+               THEME_COLOR_DIM2 \
+               THEME_COLOR_DIM3 \
+               THEME_COLOR_DIM4 \
+               THEME_COLOR_DIM5 \
+               THEME_COLOR_DIM6; do
+        tmux set-environment -g $var "${!var}"
+    done
+
+    tmux source-file ~/.tmux.conf
+}
+
+open() {
+    local path name url repo color color_l color_d
+    path=$1
+    name=$2
+
+    if ! tmux has-session -t="$name" 2>/dev/null; then
+        url=$(git config --get remote.origin.url)
+        repo=${url##*/}
+        repo=${repo%.git}
+
+        # Set accent color
+        for pattern in $(yq '.accents.[].pattern'); do
+            [[ $url =~ $pattern ]] || continue
+            query=".accents.[] | select(.pattern == \"$pattern\")"
+            color=$(yq "${query}.color")
+            color_l=$(accent $color 1)
+            color_d=$(accent $color 2)
+            break
+        done
+
+        # Construct session
+
+        tmux new-session -ds "$name" -n " edit" \
+            -e NVIM_SERVER=$PWD/.nvim.sock \
+            -e TIG_EDITOR=edit \
+            -e ACCENT_FG_L=$color_l \
+            -e ACCENT_FG_D=$color_d \
+            -e TIDE_REPO=$repo \
+            -e TIDE_PATH=$path \
+            "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
+        tmux new-window -t "$name" -n " repo" "sleep 0.3; tig"
+        tmux new-window -t "$name" -n " term"
+
+        tmux set-option -p -t $name:1.1 remain-on-exit on
+        tmux set-option -p -t $name:2.1 remain-on-exit on
+        tmux set-option -p -t $name:3.1 remain-on-exit on
+        tmux set-hook -p -t $name:1.1 pane-died "respawn-pane"
+        tmux set-hook -p -t $name:2.1 pane-died "respawn-pane"
+        tmux set-hook -p -t $name:3.1 pane-died "respawn-pane"
+
+        tmux select-window -t "${name}:+1"
+
+        cmd_update
+    fi
+
+    if [ -z "$TMUX" ]; then
+        tmux attach -t "$name"
+    else
+        tmux switch-client -t "$name"
+    fi
+}
+
+cmd_open() {
+    local func line path name
+    if [ "$1" == "--all" ]; then
+        func=list_repos
+    else
+        func=list_worktrees
+    fi
+
+    line=$($func | fzf --ansi -n1,3 --ghost "Open a worktree")
+    [ -z "$line" ] && return
+
+    path=$(echo "$line" | awk '{print $1}')
+    name=$(echo "$path" | sed 's/\./-/g')
+    cd "$ROOTDIR/$path"
+    open $path $name
+}
+
+cmd_open_all () {
+    cmd_open --all
+}
+
+cmd_worktree_reload() {
+    local path=$(tmux display -p '#S')
+    tmux kill-session
+    cd "$ROOTDIR/$path"
+    open $path $path
+}
+
+cmd_checkout() {
+    local line ref
+
+    line=$(list_branches | fzf --ansi -n2,4 --ghost "Checkout a branch or tag")
+    [ -z "$line" ] && return
+
+    ref=$(echo "$line" | awk '{print $2}')
+    git checkout $ref || press_key
+    git ctags
+    tmux refresh-client
+}
+
+cmd_worktree_add() {
+    local line ref
+
+    line=$(list_branches | fzf --ansi -n2,4 \
+           --ghost "Create a worktree for a branch or tag")
+    [ -z "$line" ] && return
+
+    ref=$(echo "$line" | awk '{print $2}')
+    [ -d ../$ref ] && return
+    git worktree add ../$ref || press_key
+}
+
+cmd_worktree_rm() {
+    local line path name
+
+    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Delete a worktree")
+    [ -z "$line" ] && return
+
+    path=$(echo "$line" | awk '{print $1}')
+    name=$(echo "$path" | sed 's/\./-/g')
+    confirm "Delete worktree $ROOTDIR/$path" \
+    git worktree remove "$ROOTDIR/$path" || press_key
+}
+
+cmd_checkout_gh() {
+    local line ref
+
+    line=$(list_pr $1 | fzf --ansi --ghost "Checkout a Pull Request")
+    [ -z "$line" ] && return
+
+    ref=$(echo "$line" | awk '{print $1}')
+    gh pr checkout $ref || press_key
+    git ctags
+    tmux refresh-client
+}
+
+cmd_checkout_gh_all() {
+    cmd_checkout_gh --all
+}
+
+cmd_clone() {
+    local forge line repo
+    forge=$1
+
+    line=$(cat ~/.config/tide/${forge}.txt | \
+           fzf --ansi --ghost "Clone a repo with $forge")
+    [ -z "$line" ] && return
+
+    path=$ROOTDIR/$line/$forge/main
+    [ -d "$path" ] && return
+    mkdir -p $path
+    $forge clone $line $path
+}
+
+cmd_clone_fedora() { cmd_clone fedpkg; }
+cmd_clone_redhat() { cmd_clone rhpkg; }
+
+cmd_status() {
+    local section command
+    section=$1
+    command=$2
+    shift
+
+    print_branch() {
+        git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
+        printf " $(git -C $1 rev-parse --abbrev-ref HEAD)"
+    }
+
+    print_toolbox() {
+        [ "$command" == "toolbox" ] || return 0
+        printf "󰆧 Toolbx  "
+    }
+
+    case $section in
+        left)
+            print_branch "$@"
+        ;;
+        right)
+            print_toolbox "$@"
+        ;;
+    esac
+}
+
+cmd_refresh() {
+    tmux source-file ~/.tmux.conf
+    tmux display-message "Config reloaded"
+}
+
+cmd_git() {
+    local num
+    num=$(git diff --staged --stat --diff-filter=u | wc -l)
+    [ $num == 0 ] && num=2
+    num=$(( num + 2 ))
+    TIG_SCRIPT=<(echo -e ":set split-view-width = 100\n:set vertical-split = true\n:${num}\n:enter") tig status
+}
+
+cmd_git_find() {
+    local line name full
+
+    line=$(show_log | fzf --ansi -n2.. --no-hscroll --ghost "Find a commit")
+    [ -z "$line" ] && return
+
+    name=$(echo "$line" | awk '{print $1}')
+    full=$(git rev-parse $name)
+    tmux new-window -n " $name" \
+        sh -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
+}
+
+cmd_palette() {
+    local cmds menu list text cmd
+    declare -A menu
+
+    cmds=(
+        cmd_open        	"Worktree: Open"
+        cmd_open_all        	"Worktree: Open (Global)"
+        cmd_worktree_reload     "Worktree: Reload"
+        cmd_worktree_add        "Worktree: Create"
+        cmd_worktree_rm         "Worktree: Delete"
+        cmd_clone_fedora    	"Git: Clone (Fedora)"
+        cmd_clone_redhat    	"Git: Clone (RHEL)"
+        cmd_checkout		"Git: Checkout"
+        cmd_git_find    	"Git: Find Commit"
+        cmd_checkout_gh		"GitHub: Checkout PR (Assigned)"
+        cmd_checkout_gh_all     "GitHub: Checkout PR"
+    )
+
+    list=()
+    for ((i = 0; i < ${#cmds[@]}; i += 2)); do
+        text=${cmds[i + 1]}
+        menu[$text]=${cmds[i]}
+        list+=("$text")
+    done
+
+    cmd=$(printf "%s\n" "${list[@]}" | \
+          fzf --ghost "Execute an action" --bind 'alt-w:close')
+    [ -z "$cmd" ] && return
+
+    ${menu[$cmd]}
+}
+
+cmd_default() {
+    local path=$DEFAULT
+    cd "$ROOTDIR/$path"
+    open $path $path
+}
+
+case $CMD in
+    palette)            cmd_palette "$@" ;;
+    status)             cmd_status "$@" ;;
+    git)                cmd_git "$@" ;;
+    refresh)            cmd_refresh "$@" ;;
+    update)             cmd_update "$@" ;;
+    *)                  cmd_default "$@" ;;
+esac

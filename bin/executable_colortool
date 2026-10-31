@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+
+import argparse
+import sys
+import colorsys
+
+parser = argparse.ArgumentParser()
+parser.add_argument('color')
+parser.add_argument('values', nargs='+', type=float)
+args = parser.parse_args()
+
+if args.color[0] == '#':
+    args.color = args.color[1:]
+
+for val in args.values:
+    rgb = (int(args.color[i:(i + 2)], 16) / 255.0 for i in (0, 2, 4))
+    hls = list(colorsys.rgb_to_hls(*rgb))
+    lvl = hls[1]
+    if val > 0:
+        lvl = min(1, lvl + val * (1 - lvl))
+    else:
+        lvl = max(0, lvl + val * lvl)
+    hls[1] = lvl
+    rgb = [round(i * 255) for i in colorsys.hls_to_rgb(*hls)]
+    print('#{:02x}{:02x}{:02x}'.format(*rgb))

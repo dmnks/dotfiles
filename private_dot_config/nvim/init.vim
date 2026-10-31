@@ -1,0 +1,180 @@
+" #############################################################################
+" # Startup
+" #############################################################################
+
+let mapleader = ' '
+
+" #############################################################################
+" # Plugin setup
+" #############################################################################
+
+lua << EOF
+require('nvim-treesitter').install {
+    "c", "cpp", "bash", "lua", "vim", "vimdoc", "query", "cmake", "markdown",
+    "markdown_inline",
+}
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { "c", "cpp", "sh", "lua", "cmake", "markdown" },
+  callback = function() vim.treesitter.start() end,
+})
+
+require('treesitter-context').setup {
+  enabled = true,
+  max_lines = 1,
+  trim_scope = 'inner',
+  multiwindow = true,
+}
+
+require("gruvbox").setup {
+  bold = false,
+  italic = {
+    strings = false,
+  },
+}
+EOF
+
+colorscheme gruvbox
+
+lua << EOF
+local function set_color_column()
+    local new_bg = vim.o.background
+    if new_bg == "dark" then
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#282828" })
+    else
+      vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#fbf1c7" })
+    end
+end
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "background",
+  callback = set_color_column;
+})
+set_color_column()
+EOF
+
+" FZF
+let g:fzf_layout = { 'tmux': '-yS -- --border block --padding 0,1' }
+function! s:buflist()
+    " Return listed buffers that have a name
+    let listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+    let named = map(listed, 'bufname(v:val)')
+    let named = filter(named, '!empty(v:val)')
+    return named
+endfunction
+command! GFiles
+\   call fzf#run(fzf#wrap({
+\       'source':  'git ls-files',
+\       'options': '-m --ghost "Open a file"',
+\   }))
+command! Buffers
+\   call fzf#run(fzf#wrap({
+\       'source':  reverse(<sid>buflist()),
+\       'sink':    'buffer',
+\       'options': '+m --ghost "Open a buffer"',
+\   }))
+command! Tags
+\   if !empty(tagfiles()) | call fzf#run(fzf#wrap({
+\       'source':  "sed '/^\\!/d;s/\t.*//' " . join(tagfiles()) . ' | uniq',
+\       'sink':    'tag',
+\       'options': '+m --ghost "Find a symbol"',
+\   })) | else | echoerr 'No tags found' | endif
+nmap <leader><leader> :Buffers<CR>
+nmap <leader>ff :GFiles<CR>
+nmap <leader>fs :Tags<CR>
+
+" #############################################################################
+" # Navigation
+" #############################################################################
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+nnoremap <C-n> gt
+nnoremap <C-p> gT
+
+" #############################################################################
+" # Appearance
+" #############################################################################
+
+set number
+set numberwidth=6
+set nowrap
+set cursorline
+set colorcolumn=80
+set scrolloff=0
+set laststatus=3
+
+let c_no_curly_error = 1
+
+nmap <silent> <leader>r :source ~/.config/nvim/init.vim<CR>
+
+" #############################################################################
+" # Editing
+" #############################################################################
+
+autocmd BufRead,BufNewfile */.tmux.conf setlocal formatoptions-=t
+autocmd VimResized,TabEnter * wincmd =
+
+set textwidth=79
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set ttimeoutlen=10
+set mouse=
+set noshowcmd
+
+nmap <silent> <leader>e :windo e<CR>
+nmap <silent> <leader>s :set spell!<CR>
+nmap <silent> <leader>p :set paste!<CR>
+nmap <silent> <leader>p V"_dP
+
+" #############################################################################
+" # Searching
+" #############################################################################
+
+set ignorecase
+set smartcase
+set noincsearch
+
+set tags=tags
+set keywordprg=:Man
+
+let g:ft_man_open_mode = 'vert'
+
+nnoremap <silent> * :let @/='\<'.expand('<cword>').'\>'<bar>set hlsearch<CR>
+nnoremap <silent> <esc><esc> :nohl<CR>
+
+" #############################################################################
+" # Git integration
+" #############################################################################
+
+autocmd FileType gitcommit setlocal spell
+
+set grepprg=git\ grep\ -n\ $*
+set grepformat=%f:%l:%m,%f:%l%m,%f\ \ %l%m
+command -nargs=+ G exec "silent grep! <args>" | copen | redraw
+
+nmap <silent> <leader>gg :exec "G <cword>"<CR>
+nmap <silent> <leader>gl :call
+\   system('tmux new-window -n "󰘬 ' . expand('%:t') . ':' . line('.') . '" ' .
+\          'sh -c "TIG_SCRIPT=<(echo :enter) tig -L' .
+\          line('.') . ',+1:' . expand('%') . '"')<CR>
+nmap <silent> <leader>gL :call
+\   system('tmux new-window -n "󰘬 ' . expand('%:t') . '" ' .
+\          'sh -c "TIG_SCRIPT=<(echo :enter) tig --follow ' .
+\          expand('%') . '"')<CR>
+nmap <silent> <leader>gb :call
+\   system('tmux new-window -n " ' . expand('%:t') . '" ' .
+\          'sh -c "TIG_SCRIPT=<(echo :enter) tig blame +' .
+\          line('.') . ' ' . expand('%') . '"')<CR>
+nmap <silent> <leader>c :call system('git ctags')<CR>
+
+" #############################################################################
+" # Misc
+" #############################################################################
+
+" Load additional config files
+for f in split(glob('~/.vimrc.d/*.vim'), '\n')
+    exec 'source' f
+endfor

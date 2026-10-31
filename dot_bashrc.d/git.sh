@@ -1,0 +1,7 @@
+which git &>/dev/null || exit
+
+source /usr/share/git-core/contrib/completion/git-prompt.sh
+
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUPSTREAM="auto"
+GIT_PS1_SHOWSTASHSTATE=1

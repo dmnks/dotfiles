@@ -1,0 +1,4 @@
+#!/bin/bash
+
+nvim --server "$NVIM_SERVER" --remote "$(realpath "$@")"
+tmux select-window -t:1

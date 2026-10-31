@@ -1,0 +1,48 @@
+[user]
+    name = Michal Domonkos
+    email = mdomonko@redhat.com
+[core]
+    editor = nvim
+[color]
+    ui = true
+# Use bright color variants for better readability on dark terminal
+[color "diff"]
+    meta = 11
+    frag = 13
+    old = 9
+    new = 10
+[color "status"]
+    added = 10
+    changed = 9
+    untracked = 9
+    unmerged = 9
+[alias]
+    ci = commit --verbose
+    ca = commit --amend
+    st = status -s
+    lg = log --oneline --graph
+    co = checkout
+    br = branch
+    pu = push
+    a = add
+    au = add -u
+    ap = add -p
+    d = diff
+    ds = diff --staged
+    stl = stash list
+    ctags = !git ls-files | ctags \
+        --tag-relative -L - -f"$(git rev-parse --show-toplevel)/tags" \
+        --python-kinds=-i
+    rc = rebase --continue
+    ra = rebase --abort
+    cc = cherry-pick --continue
+    cb = cherry-pick --abort
+    dd = "!f() { git range-diff \"$1^!\" \"$2^!\"; }; f"
+[merge]
+    tool = vimdiff
+[pull]
+    ff = only
+[commit]
+    verbose = true
+[init]
+    defaultBranch = main
