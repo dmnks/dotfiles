@@ -1,21 +1,18 @@
 PACKAGES = bash desktop git podman rpm tmux utils vim
-VIMPACK = ~/.vim/pack/git/start
+NVIMPACK = ~/.local/share/nvim/site/pack/plugins/start
 
 .PHONY: all software install uninstall vim gnome
 
-all: software install vim gnome
+all: software install neovim
 
 software:
 	sudo dnf install -y \
 		 ctags \
-		 dejavu-sans-mono-fonts \
 		 fzf \
 		 gh \
 		 git \
-		 gnome-extensions-app \
 		 gnome-tweaks \
 		 neovim \
-		 pass \
 		 podman \
 		 stow \
 		 tig \
@@ -23,15 +20,21 @@ software:
 
 install:
 	stow --target ${HOME} -Rv --no-folding $(PACKAGES)
-	update-desktop-database ~/.local/share/applications/
 
 uninstall:
 	stow --target ${HOME} -Dv --no-folding $(PACKAGES)
 
-vim:
-	curl -fLo \
-	    ${HOME}/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-	    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+neovim:
+	mkdir -p $(NVIMPACK)
+	git clone \
+		https://github.com/ellisonleao/gruvbox.nvim \
+		$(NVIMPACK)/gruvbox
+	git clone \
+		https://github.com/nvim-treesitter/nvim-treesitter.git \
+		$(NVIMPACK)/nvim-treesitter
+	git clone \
+		https://github.com/nvim-treesitter/nvim-treesitter-context.git \
+		$(NVIMPACK)/nvim-treesitter-context
 
 gnome:
 	dconf load /org/gnome/ < gnome.conf
