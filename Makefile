@@ -1,9 +1,9 @@
-PACKAGES = bash desktop git podman rpm tmux utils vim
+PACKAGES := $(shell cd pkgs && ls)
 NVIMPACK = ~/.local/share/nvim/site/pack/plugins/start
 
-.PHONY: all software install uninstall vim gnome
+.PHONY: all software install uninstall plugins gnome
 
-all: software install neovim
+all: software install plugins
 
 software:
 	sudo dnf install -y \
@@ -19,12 +19,12 @@ software:
 		 toolbox
 
 install:
-	stow --target ${HOME} -Rv --no-folding $(PACKAGES)
+	stow -R $(PACKAGES)
 
 uninstall:
-	stow --target ${HOME} -Dv --no-folding $(PACKAGES)
+	stow -D $(PACKAGES)
 
-neovim:
+plugins:
 	mkdir -p $(NVIMPACK)
 	git clone \
 		https://github.com/ellisonleao/gruvbox.nvim \
