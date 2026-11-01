@@ -1,18 +1,3 @@
-export EDITOR=nvim
-alias vim=nvim
-
-if which git &>/dev/null; then
-    source /usr/share/git-core/contrib/completion/git-prompt.sh
-    GIT_PS1_SHOWDIRTYSTATE=1
-    GIT_PS1_SHOWUPSTREAM="auto"
-    GIT_PS1_SHOWSTASHSTATE=1
-    alias gdiff='git diff --no-index --'
-fi
-
-if which /usr/bin/fzf &>/dev/null; then
-    source /usr/share/fzf/shell/key-bindings.bash
-fi
-
 setup_ps1() {
     local red="\[$(tput setaf 9)\]"
     local green="\[$(tput setaf 10)\]"
