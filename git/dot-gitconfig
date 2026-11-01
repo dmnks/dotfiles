@@ -3,8 +3,6 @@
     email = mdomonko@redhat.com
 [core]
     editor = nvim
-    # Stow ignores .gitignore files so using a different name
-    excludesfile = ~/.gitign
 [color]
     ui = true
 # Use bright color variants for better readability on dark terminal
