@@ -1,0 +1,5 @@
+--dotfiles
+--no-folding
+--verbose
+--dir pkgs
+--target $HOME
