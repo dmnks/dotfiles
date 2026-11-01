@@ -1,6 +1,10 @@
 [user]
     name = Michal Domonkos
     email = mdomonko@redhat.com
+[core]
+    editor = nvim
+    # Stow ignores .gitignore files so using a different name
+    excludesfile = ~/.gitign
 [color]
     ui = true
 # Use bright color variants for better readability on dark terminal
@@ -14,10 +18,6 @@
     changed = 9
     untracked = 9
     unmerged = 9
-[core]
-    editor = nvim
-    # Stow ignores .gitignore files so using a different name
-    excludesfile = ~/.gitign
 [alias]
     ci = commit --verbose
     ca = commit --amend
@@ -43,19 +43,8 @@
 [merge]
     tool = vimdiff
 [pull]
-	ff = only
+    ff = only
 [commit]
-	verbose = true
-[credential "https://github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
-[sendemail]
-    sendmailcmd = /usr/bin/msmtp -a rht
-    to = pmatilai@redhat.com,ffesti@redhat.com
+    verbose = true
 [init]
-	defaultBranch = main
-[rerere]
-	enabled = false
+    defaultBranch = main
