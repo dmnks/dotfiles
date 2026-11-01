@@ -7,16 +7,20 @@ all: software install plugins
 
 software:
 	sudo dnf install -y \
+		 blackbox-terminal \
 		 ctags \
 		 fzf \
 		 gh \
 		 git \
+		 gnome-shell-extension-just-perfection \
 		 gnome-tweaks \
 		 neovim \
 		 podman \
+		 scdoc \
 		 stow \
 		 tig \
-		 toolbox
+		 toolbox \
+		 yq
 
 install:
 	stow -R $(PACKAGES)
