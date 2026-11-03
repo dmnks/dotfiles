@@ -28,4 +28,8 @@ setup_ps1() {
     export PS1
 }
 
+if which /usr/bin/fzf &>/dev/null; then
+    source /usr/share/fzf/shell/key-bindings.bash
+fi
+
 setup_ps1
