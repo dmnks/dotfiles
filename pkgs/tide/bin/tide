@@ -190,14 +190,15 @@ open() {
         repo=${repo%.git}
 
         # Set accent color
+        color=blue
         for pattern in $(yq '.accents.[].pattern'); do
             [[ $url =~ $pattern ]] || continue
             query=".accents.[] | select(.pattern == \"$pattern\")"
             color=$(yq "${query}.color")
-            color_l=$(accent $color 1)
-            color_d=$(accent $color 2)
             break
         done
+        color_l=$(accent $color 1)
+        color_d=$(accent $color 2)
 
         # Construct session
 
