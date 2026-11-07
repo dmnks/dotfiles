@@ -202,7 +202,7 @@ open() {
 
         # Construct session
 
-        tmux new-session -ds "$name" -n " edit" \
+        tmux new-session -ds "$name" -n "edit" \
             -e NVIM_SERVER=$PWD/.nvim.sock \
             -e TIG_EDITOR=edit \
             -e ACCENT_FG_L=$color_l \
@@ -210,8 +210,8 @@ open() {
             -e TIDE_REPO=$repo \
             -e TIDE_PATH=$path \
             "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
-        tmux new-window -t "$name" -n " repo" "sleep 0.3; tig"
-        tmux new-window -t "$name" -n " term"
+        tmux new-window -t "$name" -n "repo" "sleep 0.3; tig"
+        tmux new-window -t "$name" -n "term"
 
         tmux set-option -p -t $name:1.1 remain-on-exit on
         tmux set-option -p -t $name:2.1 remain-on-exit on
