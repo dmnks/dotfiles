@@ -54,6 +54,10 @@ list_branches() {
     git for-each-ref --color=always --format="${format[*]}" $path | sed '/^$/d'
 }
 
+list_sockets() {
+    tmux display -p '#{socket_path}' | xargs dirname | xargs ls
+}
+
 show_log() {
     git log --date=relative \
             --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
@@ -301,12 +305,15 @@ cmd_status() {
         git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
         refname=$(git -C $1 rev-parse --abbrev-ref --symbolic-full-name @{u})
         [ -z "$refname" ] && return
-        printf " $refname"
+        printf " $refname  "
     }
 
-    print_toolbox() {
-        [ "$1" == "toolbox" ] || return 0
-        printf "󰆧 toolbx  "
+    print_host() {
+        if [ -f /run/.toolboxenv ]; then
+            printf "󰆧 $(sh -c 'source /run/.containerenv; echo $name')"
+        else
+            printf "󰍹 "
+        fi
     }
 
     case $section in
@@ -314,8 +321,8 @@ cmd_status() {
             print_branch "$@"
         ;;
         right)
-            print_toolbox "$2"
             print_upstream "$1"
+            print_host
         ;;
     esac
 }
@@ -374,13 +381,22 @@ cmd_palette() {
     ${menu[$cmd]}
 }
 
+cmd_workspace() {
+    export_colors
+    name=$(list_sockets | fzf --margin 0,35,20,35 \
+                              --ansi -n1,3 --ghost "Enter a workspace")
+    [ -z "$name" ] && return
+    tmux -L$name attach
+}
+
 cmd_default() {
-    local path=dotfiles/github/main
+    local path=${TIDE_DEFAULT:-dotfiles/github/main}
     cd "$ROOTDIR/$path"
     open $path $path
 }
 
 case $CMD in
+    enter)              cmd_workspace "$@" ;;
     palette)            cmd_palette "$@" ;;
     status)             cmd_status "$@" ;;
     git)                cmd_git "$@" ;;
