@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Tmux
 GenericName=Tmux
-Exec=ptyxis --gapplication-app-id=dmnks.tmux -- systemd-run --quiet --scope --user tide
+Exec=ptyxis --gapplication-app-id=dmnks.tmux -- tide
 Terminal=false
 Type=Application
 Keywords=shell;prompt;command;commandline;
@@ -11,4 +11,4 @@ Actions=new-window;
 
 [Desktop Action new-window]
 Name=New Window
-Exec=ptyxis --gapplication-app-id=dmnks.tmux -- systemd-run --quiet --scope --user tide
+Exec=ptyxis --gapplication-app-id=dmnks.tmux -- tide
