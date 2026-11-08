@@ -92,7 +92,7 @@ accent() {
     esac | cut -d' ' -f$2
 }
 
-cmd_update() {
+export_colors() {
     local variant
     if [ $# != 0 ]; then
         variant=$1
@@ -101,32 +101,36 @@ cmd_update() {
     fi
 
     if [ "$variant" == "prefer-dark" ]; then
-        ACCENT_FG=ACCENT_FG_D
-        THEME_VARIANT=dark
-        THEME_COLOR_FG='#bdae93'
-        THEME_COLOR_BG='#282828'
-        THEME_COLOR_FG0='#fbf1c7'
-        THEME_COLOR_BG0='#1d2021'
-        THEME_COLOR_DIM1='#928374'
-        THEME_COLOR_DIM2='#7c6f64'
-        THEME_COLOR_DIM3='#665c54'
-        THEME_COLOR_DIM4='#504945'
-        THEME_COLOR_DIM5='#3c3836'
-        THEME_COLOR_DIM6='#32302f'
+        export ACCENT_FG=ACCENT_FG_D
+        export THEME_VARIANT=dark
+        export THEME_COLOR_FG='#bdae93'
+        export THEME_COLOR_BG='#282828'
+        export THEME_COLOR_FG0='#fbf1c7'
+        export THEME_COLOR_BG0='#1d2021'
+        export THEME_COLOR_DIM1='#928374'
+        export THEME_COLOR_DIM2='#7c6f64'
+        export THEME_COLOR_DIM3='#665c54'
+        export THEME_COLOR_DIM4='#504945'
+        export THEME_COLOR_DIM5='#3c3836'
+        export THEME_COLOR_DIM6='#32302f'
     else
-        ACCENT_FG=ACCENT_FG_L
-        THEME_VARIANT=light
-        THEME_COLOR_FG='#ebdbb2'
-        THEME_COLOR_BG='#fbf1c7'
-        THEME_COLOR_BG0='#f9f5d7'
-        THEME_COLOR_FG0='#282828'
-        THEME_COLOR_DIM1='#928374'
-        THEME_COLOR_DIM2='#a89984'
-        THEME_COLOR_DIM3='#bdae93'
-        THEME_COLOR_DIM4='#d5c4a1'
-        THEME_COLOR_DIM5='#ebdbb2'
-        THEME_COLOR_DIM6='#f2e5bc'
+        export ACCENT_FG=ACCENT_FG_L
+        export THEME_VARIANT=light
+        export THEME_COLOR_FG='#ebdbb2'
+        export THEME_COLOR_BG='#fbf1c7'
+        export THEME_COLOR_BG0='#f9f5d7'
+        export THEME_COLOR_FG0='#282828'
+        export THEME_COLOR_DIM1='#928374'
+        export THEME_COLOR_DIM2='#a89984'
+        export THEME_COLOR_DIM3='#bdae93'
+        export THEME_COLOR_DIM4='#d5c4a1'
+        export THEME_COLOR_DIM5='#ebdbb2'
+        export THEME_COLOR_DIM6='#f2e5bc'
     fi
+}
+
+cmd_update() {
+    export_colors
 
     for var in THEME_VARIANT \
                ACCENT_FG \
