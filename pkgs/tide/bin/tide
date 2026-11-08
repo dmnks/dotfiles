@@ -47,7 +47,8 @@ list_branches() {
     local path=$1
     format=(
         "%(if:equals=)%(symref)%(then)%(refname:short)"
-        "%(color:$THEME_COLOR_DIM1)%(creatordate:relative)%(color:reset)"
+        "%(color:$THEME_COLOR_DIM1) %(objectname:short)"
+        "%(creatordate:relative)%(color:reset)"
         "%(end)"
     )
     git for-each-ref --color=always --format="${format[*]}" $path | sed '/^$/d'
@@ -282,9 +283,8 @@ cmd_worktree_rm() {
 }
 
 cmd_status() {
-    local section command
+    local section
     section=$1
-    command=$2
     shift
 
     print_branch() {
@@ -292,9 +292,17 @@ cmd_status() {
         printf " $(git -C $1 rev-parse --abbrev-ref HEAD)"
     }
 
+    print_upstream() {
+        local refname
+        git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
+        refname=$(git -C $1 rev-parse --abbrev-ref --symbolic-full-name @{u})
+        [ -z "$refname" ] && return
+        printf " $refname"
+    }
+
     print_toolbox() {
-        [ "$command" == "toolbox" ] || return 0
-        printf "󰆧 Toolbx  "
+        [ "$1" == "toolbox" ] || return 0
+        printf "󰆧 toolbx  "
     }
 
     case $section in
@@ -302,7 +310,8 @@ cmd_status() {
             print_branch "$@"
         ;;
         right)
-            print_toolbox "$@"
+            print_toolbox "$2"
+            print_upstream "$1"
         ;;
     esac
 }
