@@ -44,38 +44,13 @@ list_repos() {
 }
 
 list_branches() {
-    local symbol name date
+    local path=$1
     format=(
-        "%(if:equals=tag)%(objecttype)%(then)%(else)%(end)"
-        "%(refname:lstrip=-1)"
-        "%(creatordate:relative)"
+        "%(if:equals=)%(symref)%(then)%(refname:short)"
+        "%(color:$THEME_COLOR_DIM1)%(creatordate:relative)%(color:reset)"
+        "%(end)"
     )
-    git for-each-ref --sort '-creatordate' --format="${format[*]}" \
-        | grep -v HEAD | awk '!seen[$2]++' | \
-    while read symbol name date; do
-        printf "${symbol} ${name} ${C_DIM}${date}${C_RES}\n"
-    done
-}
-
-list_pr() {
-    local query template number author ref title
-    if [ "$1" == "--all" ]; then
-        query=
-    else
-        query="user-review-requested:@me"
-    fi
-    template=(
-        '{{range .}}{{.number}} {{.author.login}} '
-        '{{.headRefName}} {{.title}}{{"\n"}}{{end}}'
-    )
-
-    gh pr list --search "$query" \
-               --json number,title,author,headRefName \
-               --template "${template[*]}" | \
-    while read number author ref title; do
-        printf "${C_DIM}#%s${C_RES} %s ${C_DIM} %s  %s${C_RES}\n" \
-               "$number" "$title" "$author" "$ref"
-    done
+    git for-each-ref --color=always --format="${format[*]}" $path | sed '/^$/d'
 }
 
 show_log() {
@@ -261,27 +236,46 @@ cmd_worktree_reload() {
 }
 
 cmd_checkout() {
-    local line ref
+    local line refname name
 
-    line=$(list_branches | fzf --ansi -n2,4 --ghost "Checkout a branch or tag")
+    line=$(list_branches refs/heads | \
+           fzf --ansi -n1 --ghost "Checkout a branch")
     [ -z "$line" ] && return
 
-    ref=$(echo "$line" | awk '{print $2}')
-    git checkout $ref || press_key
+    refname=$(echo "$line" | awk '{print $1}')
+    name=$(basename $refname)
+    git checkout $name || press_key
+    git ctags
+    tmux refresh-client
+}
+
+cmd_checkout_all() {
+    local line refname name
+
+    line=$(list_branches refs/remotes | \
+           fzf --ansi -n1 --ghost "Checkout a global branch")
+    [ -z "$line" ] && return
+
+    refname=$(echo "$line" | awk '{print $1}')
+    name=$(basename $refname)
+    if git rev-parse --verify $name 2>/dev/null; then
+        git checkout $name || press_key
+    else
+        git checkout -b $name --track $refname || press_key
+    fi
     git ctags
     tmux refresh-client
 }
 
 cmd_worktree_add() {
-    local line ref
+    local line refname
 
-    line=$(list_branches | fzf --ansi -n2,4 \
+    line=$(list_branches refs/heads | fzf --ansi -n2,4 \
            --ghost "Create a worktree for a branch or tag")
     [ -z "$line" ] && return
 
-    ref=$(echo "$line" | awk '{print $2}')
-    [ -d ../$ref ] && return
-    git worktree add ../$ref || press_key
+    refname=$(echo "$line" | awk '{print $1}')
+    git worktree add ../$refname || press_key
 }
 
 cmd_worktree_rm() {
@@ -295,39 +289,6 @@ cmd_worktree_rm() {
     confirm "Delete worktree $ROOTDIR/$path" \
     git worktree remove "$ROOTDIR/$path" || press_key
 }
-
-cmd_checkout_gh() {
-    local line ref
-
-    line=$(list_pr $1 | fzf --ansi --ghost "Checkout a Pull Request")
-    [ -z "$line" ] && return
-
-    ref=$(echo "$line" | awk '{print $1}')
-    gh pr checkout $ref || press_key
-    git ctags
-    tmux refresh-client
-}
-
-cmd_checkout_gh_all() {
-    cmd_checkout_gh --all
-}
-
-cmd_clone() {
-    local forge line repo
-    forge=$1
-
-    line=$(cat ~/.config/tide/${forge}.txt | \
-           fzf --ansi --ghost "Clone a repo with $forge")
-    [ -z "$line" ] && return
-
-    path=$ROOTDIR/$line/$forge/main
-    [ -d "$path" ] && return
-    mkdir -p $path
-    $forge clone $line $path
-}
-
-cmd_clone_fedora() { cmd_clone fedpkg; }
-cmd_clone_redhat() { cmd_clone rhpkg; }
 
 cmd_status() {
     local section command
@@ -390,12 +351,9 @@ cmd_palette() {
         cmd_worktree_reload     "Worktree: Reload"
         cmd_worktree_add        "Worktree: Create"
         cmd_worktree_rm         "Worktree: Delete"
-        cmd_clone_fedora    	"Git: Clone (Fedora)"
-        cmd_clone_redhat    	"Git: Clone (RHEL)"
-        cmd_checkout		"Git: Checkout"
+        cmd_checkout            "Git: Checkout"
+        cmd_checkout_all        "Git: Checkout (Global)"
         cmd_git_find    	"Git: Find Commit"
-        cmd_checkout_gh		"GitHub: Checkout PR (Assigned)"
-        cmd_checkout_gh_all     "GitHub: Checkout PR"
     )
 
     list=()
