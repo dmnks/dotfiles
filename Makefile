@@ -7,7 +7,6 @@ all: software install plugins
 
 software:
 	sudo dnf install -y \
-		 blackbox-terminal \
 		 ctags \
 		 fzf \
 		 gh \
@@ -24,6 +23,7 @@ software:
 
 install:
 	stow -R $(PACKAGES)
+	update-desktop-database ~/.local/share/applications/
 
 uninstall:
 	stow -D $(PACKAGES)
