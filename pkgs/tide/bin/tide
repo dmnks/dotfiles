@@ -31,7 +31,7 @@ list_worktrees() {
     while read label path; read label obj; read label ref; read; do
         path=${path##$ROOTDIR/}
         ref=${ref##*/}
-        printf "${path}${C_DIM}  ${ref:-HEAD}  ${obj:0:10}${name}${C_RES}\n"
+        printf "${path}${C_DIM}  ${ref:-HEAD}${name}${C_RES}\n"
     done
 }
 
