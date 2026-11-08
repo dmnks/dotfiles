@@ -22,7 +22,7 @@
     st = status -s
     lg = log --oneline --graph
     co = checkout
-    br = branch -vv
+    br = branch
     pu = push
     a = add
     au = add -u
