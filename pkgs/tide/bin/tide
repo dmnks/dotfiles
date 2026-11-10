@@ -111,6 +111,7 @@ export_colors() {
         export THEME_COLOR_BG='#282828'
         export THEME_COLOR_FG0='#fbf1c7'
         export THEME_COLOR_BG0='#1d2021'
+        export THEME_COLOR_FG4='#a89984'
         export THEME_COLOR_DIM1='#928374'
         export THEME_COLOR_DIM2='#7c6f64'
         export THEME_COLOR_DIM3='#665c54'
@@ -124,6 +125,7 @@ export_colors() {
         export THEME_COLOR_BG='#fbf1c7'
         export THEME_COLOR_BG0='#f9f5d7'
         export THEME_COLOR_FG0='#282828'
+        export THEME_COLOR_FG4='#7c6f64'
         export THEME_COLOR_DIM1='#928374'
         export THEME_COLOR_DIM2='#a89984'
         export THEME_COLOR_DIM3='#bdae93'
@@ -142,6 +144,7 @@ cmd_update() {
                THEME_COLOR_BG \
                THEME_COLOR_BG0 \
                THEME_COLOR_FG0 \
+               THEME_COLOR_FG4 \
                THEME_COLOR_DIM1 \
                THEME_COLOR_DIM2 \
                THEME_COLOR_DIM3 \
