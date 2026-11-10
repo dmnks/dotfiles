@@ -47,7 +47,7 @@ list_branches() {
     local path=$1
     format=(
         "%(if:equals=)%(symref)%(then)%(refname:short)%(color:$THEME_COLOR_DIM1)"
-        "%(if)%(upstream)%(then) %(upstream:short) %(end) %(objectname:short)"
+        "%(if)%(upstream)%(then) %(upstream:short) %(end) %(objectname:short)"
         "%(creatordate:relative)"
         "%(color:reset)%(end)"
     )
@@ -357,7 +357,7 @@ cmd_git_find() {
 
     name=$(echo "$line" | awk '{print $1}')
     full=$(git rev-parse $name)
-    tmux new-window -n " $name" \
+    tmux new-window -n " $name" \
         sh -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
 }
 
