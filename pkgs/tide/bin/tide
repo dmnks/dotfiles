@@ -185,8 +185,8 @@ open() {
             -e TIDE_REPO=$repo \
             -e TIDE_PATH=$path \
             "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
-        tmux new-window -t "$name" -n " repo" "sleep 0.3; tig"
-        tmux new-window -t "$name" -n " term"
+        tmux new-window -t "$name" -n " repo" "sleep 0.3; tig"
+        tmux new-window -t "$name" -n " term"
 
         tmux set-option -p -t $name:1.1 remain-on-exit on
         tmux set-option -p -t $name:2.1 remain-on-exit on
@@ -308,6 +308,10 @@ cmd_status() {
         printf " $refname  "
     }
 
+    print_path() {
+        printf " #{TIDE_PATH}  "
+    }
+
     print_host() {
         if [ -f /run/.toolboxenv ]; then
             printf "󰆧 $(sh -c 'source /run/.containerenv; echo $name')"
@@ -322,6 +326,7 @@ cmd_status() {
         ;;
         right)
             print_upstream "$1"
+            print_path
             print_host
         ;;
     esac
