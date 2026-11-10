@@ -47,7 +47,7 @@ list_branches() {
     local path=$1
     format=(
         "%(if:equals=)%(symref)%(then)%(refname:short)%(color:$THEME_COLOR_DIM1)"
-        "%(if)%(upstream)%(then) %(upstream:short) %(end) %(objectname:short)"
+        "%(if)%(upstream)%(then) %(upstream:short) %(end) %(objectname:short)"
         "%(creatordate:relative)"
         "%(color:reset)%(end)"
     )
@@ -305,7 +305,7 @@ cmd_status() {
         git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
         refname=$(git -C $1 rev-parse --abbrev-ref --symbolic-full-name @{u})
         [ -z "$refname" ] && return
-        printf " $refname  "
+        printf " $refname  "
     }
 
     print_path() {
