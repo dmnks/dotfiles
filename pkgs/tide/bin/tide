@@ -316,7 +316,8 @@ cmd_status() {
         if [ -f /run/.toolboxenv ]; then
             printf "󰆧 $(sh -c 'source /run/.containerenv; echo $name')"
         else
-            printf "󰍹 "
+            printf "󰍹 $(sh -c 'source /etc/os-release;
+                               echo ${ID}-${VERSION_ID}')"
         fi
     }
 
