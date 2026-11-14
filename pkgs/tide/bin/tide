@@ -239,15 +239,14 @@ cmd_worktree_reload() {
 }
 
 cmd_checkout() {
-    local line refname name
+    local line refname
 
     line=$(list_branches refs/heads | \
            fzf --ansi -n1 --ghost "Checkout a branch")
     [ -z "$line" ] && return
 
     refname=$(echo "$line" | awk '{print $1}')
-    name=$(basename $refname)
-    git checkout $name || press_key
+    git checkout $refname || press_key
     git ctags
     tmux refresh-client
 }
