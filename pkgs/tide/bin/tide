@@ -398,7 +398,7 @@ list_workspaces() {
 cmd_workspace() {
     export_colors
     line=$(list_workspaces | fzf --margin 0,35,20,35 --ansi -n1,3 \
-                                 --ghost "Enter a workspace")
+                                 --ghost "Open a workspace")
     [ -z "$line" ] && return
     name=$(echo "$line" | awk '{print $1}')
     tbox=$(echo "$line" | awk '{print $3}')
