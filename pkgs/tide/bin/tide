@@ -102,8 +102,15 @@ export_colors() {
         variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
     fi
 
+    if [ -n "$TMUX" ]; then
+        sock=$(basename "${TMUX%%,*}")
+        accent=$(yq ".workspaces[] | select(.name == \"$sock\").color")
+    else
+        accent=blue
+    fi
+
     if [ "$variant" == "prefer-dark" ]; then
-        export ACCENT_FG=ACCENT_FG_D
+        export ACCENT_FG=$(accent $accent 2)
         export THEME_VARIANT=dark
         export THEME_COLOR_FG='#bdae93'
         export THEME_COLOR_BG='#282828'
@@ -117,7 +124,7 @@ export_colors() {
         export THEME_COLOR_DIM5='#3c3836'
         export THEME_COLOR_DIM6='#32302f'
     else
-        export ACCENT_FG=ACCENT_FG_L
+        export ACCENT_FG=$(accent $accent 1)
         export THEME_VARIANT=light
         export THEME_COLOR_FG='#ebdbb2'
         export THEME_COLOR_BG='#fbf1c7'
@@ -165,24 +172,11 @@ open() {
         repo=${url##*/}
         repo=${repo%.git}
 
-        # Set accent color
-        color=blue
-        for pattern in $(yq '.accents.[].pattern'); do
-            [[ $url =~ $pattern ]] || continue
-            query=".accents.[] | select(.pattern == \"$pattern\")"
-            color=$(yq "${query}.color")
-            break
-        done
-        color_l=$(accent $color 1)
-        color_d=$(accent $color 2)
-
         # Construct session
 
         tmux new-session -ds "$name" -n " edit" \
             -e NVIM_SERVER=$PWD/.nvim.sock \
             -e TIG_EDITOR=edit \
-            -e ACCENT_FG_L=$color_l \
-            -e ACCENT_FG_D=$color_d \
             -e TIDE_REPO=$repo \
             -e TIDE_PATH=$path \
             "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
@@ -411,7 +405,7 @@ cmd_workspace() {
     sock=$SOCKDIR/$name
 
     if ! tmux -S $sock has-session -t $base 2>/dev/null; then
-        if [ "$tbox" != "false" ]; then
+        if [ "$tbox" != "host" ]; then
             prefix="toolbox run -c $tbox"
         else
             prefix=""

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ACCENT_FG="${!ACCENT_FG}"
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
     --prompt='  '
     --layout=reverse
