@@ -38,6 +38,7 @@
     cc = cherry-pick --continue
     cb = cherry-pick --abort
     dd = "!f() { git range-diff \"$1^!\" \"$2^!\"; }; f"
+    pr = "!f() { git fetch upstream pull/$1/head:pr/$1; git checkout pr/$1; }; f"
 [merge]
     tool = vimdiff
 [pull]
