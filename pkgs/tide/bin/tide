@@ -397,7 +397,6 @@ list_workspaces() {
 
 cmd_workspace() {
     export_colors
-    base=default
     line=$(list_workspaces | fzf --margin 0,35,20,35 --ansi -n1,3 \
                                  --ghost "Enter a workspace")
     [ -z "$line" ] && return
@@ -405,13 +404,13 @@ cmd_workspace() {
     tbox=$(echo "$line" | awk '{print $3}')
     sock=$SOCKDIR/$name
 
-    if ! tmux -S $sock has-session -t $base 2>/dev/null; then
+    if ! tmux -S $sock has-session -t $name 2>/dev/null; then
         if [ "$tbox" != "host" ]; then
             prefix="toolbox run -c $tbox"
         else
             prefix=""
         fi
-        $prefix tmux -S $sock new-session -d -s $base
+        $prefix tmux -S $sock new-session -d -s $name
     fi
 
     tmux -S $sock attach
