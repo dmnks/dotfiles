@@ -406,6 +406,11 @@ cmd_workspace() {
 
     if ! tmux -S $sock has-session -t $name 2>/dev/null; then
         if [ "$tbox" != "host" ]; then
+            if ! podman container exists $tbox; then
+                echo Error: No such toolbox: $name
+                press_key
+                return
+            fi
             prefix="toolbox run -c $tbox"
         else
             prefix=""
