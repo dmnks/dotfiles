@@ -419,6 +419,7 @@ cmd_workspace() {
     fi
 
     tmux -S $sock attach
+    exec tide
 }
 
 case $CMD in
