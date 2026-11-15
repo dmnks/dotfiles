@@ -154,7 +154,8 @@ open() {
     local path name url repo color color_l color_d
 
     path=$1
-    name=$2
+    name=$(echo "$path" | sed 's/\./-/g')
+    cd "$ROOTDIR/$path"
 
     if ! tmux has-session -t="$name" 2>/dev/null; then
         url=$(git config --get remote.origin.url)
@@ -203,9 +204,7 @@ cmd_open() {
     [ -z "$line" ] && return
 
     path=$(echo "$line" | awk '{print $1}')
-    name=$(echo "$path" | sed 's/\./-/g')
-    cd "$ROOTDIR/$path"
-    open $path $name
+    open $path
 }
 
 cmd_open_all () {
