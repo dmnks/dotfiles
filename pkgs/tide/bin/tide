@@ -312,16 +312,24 @@ cmd_refresh() {
 
 cmd_git() {
     local num
+
     num=$(git diff --staged --stat --diff-filter=u | wc -l)
     [ $num == 0 ] && num=2
     num=$(( num + 2 ))
-    TIG_SCRIPT=<(echo -e ":set split-view-width = 100\n:set vertical-split = true\n:${num}\n:enter") tig status
+
+    TIG_SCRIPT=<(
+        printf ":set split-view-width = 100\n"
+        printf ":set vertical-split = true\n"
+        printf ":${num}\n"
+        printf ":enter"
+    ) tig status
 }
 
 cmd_git_find() {
     local line name full
 
-    line=$(list_commits | fzf --ansi -n2.. --no-hscroll --ghost "Find a commit")
+    line=$(list_commits | \
+           fzf --ansi -n2.. --no-hscroll --ghost "Find a commit")
     [ -z "$line" ] && return
 
     name=$(echo "$line" | awk '{print $1}')
@@ -359,9 +367,11 @@ cmd_palette() {
 }
 
 list_workspaces() {
+    local name tbox
     yq '.workspaces[].name' $CONFILE | \
     while read name; do
-        tbox=$(yq ".workspaces[] | select(.name == \"$name\").toolbox" $CONFILE)
+        tbox=$(yq ".workspaces[] | select(.name == \"$name\").toolbox" \
+               $CONFILE)
         if [ "$tbox" != "false" ]; then
             tbox="󰆧 $tbox"
         else
@@ -372,6 +382,8 @@ list_workspaces() {
 }
 
 cmd_workspace() {
+    local line name tbox sock
+
     export_colors
     line=$(list_workspaces | fzf --margin 0,40,20,40 --ansi -n1,3 \
                                  --ghost "Open a workspace")
