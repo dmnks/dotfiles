@@ -8,6 +8,7 @@ ROOTDIR=$(yq ".rootdir" $CONFILE)
 MAXDEPTH=4
 C_DIM=$(tput setaf 8)
 C_RES=$(printf "\x1b[0m")
+DCONF_KEY=/org/gnome/desktop/interface/color-scheme
 CMD=$1; shift
 
 press_key() {
@@ -88,22 +89,18 @@ list_commits() {
 }
 
 export_colors() {
-    local variant
-    if [ $# != 0 ]; then
-        variant=$1
-    else
-        variant=$(dconf read /org/gnome/desktop/interface/color-scheme | tr -d \')
-    fi
+    local theme sock color
 
+    theme=${1:-$(dconf read $DCONF_KEY | tr -d \')}
     if [ -n "$TMUX" ]; then
         sock=$(basename "${TMUX%%,*}")
-        accent=$(yq ".workspaces[] | select(.name == \"$sock\").color" $CONFILE)
+        color=$(yq ".workspaces[] | select(.name == \"$sock\").color" $CONFILE)
     else
-        accent=blue
+        color=blue
     fi
 
-    if [ "$variant" == "prefer-dark" ]; then
-        export ACCENT_FG=$(accent $accent 2)
+    if [ "$theme" == "prefer-dark" ]; then
+        export ACCENT_FG=$(accent $color 2)
         export THEME_VARIANT=dark
         export THEME_COLOR_FG='#bdae93'
         export THEME_COLOR_BG='#282828'
@@ -117,7 +114,7 @@ export_colors() {
         export THEME_COLOR_DIM5='#3c3836'
         export THEME_COLOR_DIM6='#32302f'
     else
-        export ACCENT_FG=$(accent $accent 1)
+        export ACCENT_FG=$(accent $color 1)
         export THEME_VARIANT=light
         export THEME_COLOR_FG='#ebdbb2'
         export THEME_COLOR_BG='#fbf1c7'
@@ -135,7 +132,6 @@ export_colors() {
 
 cmd_update() {
     export_colors
-
     for var in THEME_VARIANT \
                ACCENT_FG \
                THEME_COLOR_FG \
@@ -151,12 +147,12 @@ cmd_update() {
                THEME_COLOR_DIM6; do
         tmux set-environment -g $var "${!var}"
     done
-
     tmux source-file ~/.tmux.conf
 }
 
 open() {
     local path name url repo color color_l color_d
+
     path=$1
     name=$2
 
