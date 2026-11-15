@@ -5,16 +5,9 @@ CONFDIR=$HOME/.config/tide
 CONFILE=$CONFDIR/tide.yml
 SOCKDIR=$CONFDIR/sock
 ROOTDIR=$(yq ".rootdir" $CONFILE)
-C_DIM=$(set_color $THEME_COLOR_DIM1)
+C_DIM=$(tput setaf 8)
 C_RES=$(printf "\x1b[0m")
 CMD=$1; shift
-
-set_color() {
-    [ $# == 0 ] && return
-    local hex=${1:1}
-    local rgb=$(printf "%d;%d;%d\n" 0x${hex:0:2} 0x${hex:2:2} 0x${hex:4:2})
-    printf "\x1b[38;2;${rgb}m"
-}
 
 list_worktrees() {
     local repo name path label obj ref
@@ -378,7 +371,6 @@ cmd_palette() {
 }
 
 list_workspaces() {
-    C_DIM=$(set_color $THEME_COLOR_DIM1)
     yq '.workspaces[].name' $CONFILE | \
     while read name; do
         tbox=$(yq ".workspaces[] | select(.name == \"$name\").toolbox" $CONFILE)
