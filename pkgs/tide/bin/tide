@@ -290,8 +290,7 @@ cmd_status() {
     }
 
     print_path() {
-        [ -z "$TIDE_PATH" ] && return
-        printf " #{TIDE_PATH}  "
+        printf "#{?TIDE_PATH, #{TIDE_PATH}}  "
     }
 
     print_host() {
