@@ -393,7 +393,8 @@ cmd_workspace() {
     local line name tbox sock
 
     export_colors
-    line=$(list_workspaces | fzf --margin 0,40,20,40 --ansi -n1,3 \
+    line=$(list_workspaces | fzf --margin 0,45,25,45 --padding 0,1 \
+                                 --border block --ansi -n1,3 \
                                  --ghost "Open a workspace")
     [ -z "$line" ] && return
     name=$(echo "$line" | awk '{print $1}')
