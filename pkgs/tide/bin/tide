@@ -5,12 +5,14 @@ CONFDIR=$HOME/.config/tide
 CONFILE=$CONFDIR/tide.yml
 SOCKDIR=$CONFDIR/sock
 ROOTDIR=$(yq ".rootdir" $CONFILE)
+MAXDEPTH=4
 C_DIM=$(tput setaf 8)
 C_RES=$(printf "\x1b[0m")
 CMD=$1; shift
 
 list_worktrees() {
-    local repo name path label obj ref
+    local repo name path label objname refname
+
     if [ $# == 0 ]; then
         repo=$PWD
         name=
@@ -18,17 +20,19 @@ list_worktrees() {
         repo=$1
         name="  ${repo##$ROOTDIR/}"
     fi
+
     git -C $repo worktree list --porcelain | \
-    while read label path; read label obj; read label ref; read; do
+    while read label path; read label objname; read label refname; read; do
         path=${path##$ROOTDIR/}
-        ref=${ref##*/}
-        printf "${path}${C_DIM}  ${ref:-HEAD}${name}${C_RES}\n"
+        refname=${refname##*/}
+        printf "${path}${C_DIM}  ${refname:-HEAD}${name}${C_RES}\n"
     done
 }
 
 list_repos() {
     local path
-    find "$ROOTDIR" -maxdepth 4 -name .git -type d -printf '%h\n' | sort | \
+    find "$ROOTDIR" -maxdepth $MAXDEPTH -name .git -type d \
+                    -printf '%h\n' | sort | \
     while read path; do
         list_worktrees $path
     done
@@ -37,15 +41,15 @@ list_repos() {
 list_branches() {
     local path=$1
     format=(
-        "%(if:equals=)%(symref)%(then)%(refname:short)%(color:$THEME_COLOR_DIM1)"
-        "%(if)%(upstream)%(then) %(upstream:short) %(end) %(objectname:short)"
-        "%(creatordate:relative)"
+        "%(if:equals=)%(symref)%(then)%(refname:short)%(color:8)"
+        "%(objectname:short)%(if)%(upstream)%(then)"
+        " %(upstream:short)%(end) %(creatordate:relative)"
         "%(color:reset)%(end)"
     )
     git for-each-ref --color=always --format="${format[*]}" $path | sed '/^$/d'
 }
 
-show_log() {
+list_commits() {
     git log --date=relative \
             --format="${C_DIM}%h${C_RES} %s ${C_DIM} %aL %cd${C_RES}"
 }
@@ -332,7 +336,7 @@ cmd_git() {
 cmd_git_find() {
     local line name full
 
-    line=$(show_log | fzf --ansi -n2.. --no-hscroll --ghost "Find a commit")
+    line=$(list_commits | fzf --ansi -n2.. --no-hscroll --ghost "Find a commit")
     [ -z "$line" ] && return
 
     name=$(echo "$line" | awk '{print $1}')
