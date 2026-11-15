@@ -65,7 +65,16 @@ list_worktrees() {
 
 list_repos() {
     local path
-    find "$ROOTDIR" -maxdepth $MAXDEPTH -name .git -type d \
+
+    sock=$(basename "${TMUX%%,*}")
+    root=$(yq ".workspaces[] | select(.name == \"$sock\").rootdir[]" $CONFILE)
+    if [ -z "$root" ]; then
+        root=$ROOTDIR
+    else
+        cd $ROOTDIR
+    fi
+
+    find $root -maxdepth $MAXDEPTH -name .git -type d \
                     -printf '%h\n' | sort | \
     while read path; do
         list_worktrees $path
