@@ -151,19 +151,18 @@ cmd_update() {
 }
 
 open() {
-    local path name url repo color color_l color_d
+    local path name url repo
 
     path=$1
     name=$(echo "$path" | sed 's/\./-/g')
     cd "$ROOTDIR/$path"
 
-    if ! tmux has-session -t="$name" 2>/dev/null; then
+    if ! tmux has-session -t "$name" 2>/dev/null; then
         url=$(git config --get remote.origin.url)
         repo=${url##*/}
         repo=${repo%.git}
 
         # Construct session
-
         tmux new-session -ds "$name" -n " edit" \
             -e NVIM_SERVER=$PWD/.nvim.sock \
             -e TIG_EDITOR=edit \
@@ -193,7 +192,8 @@ open() {
 }
 
 cmd_open() {
-    local func line path name
+    local func line
+
     if [ "$1" == "--all" ]; then
         func=list_repos
     else
@@ -202,9 +202,7 @@ cmd_open() {
 
     line=$($func | fzf --ansi -n1,3 --ghost "Open a worktree")
     [ -z "$line" ] && return
-
-    path=$(echo "$line" | awk '{print $1}')
-    open $path
+    open $(echo "$line" | awk '{print $1}')
 }
 
 cmd_open_all () {
