@@ -372,7 +372,7 @@ list_workspaces() {
     while read name; do
         tbox=$(yq ".workspaces[] | select(.name == \"$name\").toolbox" \
                $CONFILE)
-        if [ "$tbox" != "false" ]; then
+        if [ "$tbox" != "null" ]; then
             tbox="󰆧 $tbox"
         else
             tbox="󰍹 host"
