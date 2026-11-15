@@ -310,7 +310,7 @@ cmd_refresh() {
     tmux display-message "Config reloaded"
 }
 
-cmd_git() {
+cmd_gitstatus() {
     local num
 
     num=$(git diff --staged --stat --diff-filter=u | wc -l)
@@ -338,7 +338,7 @@ cmd_git_find() {
         sh -c "TIG_SCRIPT=<(echo -e ':$full\n:enter') tig"
 }
 
-cmd_palette() {
+cmd_pal() {
     local cmds menu list text cmd
     declare -A menu
 
@@ -411,9 +411,9 @@ cmd_workspace() {
 }
 
 case $CMD in
-    palette)            cmd_palette "$@" ;;
-    status)             cmd_status "$@" ;;
-    git)                cmd_git "$@" ;;
+    cmdpal)             cmd_pal "$@" ;;
+    statusbar)          cmd_status "$@" ;;
+    gitstatus)          cmd_gitstatus "$@" ;;
     refresh)            cmd_refresh "$@" ;;
     update)             cmd_update "$@" ;;
     *)                  cmd_workspace "$@" ;;
