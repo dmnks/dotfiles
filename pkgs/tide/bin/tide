@@ -357,11 +357,11 @@ list_workspaces() {
         tbox=$(yq ".workspaces[] | select(.name == \"$name\").toolbox" \
                $CONFILE)
         if [ "$tbox" != "null" ]; then
-            tbox="󰆧 $tbox"
+            tbox="${C_DIM} 󰆧 $tbox${C_RES}"
         else
-            tbox="󰍹 host"
+            tbox=
         fi
-        printf "${name}${C_DIM} ${tbox}${C_RES}\n"
+        printf "${name}${tbox}\n"
     done
 }
 
@@ -379,7 +379,7 @@ cmd_workspace() {
     base=$(basename "${sock%%,*}")
 
     if ! tmux -S $sock has-session -t default 2>/dev/null; then
-        if [ "$tbox" != "host" ]; then
+        if [ -n "$tbox" ]; then
             if ! podman container exists $tbox; then
                 echo "Error: No such toolbox: $tbox"
                 press_key
