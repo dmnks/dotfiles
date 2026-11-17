@@ -47,13 +47,8 @@ accent() {
 list_worktrees() {
     local repo name path label objname refname
 
-    if [ $# == 0 ]; then
-        repo=$PWD
-        name=
-    else
-        repo=$1
-        name="  ${repo##$ROOTDIR/}"
-    fi
+    repo=$1
+    name="  ${repo##$ROOTDIR/}"
 
     git -C $repo worktree list --porcelain | \
     while read label path; read label objname; read label refname; read; do
@@ -74,8 +69,7 @@ list_repos() {
         cd $ROOTDIR
     fi
 
-    find $root -maxdepth $MAXDEPTH -name .git -type d \
-                    -printf '%h\n' | sort | \
+    find $root -maxdepth $MAXDEPTH -name .git -type d -printf '%h\n' | sort | \
     while read path; do
         list_worktrees $path
     done
@@ -201,21 +195,10 @@ open() {
 }
 
 cmd_open() {
-    local func line
-
-    if [ "$1" == "--all" ]; then
-        func=list_repos
-    else
-        func=list_worktrees
-    fi
-
-    line=$($func | fzf --ansi -n1,3 --ghost "Open a worktree")
+    local line
+    line=$(list_repos | fzf --ansi -n1,3 --ghost "Open a worktree")
     [ -z "$line" ] && return
     open $(echo "$line" | awk '{print $1}')
-}
-
-cmd_open_all () {
-    cmd_open --all
 }
 
 cmd_checkout() {
@@ -263,7 +246,7 @@ cmd_worktree_add() {
 cmd_worktree_rm() {
     local line path
 
-    line=$(list_worktrees | fzf --ansi -n1,3 --ghost "Delete a worktree")
+    line=$(list_repos | fzf --ansi -n1,3 --ghost "Delete a worktree")
     [ -z "$line" ] && return
 
     path=$ROOTDIR/$(echo "$line" | awk '{print $1}')
@@ -352,7 +335,6 @@ cmd_pal() {
 
     cmds=(
         cmd_open        	"Worktree: Open"
-        cmd_open_all        	"Worktree: Open (Global)"
         cmd_worktree_add        "Worktree: Create"
         cmd_worktree_rm         "Worktree: Delete"
         cmd_checkout            "Git: Checkout"
