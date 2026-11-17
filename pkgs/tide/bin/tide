@@ -59,10 +59,9 @@ list_worktrees() {
 }
 
 list_repos() {
-    local path
-
-    sock=$(basename "${TMUX%%,*}")
-    root=$(yq ".workspaces[] | select(.name == \"$sock\").rootdir[]" $CONFILE)
+    local root path
+    root=$(yq ".workspaces[] | select(.name == \"$TIDE_SOCK\").rootdir[]" \
+           $CONFILE)
     if [ -z "$root" ]; then
         root=$ROOTDIR
     else
@@ -92,12 +91,12 @@ list_commits() {
 }
 
 export_colors() {
-    local theme sock color
+    local theme color
 
     theme=${1:-$(dconf read $DCONF_KEY | tr -d \')}
     if [ -n "$TMUX" ]; then
-        sock=$(basename "${TMUX%%,*}")
-        color=$(yq ".workspaces[] | select(.name == \"$sock\").color" $CONFILE)
+        color=$(yq ".workspaces[] | select(.name == \"$TIDE_SOCK\").color" \
+                $CONFILE)
     else
         color=blue
     fi
@@ -169,6 +168,7 @@ open() {
         tmux new-session -ds "$name" -n " edit" \
             -e NVIM_SERVER=$PWD/.nvim.sock \
             -e TIG_EDITOR=edit \
+            -e TIDE_SOCK=$TIDE_SOCK \
             -e TIDE_REPO=$repo \
             -e TIDE_PATH=$path \
             "sleep 0.3; nvim --listen \$NVIM_SERVER -c GFiles"
@@ -269,29 +269,23 @@ cmd_status() {
         git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
         refname=$(git -C $1 rev-parse --abbrev-ref --symbolic-full-name @{u})
         [ -z "$refname" ] && return
-        printf " $refname  "
-    }
-
-    print_path() {
-        printf "#{?TIDE_PATH, #{TIDE_PATH}}  "
+        printf " $refname"
     }
 
     print_host() {
-        if [ -f /run/.toolboxenv ]; then
-            printf "󰆧 $(sh -c 'source /run/.containerenv; echo $name')"
-        else
-            printf "󰍹"
-        fi
+        [ -f /run/.toolboxenv ] || return
+        printf "#[fg=#{ACCENT_FG}]󰆧 "
+        printf "$(sh -c 'source /run/.containerenv; echo $name')"
+        printf "#[default]  "
     }
 
     case $section in
         left)
+            print_host
             print_branch "$@"
         ;;
         right)
             print_upstream "$1"
-            print_path
-            print_host
         ;;
     esac
 }
@@ -382,8 +376,9 @@ cmd_workspace() {
     name=$(echo "$line" | awk '{print $1}')
     tbox=$(echo "$line" | awk '{print $3}')
     sock=$SOCKDIR/$name
+    base=$(basename "${sock%%,*}")
 
-    if ! tmux -S $sock has-session -t $name 2>/dev/null; then
+    if ! tmux -S $sock has-session -t default 2>/dev/null; then
         if [ "$tbox" != "host" ]; then
             if ! podman container exists $tbox; then
                 echo "Error: No such toolbox: $tbox"
@@ -394,7 +389,7 @@ cmd_workspace() {
         else
             prefix=""
         fi
-        $prefix tmux -S $sock new-session -d -s $name
+        $prefix tmux -S $sock new-session -e TIDE_SOCK=$base -d -s default
     fi
 
     tmux -S $sock attach
