@@ -1,7 +1,7 @@
 PACKAGES := $(shell cd pkgs && ls)
 NVIMPACK = ~/.local/share/nvim/site/pack/plugins/start
 
-.PHONY: all software install uninstall plugins gnome
+.PHONY: all software install uninstall plugins
 
 all: software install plugins
 
@@ -10,24 +10,47 @@ software:
 		 blackbox-terminal \
 		 ctags \
 		 dejavu-sans-mono-fonts \
+		 fuzzel \
 		 fzf \
 		 gh \
 		 git \
-		 gnome-shell-extension-just-perfection \
 		 gnome-tweaks \
+		 kanshi \
+		 labwc \
+		 labwc-session \
+		 mako \
 		 neovim \
 		 podman \
 		 scdoc \
 		 stow \
+		 swaybg \
+		 swaylock \
 		 tig \
 		 toolbox \
+		 waybar \
+		 wlr-randr \
+		 wlsunset \
+		 xfce-polkit \
 		 yq
 
 install:
 	stow -R $(PACKAGES)
+	systemctl --user daemon-reload
+	systemctl --user enable gcr-ssh-agent.socket
 
 uninstall:
 	stow -D $(PACKAGES)
+	rm -f ~/.config/fuzzel/fuzzel.ini
+	rm -f ~/.config/mako/config
+	rm -f ~/.config/swaylock/config
+	rm -f ~/.config/waybar/style.css
+	rm -f ~/.themes/default/openbox-3
+	if [ -d ~/.themes ]; then \
+		rmdir ~/.themes/default; \
+		rmdir ~/.themes; \
+	fi
+	systemctl --user daemon-reload
+	systemctl --user disable gcr-ssh-agent.socket
 
 plugins:
 	mkdir -p $(NVIMPACK)
@@ -40,6 +63,3 @@ plugins:
 	git clone \
 		https://github.com/nvim-treesitter/nvim-treesitter-context.git \
 		$(NVIMPACK)/nvim-treesitter-context
-
-gnome:
-	dconf load /org/gnome/ < gnome.conf
