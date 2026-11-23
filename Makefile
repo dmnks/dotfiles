@@ -9,6 +9,7 @@ software:
 	sudo dnf install -y \
 		 blackbox-terminal \
 		 ctags \
+		 dejavu-sans-mono-fonts \
 		 fzf \
 		 gh \
 		 git \
