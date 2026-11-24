@@ -260,8 +260,16 @@ cmd_status() {
     shift
 
     print_branch() {
+        local remote upstream prefix
         git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
-        printf " $(git -C $1 rev-parse --abbrev-ref HEAD)"
+        remote=$(git -C $1 rev-parse --abbrev-ref --symbolic-full-name @{u})
+        upstream=$(dirname "$remote")
+        if [ "$upstream" == "origin" ]; then
+            prefix=
+        else
+            prefix="#[fg=#{THEME_COLOR_DIM2}]$upstream/#[default]"
+        fi
+        printf " $prefix$(git -C $1 rev-parse --abbrev-ref HEAD)"
     }
 
     print_upstream() {
@@ -285,7 +293,7 @@ cmd_status() {
             print_branch "$@"
         ;;
         right)
-            print_upstream "$1"
+            # print_upstream "$1"
         ;;
     esac
 }
