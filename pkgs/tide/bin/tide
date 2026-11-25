@@ -264,7 +264,7 @@ cmd_status() {
         git -C $1 rev-parse --is-inside-work-tree >/dev/null || return 0
         remote=$(git -C $1 rev-parse --abbrev-ref --symbolic-full-name @{u})
         upstream=$(dirname "$remote")
-        if [ "$upstream" == "origin" ]; then
+        if [ "$upstream" == "origin" ] || [ "$upstream" == "." ]; then
             prefix=
         else
             prefix="#[fg=#{THEME_COLOR_DIM2}]$upstream/#[default]"
