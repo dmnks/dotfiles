@@ -21,16 +21,18 @@ fi
 if [ $VARIANT == dark ]; then
     SCHEME=prefer-dark
     BGIMAG=$BGIMAG_D
-    killall -s SIGUSR1 foot
+    FOOTSG=SIGUSR1
 else
     SCHEME=default
     BGIMAG=$BGIMAG_L
-    killall -s SIGUSR2 foot
+    FOOTSG=SIGUSR2
 fi
 
 if [ "$1" == "toggle" ]; then
     gsettings set org.gnome.desktop.interface color-scheme $SCHEME
 fi
+
+killall -s $FOOTSG foot
 
 mkdir -p $TARGET_DIR
 ln -sf $SOURCE_DIR/$VARIANT/openbox-3 $TARGET_DIR/

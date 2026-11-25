@@ -10,6 +10,7 @@ software:
 		 blackbox-terminal \
 		 ctags \
 		 dejavu-sans-mono-fonts \
+		 foot \
 		 fuzzel \
 		 fzf \
 		 gh \
@@ -37,6 +38,8 @@ install:
 	stow -R $(PACKAGES)
 	systemctl --user daemon-reload
 	systemctl --user enable gcr-ssh-agent.socket
+	systemctl --user enable foot-server.service
+	systemctl --user start foot-server.service
 
 uninstall:
 	stow -D $(PACKAGES)
@@ -51,6 +54,8 @@ uninstall:
 	fi
 	systemctl --user daemon-reload
 	systemctl --user disable gcr-ssh-agent.socket
+	systemctl --user disable foot-server.service
+	systemctl --user stop foot-server.service
 
 plugins:
 	mkdir -p $(NVIMPACK)
