@@ -36,6 +36,7 @@ software:
 
 install:
 	stow -R $(PACKAGES)
+	update-desktop-database ~/.local/share/applications/
 	systemctl --user daemon-reload
 	systemctl --user enable gcr-ssh-agent.socket
 	systemctl --user enable foot-server.service
@@ -43,6 +44,7 @@ install:
 
 uninstall:
 	stow -D $(PACKAGES)
+	update-desktop-database ~/.local/share/applications/
 	rm -f ~/.config/fuzzel/fuzzel.ini
 	rm -f ~/.config/mako/config
 	rm -f ~/.config/swaylock/config

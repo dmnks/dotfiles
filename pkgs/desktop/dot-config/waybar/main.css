@@ -9,7 +9,7 @@
 
 #waybar {
     color: @foreground;
-    background-color: @background;
+    background: linear-gradient(90deg, rgba(44,73,104,1) 100%, rgba(44,73,104,1) 100%);
 }
 
 button {

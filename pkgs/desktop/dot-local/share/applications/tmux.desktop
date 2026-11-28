@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=footclient -W 179x48 -a Tmux tide
+Icon=org.gnome.Ptyxis
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;
+Name=Tmux
+GenericName=Tmux
+Comment=A terminal multiplexer
